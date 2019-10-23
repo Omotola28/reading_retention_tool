@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:reading_retention_tool/screens/SignUpScreen.dart';
 import 'package:reading_retention_tool/screens/HomeScreen.dart';
 import 'package:flutter/services.dart';
 import 'package:reading_retention_tool/constants/constants.dart';
@@ -25,7 +24,7 @@ class _SignInFormState extends State<SignInForm> {
     return Stack(
       children: <Widget>[
         Padding(
-          padding: EdgeInsets.all(40.0),
+          padding: EdgeInsets.all(10.0),
           child: Form(
             key: _signInKey,
             child: Container(
@@ -150,41 +149,6 @@ class _SignInFormState extends State<SignInForm> {
             ),
           ),
         ),
-        Positioned(
-          bottom: 2.0,
-          left: 110.0,
-          right: 110.0,
-          child: Row(
-            children: <Widget>[
-              Text(
-                "Dont have an account? ",
-                style: TextStyle(
-                  fontFamily: 'NotoSans',
-                  fontSize: 12.0,
-                  color: kHighlightColorDarkGrey,
-                  decoration: TextDecoration.none,
-                ),
-              ),
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context){
-                    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
-                    return SignUpScreen();
-                  }));
-                },
-                child: Text(
-                  "Sign Up",
-                  style: TextStyle(
-                    fontFamily: 'NotoSans',
-                    fontSize: 12.0,
-                    color: kSecondaryColor,
-                    decoration: TextDecoration.none,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        )
       ],
     );
   }

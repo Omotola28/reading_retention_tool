@@ -19,6 +19,10 @@ void main() {
     );
   }
 
+  /**
+   * Setting the theme for the application the copyWith is used
+   * to indicate what we would like to copy all over our app
+   */
   SystemChrome.setSystemUIOverlayStyle(copyWith());
 
   runApp(

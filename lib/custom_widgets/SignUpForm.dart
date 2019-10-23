@@ -29,7 +29,7 @@ class _SignUpFormState extends State<SignUpForm> {
     return Stack(
       children: <Widget>[
         Padding(
-          padding: EdgeInsets.all(40.0),
+          padding: EdgeInsets.all(10.0),
           child: Form(
             key: _signUpKey,
             child: Container(
@@ -168,35 +168,6 @@ class _SignUpFormState extends State<SignUpForm> {
                 ],
               ),
             ),
-          ),
-        ),
-        Positioned(
-          bottom: 2.0,
-          left: 100.0,
-          right: 100.0,
-          child: Row(
-            children: <Widget>[
-              Text(
-                "Have an account already? ",
-                style: kTrailingTextStyleDecoration,
-              ),
-              GestureDetector(
-                onTap: () {
-                  Navigator.push(context, MaterialPageRoute(builder: (context) {
-                    return SignInScreen();
-                  }));
-                },
-                child: Text(
-                  "Sign In",
-                  style: TextStyle(
-                    fontFamily: 'NotoSans',
-                    fontSize: 12.0,
-                    color: kSecondaryColor,
-                    decoration: TextDecoration.none,
-                  ),
-                ),
-              ),
-            ],
           ),
         ),
       ],

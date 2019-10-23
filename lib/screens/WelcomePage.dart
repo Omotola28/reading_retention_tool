@@ -15,8 +15,8 @@ class _WelcomePage extends State<WelcomePage> {
   @override
   void initState(){
     super.initState();
+    //This function loadGetStartedScreen should be called when this screen shows after 3 secs
     SchedulerBinding.instance.addPostFrameCallback((_) => loadGetStartedScreen());
-
   }
 
   void loadGetStartedScreen(){

@@ -1,2 +1,2 @@
 # reading_retention_tool
-A tool for reading retentio
+A tool for reading retention

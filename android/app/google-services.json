@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "209852250192",
+    "firebase_url": "https://readingtool-479e1.firebaseio.com",
+    "project_id": "readingtool-479e1",
+    "storage_bucket": "readingtool-479e1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:209852250192:android:d83dde0de66dfcadae7955",
+        "android_client_info": {
+          "package_name": "com.oshogunle.reading_retention_tool"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "209852250192-4teq79a4bmcg9hcvuimm8fg0e6pcp8rh.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.oshogunle.reading_retention_tool",
+            "certificate_hash": "82a90bb649d3a80649ee84aa364797c51dc4b463"
+          }
+        },
+        {
+          "client_id": "209852250192-65fh49d11bda8rr6511rohlln0b4odpo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBDxluXtE1bJ8HyKr_SuZZOg9awE51WbbQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "209852250192-65fh49d11bda8rr6511rohlln0b4odpo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

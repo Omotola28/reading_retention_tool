@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:reading_retention_tool/constants/constants.dart';
+import 'package:reading_retention_tool/constants/User.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:reading_retention_tool/constants/constants.dart';
+import 'package:reading_retention_tool/logic/auth.dart';
 import 'package:reading_retention_tool/screens/GetStartedScreen.dart';
+import 'package:reading_retention_tool/custom_widgets/ServiceSync.dart';
+import 'package:reading_retention_tool/screens/KindleHighlightsSync.dart';
+import 'dart:async';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -11,30 +16,23 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
 
-  FirebaseUser loggedUser;
-  final _auth = FirebaseAuth.instance;
+  Future<FirebaseUser> loggedUser;
+  final _auth = UserAuth.auth;
+  var userEmail;
+ /* FirebaseUser loggedUser;
+  final _auth = FirebaseAuth.instance;*/
 
   @override
   void initState() {
     super.initState();
+    loggedUser = UserAuth.getCurrentUser();
+    loggedUser.then((val){
+      setState(() {
+        userEmail = val.email;
+      });
+    });
 
-    getCurrentUser();
   }
-
-  void getCurrentUser() async{
-    try {
-      final user = await _auth.currentUser();
-      if (user != null)
-        setState(() {
-          loggedUser = user;
-        });
-      print("Result $loggedUser");
-    }
-    catch (e) {
-      print("Error $e");
-    }
-  }
-
 
   @override
   Widget build(BuildContext context) {
@@ -82,7 +80,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     accountEmail: Text(
                       // '',
-                      loggedUser.email != null ? loggedUser.email : '',
+                      userEmail != null ? userEmail : '',
                       style: kHeadingTextStyleDecoration,
                     ),
                     currentAccountPicture: CircleAvatar(
@@ -149,7 +147,7 @@ class _HomeScreenState extends State<HomeScreen> {
               Column(
                 children: <Widget>[
                   Text(
-                    "Upload Highlights",
+                    "Sync Highlights",
                     style: kHeadingTextStyleDecoration.copyWith(fontSize: 25.0),
                   ),
                   Text(
@@ -159,35 +157,93 @@ class _HomeScreenState extends State<HomeScreen> {
                 ],
               ),
               SizedBox(
-                height: 125.0,
+                height: 30.0,
               ),
               Column(
                 children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Card(
-                      elevation: 2.0,
-                      color: kPrimaryColor,
-                      child: TextField(
-                        decoration: InputDecoration(
-                          enabledBorder: OutlineInputBorder(
-                            borderSide:
-                            BorderSide(color: kPrimaryColor),
-                          ),
+                  ListView(
+                    shrinkWrap: true,
+                    padding: const EdgeInsets.all(20.0),
+                    children: <Widget>[
+                         ServiceSync(
+                           thumbnail: Image.asset("Images/Instapaper.png"),
+                           title: "Instatpaper",
+                           subtitle: "Sync all your highlights from articles you have read online"
+                         ),
+                         ServiceSync(
+                            thumbnail: Image.asset("Images/medium.png"),
+                            title: "Medium",
+                            subtitle: "Sync highlights from medium"
+                         ),
+                        ServiceSync(
+                          thumbnail: Image.asset("Images/kindle.png"),
+                          title: "Kindle",
+                          subtitle: "Sync highlights from your kindle ebooks/app",
+                          screen: KindleHighlightsSync(),
                         ),
-                      ),
-                    ),
+                        ServiceSync(
+                          thumbnail: Image.asset("Images/hmq.png"),
+                          title: "Highlight My Quotes",
+                          subtitle: "Add highlights manually from print books you have read"
+                        ),
+                        ],
+                      )
+                    ],
                   ),
-                  Text(
-                    "File format accepted included html & pdf",
-                    style: kTrailingTextStyleDecoration,
-                  )
                 ],
               )
-            ],
-          ),
         ),
       ),
     );
   }
 }
+
+
+/*
+Card(
+child: Padding(
+padding: const EdgeInsets.all(10.0),
+child: ListTile(
+leading: Image.asset("Images/Instapaper.png"),
+title: Text(
+'Instapaper',
+style: TextStyle(
+fontWeight: FontWeight.w700,
+fontSize: 20.0,
+),
+),
+subtitle: Text('Sync all your highlights '
+'from articles you read online',
+style: TextStyle(
+fontSize: 15.0,
+),
+),
+
+),
+),
+),
+
+*/
+
+
+
+
+
+/*
+Padding(
+padding: const EdgeInsets.all(8.0),
+child: Card(
+elevation: 2.0,
+color: kPrimaryColor,
+child: TextField(
+decoration: InputDecoration(
+enabledBorder: OutlineInputBorder(
+borderSide:
+BorderSide(color: kPrimaryColor),
+),
+),
+),
+),
+),*/
+
+// trailing: Icon(Icons.more_vert),

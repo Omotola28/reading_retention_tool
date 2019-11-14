@@ -1,31 +1,49 @@
-import 'package:flutter/material.dart';
-import 'package:reading_retention_tool/constants/constants.dart';
+import 'dart:async';
+import 'package:firebase_auth/firebase_auth.dart';
 
 
-class UserTextInputField extends StatelessWidget {
-  UserTextInputField({@required this.labelText, @required this.validate, @required this.value, @required this.savedValue, this.inputType});
+class UserAuth {
 
-  final String labelText;
-  final Function validate;
-  final bool value;
-  final TextInputType inputType;
-  final Function savedValue;
+  static final auth = FirebaseAuth.instance;
+  static FirebaseUser loggedUser;
 
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(10.0),
-      child: TextFormField(
-        keyboardType: inputType,
-        decoration: InputDecoration(
-          labelText: labelText,
-          enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: kPrimaryColor,width: 2.0)),
-          focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: kPrimaryColor,width: 3.0)),
-        ),
-        obscureText: value,
-        validator: validate,
-        onSaved: savedValue,
-      ),
-    );
+  static Future<FirebaseUser> getCurrentUser() async{
+    try {
+      final user = await auth.currentUser();
+      if (user != null){
+        loggedUser = user;
+        //print("Result $loggedUser");
+      }
+    }
+    catch (e) {
+      print("Error $e");
+    }
+    return loggedUser;
+  }
+
+  static Future registerUser(String email, String password) async{
+
+    final registerUser = await auth.createUserWithEmailAndPassword(email: email, password: password);
+    return registerUser;
+
+  }
+
+  Future signInUser(String email, String password) async{
+
+    final signInUser = await auth.signInWithEmailAndPassword(email: email, password: password);
+    return signInUser;
   }
 }
+
+/*
+class UserRegistrationAuth {
+
+
+
+}
+
+class UserSignInAuth{
+
+
+
+}*/

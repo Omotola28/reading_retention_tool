@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:reading_retention_tool/constants/constants.dart';
 import 'package:flutter/services.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:reading_retention_tool/custom_widgets/ActionUserButton.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:reading_retention_tool/module/data.dart';
 import 'dart:io';
 
 class KindleHighlightsSync extends StatefulWidget {
@@ -144,7 +146,7 @@ class _KindleHighlightsSync extends State<KindleHighlightsSync> {
                         ActionUserButton(color: Colors.white, title: 'Select File', onPressed: () => _openFileExplorer()),
                         ActionUserButton(color: Colors.white, title: 'Upload File', onPressed: (){
                           final StorageReference firebaseStorageRef =
-                                FirebaseStorage.instance.ref().child('file.pdf');
+                                FirebaseStorage.instance.ref().child("${Provider.of<Data>(context).uid}.pdf");
                           final StorageUploadTask task = firebaseStorageRef.putFile(File(_path));
                         }),
                       ],

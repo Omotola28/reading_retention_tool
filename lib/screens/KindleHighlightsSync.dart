@@ -5,8 +5,10 @@ import 'package:flutter/services.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:reading_retention_tool/custom_widgets/ActionUserButton.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:reading_retention_tool/module/data.dart';
+import 'package:reading_retention_tool/module/user_data.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:io';
+
 
 class KindleHighlightsSync extends StatefulWidget {
   @override
@@ -19,8 +21,14 @@ class _KindleHighlightsSync extends State<KindleHighlightsSync> {
   String _extension;
   bool _loadingPath = false;
   FileType _pickingType;
+  final _firestore = Firestore.instance;
 
   TextEditingController _controller = new TextEditingController();
+
+  void getHighlights() async{
+      final highlights = await _firestore.collection("users").document(Provider.of<UserData>(context).uid);
+      print(highlights.snapshots());
+  }
 
   @override
   void initState() {
@@ -146,8 +154,13 @@ class _KindleHighlightsSync extends State<KindleHighlightsSync> {
                         ActionUserButton(color: Colors.white, title: 'Select File', onPressed: () => _openFileExplorer()),
                         ActionUserButton(color: Colors.white, title: 'Upload File', onPressed: (){
                           final StorageReference firebaseStorageRef =
-                                FirebaseStorage.instance.ref().child("${Provider.of<Data>(context).uid}.pdf");
+                                FirebaseStorage.instance.ref().child("${Provider.of<UserData>(context).uid}.pdf");
                           final StorageUploadTask task = firebaseStorageRef.putFile(File(_path));
+                          print(task);
+                          getHighlights();
+                          if(task.isSuccessful){
+                              getHighlights();
+                          }
                         }),
                       ],
                     ),

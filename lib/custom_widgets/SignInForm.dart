@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:reading_retention_tool/screens/HomeScreen.dart';
 import 'package:flutter/services.dart';
 import 'package:reading_retention_tool/constants/constants.dart';
 import 'package:reading_retention_tool/custom_widgets/ActionUserButton.dart';
 import 'package:reading_retention_tool/custom_widgets/UserTextInputField.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:reading_retention_tool/module/data.dart';
+
 
 
 class SignInForm extends StatefulWidget {
@@ -23,9 +22,7 @@ class _SignInFormState extends State<SignInForm> {
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider<Data>(
-      builder: (context) => Data(),
-      child: Stack(
+    return Stack(
         children: <Widget>[
           Padding(
             padding: EdgeInsets.all(10.0),
@@ -154,7 +151,6 @@ class _SignInFormState extends State<SignInForm> {
             ),
           ),
         ],
-      ),
     );
   }
 }

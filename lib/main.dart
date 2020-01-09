@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 import 'package:reading_retention_tool/screens/WelcomePage.dart';
+import 'package:reading_retention_tool/module/user_data.dart';
 
 void main() {
 
@@ -26,15 +28,18 @@ void main() {
   SystemChrome.setSystemUIOverlayStyle(copyWith());
 
   runApp(
-    MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData.light().copyWith(
-        primaryColor: Color(0xFFFFFFFF),
-        backgroundColor: Colors.white,
-      ),
-      home: Scaffold(
-        body: SafeArea(
-          child: WelcomePage(),
+    ChangeNotifierProvider<UserData>(
+      builder: (context) => UserData(),
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData.light().copyWith(
+          primaryColor: Color(0xFFFFFFFF),
+          backgroundColor: Colors.white,
+        ),
+        home: Scaffold(
+          body: SafeArea(
+            child: WelcomePage(),
+          ),
         ),
       ),
     ),

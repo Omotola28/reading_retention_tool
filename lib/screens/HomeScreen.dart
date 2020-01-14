@@ -7,7 +7,7 @@ import 'package:reading_retention_tool/module/auth.dart';
 import 'package:reading_retention_tool/screens/GetStartedScreen.dart';
 import 'package:reading_retention_tool/custom_widgets/ServiceSync.dart';
 import 'package:reading_retention_tool/screens/KindleHighlightsSync.dart';
-import 'package:reading_retention_tool/module/user_data.dart';
+import 'package:reading_retention_tool/module/app_data.dart';
 import 'dart:async';
 
 class HomeScreen extends StatefulWidget {
@@ -28,8 +28,8 @@ class _HomeScreenState extends State<HomeScreen> {
     super.initState();
     loggedUser = UserAuth.getCurrentUser();
     loggedUser.then((val){
-      Provider.of<UserData>(context).setCurrentUserEmail(val.email);
-      Provider.of<UserData>(context).setCurrentUid(val.uid);
+      Provider.of<AppData>(context).setCurrentUserEmail(val.email);
+      Provider.of<AppData>(context).setCurrentUid(val.uid);
         //userEmail = val.email;
     });
    // userEmail = Provider.of<Data>(context).email;
@@ -39,7 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    userEmail = Provider.of<UserData>(context).email;
+    userEmail = Provider.of<AppData>(context).email;
     return Scaffold(
         appBar: AppBar(
           brightness: Brightness.light,

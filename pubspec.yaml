@@ -49,3 +49,6 @@ flutter:
     - family: NotoSans
       fonts:
         - asset: fonts/NotoSans-Regular.ttf
+    - family: CustomIcons
+      fonts:
+        - asset: fonts/CustomIcons.ttf

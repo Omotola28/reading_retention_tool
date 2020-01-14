@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:reading_retention_tool/screens/WelcomePage.dart';
-import 'package:reading_retention_tool/module/user_data.dart';
+import 'package:reading_retention_tool/module/app_data.dart';
 
 void main() {
 
@@ -28,8 +28,8 @@ void main() {
   SystemChrome.setSystemUIOverlayStyle(copyWith());
 
   runApp(
-    ChangeNotifierProvider<UserData>(
-      builder: (context) => UserData(),
+    ChangeNotifierProvider<AppData>(
+      builder: (context) => AppData(),
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData.light().copyWith(

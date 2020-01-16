@@ -9,12 +9,8 @@ import 'package:reading_retention_tool/screens/SignInScreen.dart';
 //import 'CarouselWidget.dart';
 
 class GetStartedScreen extends StatelessWidget {
-  /* hexColor(String colorHexCode) {
-    String color = '0xff';
-    String newColor = color + colorHexCode;
-    int colorInt = int.parse(newColor);
-    return colorInt;
-  }*/
+
+  static String id = 'getstarted_screen';
 
   @override
   Widget build(BuildContext context) {
@@ -93,9 +89,7 @@ class GetStartedScreen extends StatelessWidget {
                         height: 50.0,
                       ),
                       ActionUserButton(color: Colors.white, title: "Sign Up", onPressed: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context){
-                          return SignUpScreen();
-                        }));
+                        Navigator.pushNamed(context, SignUpScreen.id);
                       },
                       ),
                       Row(
@@ -108,9 +102,7 @@ class GetStartedScreen extends StatelessWidget {
                           ),
                           GestureDetector(
                             onTap: () {
-                              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                                return SignInScreen();
-                              }));
+                              Navigator.pushNamed(context, SignInScreen.id);
                             },
                             child: Text(
                               'Login',

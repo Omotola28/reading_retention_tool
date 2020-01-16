@@ -9,11 +9,15 @@ import 'package:reading_retention_tool/module/app_data.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:io';
 import 'dart:convert';
+import 'dart:async';
 
 import 'package:reading_retention_tool/screens/ShowRetrievedHighlightsScreen.dart';
 
 
 class KindleHighlightsSync extends StatefulWidget {
+
+  static String id = 'kindle_highlights_sync_screen';
+
   @override
   _KindleHighlightsSync createState() => new _KindleHighlightsSync();
 }
@@ -30,32 +34,33 @@ class _KindleHighlightsSync extends State<KindleHighlightsSync> {
 
   TextEditingController _controller = new TextEditingController();
 
-  void getHighlights() async{
+  Future<Map> getHighlights() async{
+
       final highlights =
         await _firestore.collection("users")
             .document(Provider.of<AppData>(context).uid).collection('books')
-            .document("${Provider.of<AppData>(context).uid}.pdf").get();
+            .document(_fileName).get();
 
 
       // Save data in a module provider function created to be accessed in the applications
       //it requires
-     /* Provider.of<AppData>(context).setUploadedHighlights(highlights);
+      Provider.of<AppData>(context).setUploadedHighlights(highlights);
 
-      _highlightObject =
-          jsonDecode(Provider
-              .of<AppData>(context)
-              .highlights
-              .data['highlights']);*/
-
-      _highlightObject = jsonDecode(highlights.data['highlights']);
-
-      _highlightObject.forEach((k,v) => obj.add(v));
+      print(highlights.data['highlights'].runtimeType.toString());
 
 
-      Navigator.push(context, MaterialPageRoute(builder: (context){
-        SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
-        return ShowRetrievedHightlightsScreen(obj);
-      }));
+      Map<String, dynamic> fridgesDs = jsonDecode(highlights.data['highlights']);
+
+      fridgesDs.forEach((key, value){
+        obj.add(value);
+      });
+
+      //Set object for listbuilder to be accessed globally
+      Provider.of<AppData>(context).setHighlightListObject(obj);
+      Provider.of<AppData>(context).setBookName(_fileName);
+
+      Navigator.pushNamed(context, ShowRetrievedHightlightsScreen.id);
+
   }
 
   @override
@@ -182,7 +187,7 @@ class _KindleHighlightsSync extends State<KindleHighlightsSync> {
                         ActionUserButton(color: Colors.white, title: 'Select File', onPressed: () => _openFileExplorer()),
                         ActionUserButton(color: Colors.white, title: 'Upload File', onPressed: (){
                           final StorageReference firebaseStorageRef =
-                                FirebaseStorage.instance.ref().child("${Provider.of<AppData>(context).uid}.pdf");
+                                FirebaseStorage.instance.ref().child("${Provider.of<AppData>(context).uid}_${_fileName}");
                           final StorageUploadTask task = firebaseStorageRef.putFile(File(_path));
 
                           getHighlights();

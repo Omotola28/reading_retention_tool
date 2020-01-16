@@ -4,12 +4,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AppData extends ChangeNotifier{
 
- // DocumentSnapshot highlights;
+  DocumentSnapshot highlights;
   String email;
   String uid;
   String savedString;
   String whatActionButton;
- // List highlightObject = [];
+  List highlightObject = [];
+  String bookName;
 
   void setCurrentUserEmail (String currentEmail){
       email = currentEmail;
@@ -26,7 +27,7 @@ class AppData extends ChangeNotifier{
     notifyListeners();
   }
 
- /* void setUploadedHighlights(DocumentSnapshot currentHighlights)
+  void setUploadedHighlights(DocumentSnapshot currentHighlights)
   {
     highlights = currentHighlights;
     notifyListeners();
@@ -36,13 +37,19 @@ class AppData extends ChangeNotifier{
   {
     highlightObject = obj;
     notifyListeners();
-  }*/
+  }
 
   void setSavedHighlight( String savedHighlight)
   {
     savedString = savedHighlight;
     notifyListeners();
 
+  }
+
+  void setBookName(String fileName)
+  {
+    bookName = fileName;
+    notifyListeners();
   }
 
 }

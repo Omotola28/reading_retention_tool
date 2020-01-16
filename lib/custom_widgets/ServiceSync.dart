@@ -14,16 +14,13 @@ class ServiceSync extends StatelessWidget {
   final Widget thumbnail;
   final String title;
   final String subtitle;
-  final Widget screen;
+  final String screen;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-      Navigator.push(context, MaterialPageRoute(builder: (context){
-        SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
-        return screen;
-      }));
+        Navigator.pushNamed(context, screen);
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 10.0),

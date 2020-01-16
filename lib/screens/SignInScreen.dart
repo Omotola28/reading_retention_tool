@@ -5,6 +5,9 @@ import 'package:reading_retention_tool/screens/SignUpScreen.dart';
 import 'package:flutter/services.dart';
 
 class SignInScreen extends StatelessWidget {
+
+  static String id = 'signIn_screen';
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -38,10 +41,11 @@ class SignInScreen extends StatelessWidget {
                     ),
                   GestureDetector(
                     onTap: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context){
+                      Navigator.pushNamed(context, SignUpScreen.id);
+                     /* Navigator.push(context, MaterialPageRoute(builder: (context){
                         SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
                         return SignUpScreen();
-                      }));
+                      }));*/
                     },
                     child: Text(
                       "Sign Up",

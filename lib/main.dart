@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:reading_retention_tool/screens/GetStartedScreen.dart';
+import 'package:reading_retention_tool/screens/HomeScreen.dart';
+import 'package:reading_retention_tool/screens/KindleHighlightsSync.dart';
+import 'package:reading_retention_tool/screens/ShowRetrievedHighlightsScreen.dart';
+import 'package:reading_retention_tool/screens/SignInScreen.dart';
+import 'package:reading_retention_tool/screens/SignUpScreen.dart';
 import 'package:reading_retention_tool/screens/WelcomePage.dart';
 import 'package:reading_retention_tool/module/app_data.dart';
 
@@ -36,11 +42,23 @@ void main() {
           primaryColor: Color(0xFFFFFFFF),
           backgroundColor: Colors.white,
         ),
-        home: Scaffold(
+        initialRoute: WelcomePage.id,
+        routes: {
+          WelcomePage.id : (context) => WelcomePage(),
+          HomeScreen.id : (context) => HomeScreen(),
+          GetStartedScreen.id : (context) => GetStartedScreen(),
+          SignInScreen.id : (context) => SignInScreen(),
+          SignUpScreen.id : (context) => SignUpScreen(),
+          KindleHighlightsSync.id : (context) => KindleHighlightsSync(),
+          ShowRetrievedHightlightsScreen.id : (context) =>
+              ShowRetrievedHightlightsScreen(Provider.of<AppData>(context).highlightObject, Provider.of<AppData>(context).bookName),
+
+        },
+        /*home: Scaffold(
           body: SafeArea(
             child: WelcomePage(),
           ),
-        ),
+        ),*/
       ),
     ),
   );

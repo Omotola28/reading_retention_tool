@@ -4,6 +4,10 @@ import 'package:reading_retention_tool/constants/constants.dart';
 import 'package:reading_retention_tool/screens/SignInScreen.dart';
 
 class SignUpScreen extends StatelessWidget {
+
+
+  static String id = 'signUp_screen';
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -32,9 +36,7 @@ class SignUpScreen extends StatelessWidget {
                   ),
                   GestureDetector(
                     onTap: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) {
-                        return SignInScreen();
-                      }));
+                      Navigator.pushNamed(context, SignInScreen.id);
                     },
                     child: Text(
                       "Sign In",

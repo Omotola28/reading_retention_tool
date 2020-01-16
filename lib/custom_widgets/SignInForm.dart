@@ -122,11 +122,9 @@ class _SignInFormState extends State<SignInForm> {
                           try {
                             final result = await _auth.signInWithEmailAndPassword(email: email, password: password);
                             print("Result $result");
-                            result != null ?  Navigator.push(context, MaterialPageRoute(builder: (context){
-                              return HomeScreen();
-                            })): print(result);
+                            result != null ? Navigator.pushNamed(context, HomeScreen.id): print(result);
                           } on PlatformException catch (e) {
-
+                                  print(e);
                             switch (e.code) {
                               case "ERROR_USER_NOT_FOUND":
                                 print(e.code);

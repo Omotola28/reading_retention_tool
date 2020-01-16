@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
@@ -11,9 +13,12 @@ import 'package:reading_retention_tool/screens/HomeScreen.dart';
 
 class ShowRetrievedHightlightsScreen extends StatefulWidget {
 
+  static String id = 'show_retrieved_highlights_screen';
+
   //List object for the builder, was better to pass it than store in provider
   List obj = [];
-  ShowRetrievedHightlightsScreen(this.obj);
+  String _fileName;
+  ShowRetrievedHightlightsScreen(this.obj, this._fileName);
 
   @override
   _ShowRetrievedHightlightsScreenState createState() =>
@@ -33,6 +38,7 @@ class _ShowRetrievedHightlightsScreenState
 
   @override
   void dispose() {
+    print("I am done");
     super.dispose();
 
   }
@@ -61,11 +67,9 @@ class _ShowRetrievedHightlightsScreenState
               _store.collection("users")
                   .document(Provider.of<AppData>(context).uid)
                   .collection("books")
-                  .document("${Provider.of<AppData>(context).uid}.pdf")
-                  .setData({"highlights":widget.obj});
-              Navigator.push(context, MaterialPageRoute(builder: (context){
-                return HomeScreen();
-              }));
+                  .document(widget._fileName)
+                  .setData({"highlights": widget.obj});
+              Navigator.popAndPushNamed(context, HomeScreen.id);
             }
 
             ),
@@ -130,6 +134,7 @@ class _ShowRetrievedHightlightsScreenState
                                 case 'Delete':
                                   {
                                     widget.obj.removeAt(index);
+                                    widget.obj.length = widget.obj.length - 1;
 
                                   }
                                   break;

@@ -11,6 +11,9 @@ import 'package:reading_retention_tool/module/app_data.dart';
 import 'dart:async';
 
 class HomeScreen extends StatefulWidget {
+
+  static String id = 'home_screen';
+
   @override
   _HomeScreenState createState() => _HomeScreenState();
 }
@@ -134,9 +137,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 onTap: () {
                   _auth.signOut();
-                  Navigator.push(context, MaterialPageRoute(builder: (context){
-                    return GetStartedScreen();
-                  }));
+                  Navigator.pushNamed(context, GetStartedScreen.id);
 
                 },
               ),
@@ -183,7 +184,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             thumbnail: Image.asset("Images/kindle.png"),
                             title: "Kindle",
                             subtitle: "Sync highlights from your kindle ebooks/app",
-                            screen: KindleHighlightsSync(),
+                            screen: KindleHighlightsSync.id,
                           ),
                           ServiceSync(
                             thumbnail: Image.asset("Images/hmq.png"),

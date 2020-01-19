@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:reading_retention_tool/constants/constants.dart';
-import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+import 'package:reading_retention_tool/module/app_data.dart';
+import 'package:cloud_functions/cloud_functions.dart';
+import 'package:reading_retention_tool/screens/MediumHighlightsScreen.dart';
 
 class ServiceSync extends StatelessWidget {
   ServiceSync({
@@ -20,7 +23,32 @@ class ServiceSync extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, screen);
+        switch (screen) {
+          case 'kindle_highlights_sync_screen':
+            {
+              Navigator.pushNamed(context, screen);
+            }
+            break;
+
+          case 'medium':
+            {
+              showMediumDialog(context).then((val){
+                //TODO:clear value set in medium name
+                print("MEDIUM ${Provider.of<AppData>(context).mediumUsername}");
+              });
+            }
+            break;
+
+          case 'Delete':
+            {
+
+            }
+            break;
+
+          default:
+            break;
+        }
+
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 10.0),
@@ -93,35 +121,67 @@ class ServiceSync extends StatelessWidget {
   }
 }
 
-// ...
+Future<bool> showMediumDialog(BuildContext context){
 
-/*
-Widget build(BuildContext context) {
-  return ListView(
-    padding: const EdgeInsets.all(10.0),
-    children: <Widget>[
-      CustomListItemTwo(
-        thumbnail: Container(
-          decoration: const BoxDecoration(color: Colors.pink),
-        ),
-        title: 'Flutter 1.0 Launch',
-        subtitle:
-        'Flutter continues to improve and expand its horizons.'
-            'This text should max out at two lines and clip',
-        author: 'Dash',
-        publishDate: 'Dec 28',
-        readDuration: '5 mins',
-      ),
-      CustomListItemTwo(
-        thumbnail: Container(
-          decoration: const BoxDecoration(color: Colors.blue),
-        ),
-        title: 'Flutter 1.2 Release - Continual updates to the framework',
-        subtitle: 'Flutter once again improves and makes updates.',
-        author: 'Flutter',
-        publishDate: 'Feb 26',
-        readDuration: '12 mins',
-      ),
-    ],
+
+  final _mediumUsername = TextEditingController(text: '@username');
+  FocusNode _focusNode = FocusNode();
+
+  _focusNode.addListener((){
+      if (_focusNode.hasFocus) _mediumUsername.clear();
+  });
+
+  final HttpsCallable callable = CloudFunctions.instance.getHttpsCallable(
+    functionName: 'syncMedium',
   );
-}*/
+
+  return showDialog(context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Image.asset(
+            "Images/medium.png",
+            height: 50,
+            width: 50,
+          ),
+          content: TextFormField(
+              validator: (value) => value.isEmpty ? 'Please enter your username' : null,
+              decoration: InputDecoration(
+                labelText: 'Enter medium username',
+                enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: kPrimaryColor,width: 2.0)),
+                focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: kPrimaryColor,width: 3.0)),
+              ),
+              controller: _mediumUsername,
+              focusNode: _focusNode,
+              style: TextStyle(color: Colors.grey),
+
+              onTap: () {
+
+              }),
+          actions: <Widget>[
+               FlatButton(
+                    color: kPrimaryColor,
+                    child: Text(
+                      'Sync Highlights',
+                      style: kHeadingTextStyleDecoration.copyWith(color: Colors.white),
+                ),
+               onPressed: () async {
+                    if(_mediumUsername.text == '@username')
+                        Provider.of<AppData>(context).setMeduimUserName(null);
+                    else
+                        Provider.of<AppData>(context).setMeduimUserName(_mediumUsername.text);
+
+                    dynamic resp = await callable.call(<String, dynamic>{
+                      'name': _mediumUsername.text,
+                      'uid': Provider.of<AppData>(context).uid
+                    });
+
+                    print(resp.data);
+                    Navigator.popAndPushNamed(context, MediumHighlightsScreen.id);
+
+               },
+          ),
+        ]
+        );
+      }
+  );
+}

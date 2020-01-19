@@ -11,6 +11,7 @@ class AppData extends ChangeNotifier{
   String whatActionButton;
   List highlightObject = [];
   String bookName;
+  String mediumUsername;
 
   void setCurrentUserEmail (String currentEmail){
       email = currentEmail;
@@ -52,4 +53,8 @@ class AppData extends ChangeNotifier{
     notifyListeners();
   }
 
+  void setMeduimUserName(String username){
+    mediumUsername = username;
+    notifyListeners();
+  }
 }

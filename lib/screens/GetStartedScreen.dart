@@ -102,7 +102,7 @@ class GetStartedScreen extends StatelessWidget {
                           ),
                           GestureDetector(
                             onTap: () {
-                              Navigator.pushNamed(context, SignInScreen.id);
+                              Navigator.popAndPushNamed(context, SignInScreen.id);
                             },
                             child: Text(
                               'Login',

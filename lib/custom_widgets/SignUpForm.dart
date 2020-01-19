@@ -5,7 +5,6 @@ import 'package:reading_retention_tool/custom_widgets/UserTextInputField.dart';
 import 'package:reading_retention_tool/constants/User.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-//import 'package:reading_retention_tool/screens/HomeScreen.dart';
 import 'package:reading_retention_tool/screens/SignInScreen.dart';
 
 /*enum PlatformExceptionKeys{
@@ -150,9 +149,7 @@ class _SignUpFormState extends State<SignUpForm> {
                               try{
                                 final result = await _auth.createUserWithEmailAndPassword(email: _user.email, password: _user.password);
                                 print("Sign Up result: $result");
-                                result  != null ?  Navigator.push(context, MaterialPageRoute(builder: (context){
-                                  return SignInScreen();
-                                })): print(result);
+                                result  != null ? Navigator.popAndPushNamed(context, SignInScreen.id) : print(result);
                               } on PlatformException catch (e) {
                                 //e.code
                                 switch(e.code)

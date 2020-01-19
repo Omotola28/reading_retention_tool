@@ -8,6 +8,9 @@ import 'package:reading_retention_tool/screens/GetStartedScreen.dart';
 import 'package:reading_retention_tool/custom_widgets/ServiceSync.dart';
 import 'package:reading_retention_tool/screens/KindleHighlightsSync.dart';
 import 'package:reading_retention_tool/module/app_data.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:reading_retention_tool/screens/UserBooksListScreen.dart';
+import 'package:reading_retention_tool/customIcons/my_flutter_app_icons.dart';
 import 'dart:async';
 
 class HomeScreen extends StatefulWidget {
@@ -20,6 +23,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
 
+  final _store = Firestore.instance;
   Future<FirebaseUser> loggedUser;
   final _auth = UserAuth.auth;
   var userEmail;
@@ -37,6 +41,30 @@ class _HomeScreenState extends State<HomeScreen> {
     });
    // userEmail = Provider.of<Data>(context).email;
 
+  }
+
+  /*void getUserBooks() async {
+    final books = await _store.collection('users')
+                        .document(Provider.of<AppData>(context).uid)
+                        .collection('books').getDocuments();
+
+    for( var book in books.documents )
+    {
+        print(book.documentID);
+    }
+  }*/
+
+  void getStreamBookIds() async{
+    final books = await _store.collection('users')
+        .document(Provider.of<AppData>(context).uid)
+        .collection('books').snapshots();
+
+    await for (var snapshot in books){
+      for (var bookid in snapshot.documents)
+      {
+         print(bookid.documentID);
+      }
+    }
   }
 
 
@@ -82,7 +110,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     UserAccountsDrawerHeader(
                       accountName: Text(
-                        "Omotola Shogunle",
+                        "Hi! :)",
                         style: kTrailingTextStyleDecoration,
                       ),
                       accountEmail: Text(
@@ -110,21 +138,78 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     Divider(
                       color: kHighlightColorGrey,
+                      thickness: 2.0,
                     ),
                     Padding(
                       padding: const EdgeInsets.all(8.0),
-                      child: Text("Categories",
+                      child: Text("Browse",
                         style: kHeadingTextStyleDecoration,
                       ),
                     ),
+                    Divider(
+                      color: kHighlightColorGrey,
+                      thickness: 2.0,
+                    ),
                     ListTile(
-                      title: Text('Item 2'),
+                      title: Text('Books'),
+                      onTap: () {
+                        // Update the state of the app
+                        //getStreamBookIds();
+                        Navigator.popAndPushNamed(context, UserBooksListScreen.id );
+                      },
+                      trailing: Icon(CustomIcons.book),
+                    ),
+                    Divider(
+                      color: kHighlightColorGrey,
+                    ),
+                    ListTile(
+                      title: Text('Medium Articles'),
                       onTap: () {
                         // Update the state of the app
                         // ...
                         // Then close the drawer
                         Navigator.pop(context);
                       },
+                      trailing: Icon(CustomIcons.doc),
+                    ),
+                    Divider(
+                      color: kHighlightColorGrey,
+                    ),
+                    ListTile(
+                      title: Text('Instapaper Articles'),
+                      onTap: () {
+                        // Update the state of the app
+                        // ...
+                        // Then close the drawer
+                        Navigator.pop(context);
+                      },
+                      trailing: Icon(CustomIcons.doc),
+                    ),
+                    Divider(
+                      color: kHighlightColorGrey,
+                    ),
+                    ListTile(
+                      title: Text('Categories'),
+                      onTap: () {
+                        // Update the state of the app
+                        // ...
+                        // Then close the drawer
+                        Navigator.pop(context);
+                      },
+                      trailing: Icon(CustomIcons.tag),
+                    ),
+                    Divider(
+                      color: kHighlightColorGrey,
+                    ),
+                    ListTile(
+                      title: Text('Favourites'),
+                      onTap: () {
+                        // Update the state of the app
+                        // ...
+                        // Then close the drawer
+                        Navigator.pop(context);
+                      },
+                      trailing: Icon(CustomIcons.favorite),
                     ),
                   ],
                 ),
@@ -145,58 +230,61 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ),
         body: SafeArea(
-          child: Container(
-            color: Colors.white,
-            child: Column(
-              children: <Widget>[
-                Column(
-                  children: <Widget>[
-                    Text(
-                      "Sync Highlights",
-                      style: kHeadingTextStyleDecoration.copyWith(fontSize: 25.0),
-                    ),
-                    Text(
-                      "20 out of 2000 highlights",
-                      style: kTrailingTextStyleDecoration,
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: 30.0,
-                ),
-                Column(
-                  children: <Widget>[
-                    ListView(
-                      shrinkWrap: true,
-                      padding: const EdgeInsets.all(20.0),
-                      children: <Widget>[
-                           ServiceSync(
-                             thumbnail: Image.asset("Images/Instapaper.png"),
-                             title: "Instatpaper",
-                             subtitle: "Sync all your highlights from articles you have read online"
-                           ),
-                           ServiceSync(
-                              thumbnail: Image.asset("Images/medium.png"),
-                              title: "Medium",
-                              subtitle: "Sync highlights from medium"
-                           ),
-                          ServiceSync(
-                            thumbnail: Image.asset("Images/kindle.png"),
-                            title: "Kindle",
-                            subtitle: "Sync highlights from your kindle ebooks/app",
-                            screen: KindleHighlightsSync.id,
-                          ),
-                          ServiceSync(
-                            thumbnail: Image.asset("Images/hmq.png"),
-                            title: "Highlight My Quotes",
-                            subtitle: "Add highlights manually from print books you have read"
-                          ),
-                          ],
-                        )
-                      ],
-                    ),
-                  ],
-                )
+          child: SingleChildScrollView(
+            child: Container(
+              color: Colors.white,
+              child: Column(
+                children: <Widget>[
+                  Column(
+                    children: <Widget>[
+                      Text(
+                        "Sync Highlights",
+                        style: kHeadingTextStyleDecoration.copyWith(fontSize: 25.0),
+                      ),
+                      Text(
+                        "20 out of 2000 highlights",
+                        style: kTrailingTextStyleDecoration,
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 30.0,
+                  ),
+                  Column(
+                    children: <Widget>[
+                      ListView(
+                        shrinkWrap: true,
+                        padding: const EdgeInsets.all(20.0),
+                        children: <Widget>[
+                             ServiceSync(
+                               thumbnail: Image.asset("Images/Instapaper.png"),
+                               title: "Instatpaper",
+                               subtitle: "Sync all your highlights from articles you have read online"
+                             ),
+                             ServiceSync(
+                                thumbnail: Image.asset("Images/medium.png"),
+                                title: "Medium",
+                                subtitle: "Sync highlights from medium",
+                                screen: 'medium',
+                             ),
+                            ServiceSync(
+                              thumbnail: Image.asset("Images/kindle.png"),
+                              title: "Kindle",
+                              subtitle: "Sync highlights from your kindle ebooks/app",
+                              screen: KindleHighlightsSync.id,
+                            ),
+                            ServiceSync(
+                              thumbnail: Image.asset("Images/hmq.png"),
+                              title: "Highlight My Quotes",
+                              subtitle: "Add highlights manually from print books you have read"
+                            ),
+                            ],
+                          )
+                        ],
+                      ),
+                    ],
+                  )
+            ),
           ),
         ),
     );

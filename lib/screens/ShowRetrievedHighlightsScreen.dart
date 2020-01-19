@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
@@ -96,7 +95,8 @@ class _ShowRetrievedHightlightsScreenState
           ),
         ],
       ),
-      body: ListView.builder(
+
+     body: ListView.builder(
         itemCount: widget.obj == null ? 0 : widget.obj.length,
         itemBuilder: (context, index) {
           return Padding(
@@ -206,7 +206,7 @@ Future<bool> showHighlightDialog(BuildContext context, String highlight, int ind
                   ),
                   FlatButton(
                     child: Icon(
-                      CustomIcons.trash_1,
+                      CustomIcons.trash,
                       color: kHighlightColorDarkGrey,
                     ),
                     onPressed: () {

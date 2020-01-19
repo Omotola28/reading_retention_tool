@@ -16,14 +16,14 @@
 ///         Author:    Designmodo for Smashing Magazine
 ///         License:   CC BY ()
 ///         Homepage:  http://designmodo.com/linecons-free/
-/// * Entypo, Copyright (C) 2012 by Daniel Bruce
-///         Author:    Daniel Bruce
-///         License:   SIL (http://scripts.sil.org/OFL)
-///         Homepage:  http://www.entypo.com
 /// * Material Design Icons, Copyright (C) Google, Inc
 ///         Author:    Google
 ///         License:   Apache 2.0 (https://www.apache.org/licenses/LICENSE-2.0)
 ///         Homepage:  https://design.google.com/icons/
+/// * Entypo, Copyright (C) 2012 by Daniel Bruce
+///         Author:    Daniel Bruce
+///         License:   SIL (http://scripts.sil.org/OFL)
+///         Homepage:  http://www.entypo.com
 /// * Linearicons Free, Copyright (C) Linearicons.com
 ///         Author:    Perxis
 ///         License:   CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/)
@@ -40,9 +40,13 @@ class CustomIcons {
 
   static const _kFontFam = 'CustomIcons';
 
-  static const IconData heart = const IconData(0xe800, fontFamily: _kFontFam);
-  static const IconData check = const IconData(0xe801, fontFamily: _kFontFam);
-  static const IconData arrow_back = const IconData(0xe802, fontFamily: _kFontFam);
-  static const IconData trash_1 = const IconData(0xe811, fontFamily: _kFontFam);
+  static const IconData doc = const IconData(0xe800, fontFamily: _kFontFam);
+  static const IconData tag = const IconData(0xe801, fontFamily: _kFontFam);
+  static const IconData favorite = const IconData(0xe802, fontFamily: _kFontFam);
+  static const IconData check = const IconData(0xe803, fontFamily: _kFontFam);
+  static const IconData heart = const IconData(0xe804, fontFamily: _kFontFam);
+  static const IconData trash = const IconData(0xe811, fontFamily: _kFontFam);
+  static const IconData book = const IconData(0xe828, fontFamily: _kFontFam);
   static const IconData down_open = const IconData(0xf004, fontFamily: _kFontFam);
+  static const IconData arrow_back = const IconData(0xf004, fontFamily: _kFontFam);
 }

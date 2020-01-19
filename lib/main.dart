@@ -4,11 +4,14 @@ import 'package:provider/provider.dart';
 import 'package:reading_retention_tool/screens/GetStartedScreen.dart';
 import 'package:reading_retention_tool/screens/HomeScreen.dart';
 import 'package:reading_retention_tool/screens/KindleHighlightsSync.dart';
+import 'package:reading_retention_tool/screens/MediumHighlightsScreen.dart';
 import 'package:reading_retention_tool/screens/ShowRetrievedHighlightsScreen.dart';
 import 'package:reading_retention_tool/screens/SignInScreen.dart';
 import 'package:reading_retention_tool/screens/SignUpScreen.dart';
+import 'package:reading_retention_tool/screens/UserBooksListScreen.dart';
 import 'package:reading_retention_tool/screens/WelcomePage.dart';
 import 'package:reading_retention_tool/module/app_data.dart';
+import 'package:reading_retention_tool/screens/UserBooksListScreen.dart';
 
 void main() {
 
@@ -50,8 +53,10 @@ void main() {
           SignInScreen.id : (context) => SignInScreen(),
           SignUpScreen.id : (context) => SignUpScreen(),
           KindleHighlightsSync.id : (context) => KindleHighlightsSync(),
+          MediumHighlightsScreen.id : (context) => MediumHighlightsScreen(),
           ShowRetrievedHightlightsScreen.id : (context) =>
               ShowRetrievedHightlightsScreen(Provider.of<AppData>(context).highlightObject, Provider.of<AppData>(context).bookName),
+          UserBooksListScreen.id : (context) => UserBooksListScreen(),
 
         },
         /*home: Scaffold(

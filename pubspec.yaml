@@ -28,6 +28,7 @@ dependencies:
   firebase_storage: ^3.0.8
   provider: ^3.1.0+1
   cloud_functions: ^0.4.1+6
+  grouped_buttons: ^1.0.4
 
 
 

@@ -60,7 +60,8 @@ class _ShowRetrievedHightlightsScreenState
       appBar: AppBar(
         leading: FlatButton(
             child: Icon(
-                CustomIcons.arrow_back
+                Icons.arrow_back_ios,
+                color: kDarkColorBlack,
             ),
             onPressed: () {
               _store.collection("users")
@@ -164,7 +165,7 @@ class _ShowRetrievedHightlightsScreenState
 Future<bool> showHighlightDialog(BuildContext context, String highlight, int index){
 
     final _highlightController = TextEditingController(text: highlight);
-
+    //TODO: Inorder to update the list for the index when a tile is deleted we have to use set state
     return showDialog(context: context,
         builder: (BuildContext context){
             return AlertDialog(

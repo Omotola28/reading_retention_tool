@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:reading_retention_tool/customIcons/my_flutter_app_icons.dart';
 import 'package:reading_retention_tool/constants/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:reading_retention_tool/module/app_data.dart';
 import 'package:provider/provider.dart';
+import 'package:reading_retention_tool/screens/BookSpecificHighlightScreen.dart';
+import 'package:reading_retention_tool/screens/HomeScreen.dart';
 
 class UserBooksListScreen extends StatefulWidget {
 
@@ -28,7 +29,7 @@ class _UserBooksListScreenState extends State<UserBooksListScreen> {
              ),
 
              onPressed: () {
-
+                  Navigator.popAndPushNamed(context, HomeScreen.id);
                }
 
          ),
@@ -67,6 +68,7 @@ class _UserBooksListScreenState extends State<UserBooksListScreen> {
                       List<ListTile> bookList = [];
                       if(snapshot.hasData){
 
+
                         /*final books = snapshot.data.documents;
 
                         for( var book in books )
@@ -87,8 +89,12 @@ class _UserBooksListScreenState extends State<UserBooksListScreen> {
                                   child: ListTile(
                                     title: Text(snapshot.data.documents[index].documentID.split('.')[0]),
                                     onTap: (){
-                                      //TODO: Show highlights associated with book for futher categorising, tagging
-                                      //TODO: Editing etc.
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(builder: (context)
+                                        => BookSpecificHighlightScreen(snapshot.data.documents[index].documentID)),
+                                      );
+
                                     },
                                     trailing: Icon(Icons.keyboard_arrow_right),
                                   ),
@@ -98,7 +104,7 @@ class _UserBooksListScreenState extends State<UserBooksListScreen> {
 
                       }
                       else{
-                        return Text('Loading');
+                        return Center(child: CircularProgressIndicator());
                       }
 
 

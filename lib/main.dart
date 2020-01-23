@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:reading_retention_tool/screens/BookSpecificHighlightScreen.dart';
+import 'package:reading_retention_tool/screens/CategoryScreen.dart';
 import 'package:reading_retention_tool/screens/GetStartedScreen.dart';
 import 'package:reading_retention_tool/screens/HomeScreen.dart';
 import 'package:reading_retention_tool/screens/KindleHighlightsSync.dart';
@@ -57,6 +59,8 @@ void main() {
           ShowRetrievedHightlightsScreen.id : (context) =>
               ShowRetrievedHightlightsScreen(Provider.of<AppData>(context).highlightObject, Provider.of<AppData>(context).bookName),
           UserBooksListScreen.id : (context) => UserBooksListScreen(),
+          CategoryScreen.id : (context) => CategoryScreen(),
+
 
         },
         /*home: Scaffold(

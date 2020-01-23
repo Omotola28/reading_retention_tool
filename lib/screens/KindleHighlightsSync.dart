@@ -49,9 +49,9 @@ class _KindleHighlightsSync extends State<KindleHighlightsSync> {
       print(highlights.data['highlights'].runtimeType.toString());
 
 
-      Map<String, dynamic> fridgesDs = jsonDecode(highlights.data['highlights']);
+      Map<String, dynamic> highlighted = jsonDecode(highlights.data['highlights']);
 
-      fridgesDs.forEach((key, value){
+      highlighted.forEach((key, value){
         obj.add(value);
       });
 

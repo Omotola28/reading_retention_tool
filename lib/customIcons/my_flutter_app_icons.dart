@@ -11,27 +11,6 @@
 ///      fonts:
 ///       - asset: fonts/MyFlutterApp.ttf
 ///
-/// 
-/// * Linecons, Copyright (C) 2013 by Designmodo
-///         Author:    Designmodo for Smashing Magazine
-///         License:   CC BY ()
-///         Homepage:  http://designmodo.com/linecons-free/
-/// * Material Design Icons, Copyright (C) Google, Inc
-///         Author:    Google
-///         License:   Apache 2.0 (https://www.apache.org/licenses/LICENSE-2.0)
-///         Homepage:  https://design.google.com/icons/
-/// * Entypo, Copyright (C) 2012 by Daniel Bruce
-///         Author:    Daniel Bruce
-///         License:   SIL (http://scripts.sil.org/OFL)
-///         Homepage:  http://www.entypo.com
-/// * Linearicons Free, Copyright (C) Linearicons.com
-///         Author:    Perxis
-///         License:   CC BY-SA 4.0 (https://creativecommons.org/licenses/by-sa/4.0/)
-///         Homepage:  https://linearicons.com
-/// * MFG Labs, Copyright (C) 2012 by Daniel Bruce
-///         Author:    MFG Labs
-///         License:   SIL (http://scripts.sil.org/OFL)
-///         Homepage:  http://www.mfglabs.com/
 ///
 import 'package:flutter/widgets.dart';
 
@@ -48,5 +27,5 @@ class CustomIcons {
   static const IconData trash = const IconData(0xe811, fontFamily: _kFontFam);
   static const IconData book = const IconData(0xe828, fontFamily: _kFontFam);
   static const IconData down_open = const IconData(0xf004, fontFamily: _kFontFam);
-  static const IconData arrow_back = const IconData(0xf004, fontFamily: _kFontFam);
+  static const IconData circle = const IconData(0xf111, fontFamily: _kFontFam);
 }

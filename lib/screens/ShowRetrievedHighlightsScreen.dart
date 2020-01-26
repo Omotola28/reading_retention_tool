@@ -46,16 +46,7 @@ class _ShowRetrievedHightlightsScreenState
 
   @override
   Widget build(BuildContext context) {
-    /*_highlightObject =
-        jsonDecode(Provider
-            .of<AppData>(context)
-            .highlights
-            .data['highlights']);
-    print('This is ${_highlightObject.runtimeType.toString()}');
 
-
-    _highlightObject.forEach((k,v) => obj.add(v));
-*/
     return Scaffold(
       appBar: AppBar(
         leading: FlatButton(
@@ -64,11 +55,11 @@ class _ShowRetrievedHightlightsScreenState
                 color: kDarkColorBlack,
             ),
             onPressed: () {
-              _store.collection("users")
+           _store.collection("users")
                   .document(Provider.of<AppData>(context).uid)
                   .collection("books")
                   .document(widget._fileName)
-                  .setData({"highlights": widget.obj});
+                  .setData({"highlights": widget.obj}, merge: true);
               Navigator.popAndPushNamed(context, HomeScreen.id);
             }
 
@@ -108,7 +99,7 @@ class _ShowRetrievedHightlightsScreenState
                 children: <Widget>[
                   ListTile(
                     contentPadding: EdgeInsets.all(20.0),
-                    subtitle: Text(widget.obj[index].replaceAll(new RegExp(r' - '), '')),
+                    subtitle: Text(widget.obj[index]['highlight'].replaceAll(new RegExp(r' - '), '')),
                     trailing: GestureDetector(
                         child: Icon(
                             CustomIcons.down_open,
@@ -116,7 +107,7 @@ class _ShowRetrievedHightlightsScreenState
                         ),
                       onTap: (){
                             showHighlightDialog(
-                                context, widget.obj[index].replaceAll(new RegExp(r' - '), ''), index)
+                                context, widget.obj[index]['highlight'].replaceAll(new RegExp(r' - '), ''), index)
                                 .then((val){
                               switch (Provider.of<AppData>(context).whatActionButton) {
                                 case 'Save':

@@ -43,17 +43,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   }
 
-  /*void getUserBooks() async {
-    final books = await _store.collection('users')
-                        .document(Provider.of<AppData>(context).uid)
-                        .collection('books').getDocuments();
-
-    for( var book in books.documents )
-    {
-        print(book.documentID);
-    }
-  }*/
-
   void getStreamBookIds() async{
     final books = await _store.collection('users')
         .document(Provider.of<AppData>(context).uid)

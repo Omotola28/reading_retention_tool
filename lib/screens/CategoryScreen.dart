@@ -9,6 +9,7 @@ import 'package:reading_retention_tool/module/app_data.dart';
 class CategoryScreen extends StatefulWidget {
   static String id = 'category_screen';
 
+
   @override
   _CategoryScreenState createState() => _CategoryScreenState();
 }
@@ -16,6 +17,7 @@ class CategoryScreen extends StatefulWidget {
 class _CategoryScreenState extends State<CategoryScreen> {
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         leading: FlatButton(
@@ -90,6 +92,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
   }
 }
 
+/*
 showCategoryDialog(BuildContext context) {
   //final _highlightController = TextEditingController(text: highlight);
 
@@ -132,10 +135,13 @@ showCategoryDialog(BuildContext context) {
               ),
               onPressed: () {
                 Navigator.of(context).pop(true);
-                /* ... */
+                */
+/* ... *//*
+
               },
             ),
           ],
         );
       });
 }
+*/

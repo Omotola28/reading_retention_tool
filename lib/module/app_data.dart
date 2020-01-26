@@ -15,6 +15,8 @@ class AppData extends ChangeNotifier{
   String mediumUsername;
   String selectedCat;
   Color selectedCol;
+  int categoryIndex;
+  List bookSpecificHighlights = [];
 
   List<Category> categories = [
     Category(categoryName: 'Self Help', defaultColor: Colors.blueAccent),
@@ -80,4 +82,26 @@ class AppData extends ChangeNotifier{
     selectedCol = color;
     notifyListeners();
   }
+
+  void setCategoryIndex(String index){
+     categoryIndex = int.parse(index);
+     notifyListeners();
+  }
+
+
+///The function would help store list object that can be manipulated and saved in database
+
+void setBookSpecificHighlightObj(List obj){
+    bookSpecificHighlights = obj;
+    notifyListeners();
+
+}
+
+///Delete category screen off the book specific category screen
+void deleteBookSpecificHighlight(Object value){
+    bookSpecificHighlights.remove(value);
+
+    notifyListeners();
+}
+
 }

@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:reading_retention_tool/constants/constants.dart';
@@ -8,9 +6,11 @@ import 'package:reading_retention_tool/module/app_data.dart';
 import 'package:reading_retention_tool/screens/CategoryScreen.dart';
 import 'package:reading_retention_tool/screens/UserBooksListScreen.dart';
 import 'package:reading_retention_tool/customIcons/my_flutter_app_icons.dart';
+import 'package:reading_retention_tool/utils/color_utility.dart';
 
 class BookSpecificHighlightScreen extends StatefulWidget {
   final String bookId;
+
 
   BookSpecificHighlightScreen(this.bookId);
 
@@ -24,6 +24,9 @@ class BookSpecificHighlightScreen extends StatefulWidget {
 class _BookSpecificHighlightScreenState
     extends State<BookSpecificHighlightScreen> {
   final _store = Firestore.instance;
+  var highlights = [];
+
+
 
   static const _menuItems = <String>[
     'Share',
@@ -41,7 +44,6 @@ class _BookSpecificHighlightScreenState
 
   ).toList();
 
-  final GlobalKey _menuKey = new GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -98,10 +100,10 @@ class _BookSpecificHighlightScreenState
                       child: CircularProgressIndicator(),
                     );
                   } else {
-                    final highlights = snapshot.data['highlights'];
+                    highlights = snapshot.data['highlights'];
 
                     for (var highly in highlights) {
-                      //print(highly);
+
                       final highlightWidget =
                         Padding(
                             padding: EdgeInsets.all(10.0),
@@ -112,16 +114,27 @@ class _BookSpecificHighlightScreenState
                                 mainAxisSize: MainAxisSize.min,
                                 children: <Widget>[
                                   ListTile(
+                                    //contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 20.0, 0.0),
                                     contentPadding: EdgeInsets.all(20.0),
                                     subtitle: Text(
-                                        highly.replaceAll(new RegExp(r' - '), ''),
+                                        highly['highlight'].replaceAll(new RegExp(r' - '), ''),
                                         style: TextStyle(color: kDarkColorBlack),
                                     ),
-                                    leading: Icon(CustomIcons.circle, size: 10.0, color: Colors.blueAccent,),
+
+
+                                    leading: Icon(CustomIcons.circle, size: 10.0, color: HexColor(highly['color']),),
                                     trailing: PopupMenuButton(
-                                        onSelected: (selectedDropDownItem) => handlePopUpMenuAction(selectedDropDownItem, context),
+                                        onSelected: (selectedDropDownItem) =>
+                                            handlePopUpMenuAction(
+                                                selectedDropDownItem,
+                                                context,
+                                                highly['index'],
+                                                highlights,
+                                                widget.bookId
+                                            ),
                                         itemBuilder: (BuildContext context) => _pop
-                                    )
+                                    ),
+
                                   ),
                                 ],
                               ),
@@ -131,15 +144,6 @@ class _BookSpecificHighlightScreenState
                       widgetHighlights.add(highlightWidget);
                     }
 
-                    print(snapshot.data['highlights'].length);
-                    // Map<String, dynamic> listOfHighlights = jsonDecode(highlights);
-
-                    /* listOfHighlights.forEach((key, value){
-                                widgetHighlights.add(ListTile(
-                                    contentPadding: EdgeInsets.all(20.0),
-                                    subtitle: Text(value.replaceAll(new RegExp(r' - '), ''))
-                                ));
-                              });*/
 
                   }
                   return ListView.builder(
@@ -159,7 +163,18 @@ class _BookSpecificHighlightScreenState
 }
 
 /// When a [PopUpMenuItem] is selected, we perform the action here
-void handlePopUpMenuAction(String value, BuildContext context) {
+void handlePopUpMenuAction(String value, BuildContext context, String index, List highlyObj, String bookName) {
+
+  //Saving the data here so it can be easily manipulated and saved back in
+  //Firebase database store -----DONT KNOW ANY BETTER WAY TO DO THIS YET
+  Provider.of<AppData>(context).setBookSpecificHighlightObj(highlyObj);
+  Provider.of<AppData>(context).setBookName(bookName);
+  Provider.of<AppData>(context).setCategoryIndex(index);
+
+  var intIndex =   Provider.of<AppData>(context).categoryIndex;
+  var highlightObj =  Provider.of<AppData>(context).bookSpecificHighlights;
+  var highlight = highlightObj[intIndex - 1];
+
   switch (value) {
     case 'Share':
       {
@@ -177,6 +192,13 @@ void handlePopUpMenuAction(String value, BuildContext context) {
     case 'Delete':
       {
 
+        Provider.of<AppData>(context).deleteBookSpecificHighlight(highlight);
+
+        Firestore.instance.collection("users")
+            .document(Provider.of<AppData>(context).uid)
+            .collection("books")
+            .document(Provider.of<AppData>(context).bookName)
+            .updateData({"highlights": highlightObj});
 
       }
       break;
@@ -184,7 +206,8 @@ void handlePopUpMenuAction(String value, BuildContext context) {
     case 'Categorise':
       {
 
-        Navigator.popAndPushNamed(context, CategoryScreen.id);
+
+        Navigator.popAndPushNamed(context, CategoryScreen.id, );
 
       }
       break;

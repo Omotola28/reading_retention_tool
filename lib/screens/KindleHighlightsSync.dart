@@ -31,10 +31,13 @@ class _KindleHighlightsSync extends State<KindleHighlightsSync> {
   final _firestore = Firestore.instance;
   var _highlightObject;
   List obj = [];
+  StorageUploadTask task;
+  StorageReference firebaseStorageRef;
+
 
   TextEditingController _controller = new TextEditingController();
 
-  Future<Map> getHighlights() async{
+  Future<DocumentSnapshot> getHighlights() async{
 
       final highlights =
         await _firestore.collection("users")
@@ -42,24 +45,7 @@ class _KindleHighlightsSync extends State<KindleHighlightsSync> {
             .document(_fileName).get();
 
 
-      // Save data in a module provider function created to be accessed in the applications
-      //it requires
-      Provider.of<AppData>(context).setUploadedHighlights(highlights);
-
-      print(highlights.data['highlights'].runtimeType.toString());
-
-
-      Map<String, dynamic> highlighted = jsonDecode(highlights.data['highlights']);
-
-      highlighted.forEach((key, value){
-        obj.add(value);
-      });
-
-      //Set object for listbuilder to be accessed globally
-      Provider.of<AppData>(context).setHighlightListObject(obj);
-      Provider.of<AppData>(context).setBookName(_fileName);
-
-      Navigator.pushNamed(context, ShowRetrievedHightlightsScreen.id);
+      return highlights;
 
   }
 
@@ -67,6 +53,13 @@ class _KindleHighlightsSync extends State<KindleHighlightsSync> {
   void initState() {
     super.initState();
     _controller.addListener(() => _extension = _controller.text);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    task = null;
+    _path = null;
   }
 
   void _openFileExplorer() async {
@@ -185,17 +178,53 @@ class _KindleHighlightsSync extends State<KindleHighlightsSync> {
                         ),
                         //CUSTOM BUTTON FOR APP
                         ActionUserButton(color: Colors.white, title: 'Select File', onPressed: () => _openFileExplorer()),
-                        ActionUserButton(color: Colors.white, title: 'Upload File', onPressed: (){
-                          final StorageReference firebaseStorageRef =
-                                FirebaseStorage.instance.ref().child("${Provider.of<AppData>(context).uid}_${_fileName}");
-                          final StorageUploadTask task = firebaseStorageRef.putFile(File(_path));
+                        task != null ? Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: CircularProgressIndicator(),
+                        ) :
+                                      ActionUserButton(color: Colors.white, title: 'Upload File', onPressed: (){
+                                           _uploadStatus(File(_path));
 
-                          getHighlights();
-                          /*if(task.isSuccessful){
-                              print("here");
-                              getHighlights();
-                          }*/
+                                           task.events.listen((onData){
+                                             print(onData.type);
+                                             if(onData.type == StorageTaskEventType.success)
+
+                                               Future.delayed(const Duration(seconds: 5), () {
+
+                                                 getHighlights().then((highlights){
+
+                                                  // print(highlights.data);
+                                                  Provider.of<AppData>(context).setUploadedHighlights(
+                                                       highlights);
+
+
+                                                   Map<String, dynamic> highlighted = jsonDecode(
+                                                       highlights.data['highlights']);
+
+                                                   highlighted.forEach((key, value) {
+                                                     obj.add({
+                                                       'highlight' : value,
+                                                       'category' : 'uncategorised',
+                                                       'color' : '#808080',
+                                                       'index' : key
+                                                     });
+                                                   });
+
+                                                   //print(obj);
+                                                    //Set object for listbuilder to be accessed globally
+                                                   Provider.of<AppData>(context).setHighlightListObject(
+                                                       obj);
+                                                   Provider.of<AppData>(context).setBookName(_fileName);
+                                                 });
+
+                                                // print(task);
+                                                 Navigator.pushNamed(
+                                                     context, ShowRetrievedHightlightsScreen.id);
+                                               });
+
+                                           });
                         }),
+
                       ],
                     ),
                   ),
@@ -203,6 +232,51 @@ class _KindleHighlightsSync extends State<KindleHighlightsSync> {
           ),
         ),
       );
+  }
+
+  String _bytesTransferred(StorageTaskSnapshot snapshot) {
+    double res = snapshot.bytesTransferred / 1024.0;
+    double res2 = snapshot.totalByteCount / 1024.0;
+    return '${res.truncate().toString()}/${res2.truncate().toString()}';
+  }
+
+
+  Widget _uploadStatus(File file) {
+
+    setState(() {
+      firebaseStorageRef = FirebaseStorage.instance.ref().child("${Provider.of<AppData>(context).uid}_${_fileName}");
+      task = firebaseStorageRef.putFile(file);
+    });
+
+
+
+    return StreamBuilder(
+      stream: task.events,
+      builder: (BuildContext context, snapshot) {
+        Widget subtitle;
+        if (snapshot.hasData) {
+          final StorageTaskEvent event = snapshot.data;
+          final StorageTaskSnapshot snap = event.snapshot;
+          subtitle = Text('${_bytesTransferred(snap)} KB sent', style: TextStyle(color: kDarkColorBlack),);
+        } else {
+          subtitle = const Text('Starting...');
+        }
+
+        return ListTile(
+            title: task.isComplete && task.isSuccessful
+                ? Text(
+              'Done',
+              style: TextStyle(color: kDarkColorBlack),
+            )
+                : Text(
+              'Uploading',
+              style: TextStyle(color: kDarkColorBlack),
+            ),
+            subtitle: subtitle,
+          );
+
+      },
+    );
   }
 }
 

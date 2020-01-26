@@ -13,26 +13,14 @@ class _AddCategoryWidgetState extends State<AddCategoryWidget> {
 
   String colCat;
   String newCategory;
-/*  bool _colPink = false;
-  bool _colYellow = false;
-  bool _colGreen = false;
-  bool _colPurple = false;
-  bool _colGrey = false;
-  bool _colCyan = false;
-  bool _colDeepOrange = false;
-  bool _amber = false;
-  bool _colLightGreen = false;
-  bool _colLime = false;
-  bool _colBlueAccent = false;
-  bool _colBrown = false;
-  bool _colDeepPurpleAccent = false;*/
+
 
   Map<String, bool> checkVals = {
     '#ff0000' : false,
     '#ec8c9d' : false,
     '#ffdb00' : false,
     '#008000' : false,
-    '#800080' : false,
+   // '#800080' : false,  //grey
     '#808080' : false,
     '#00ffff' : false,
     '#ffa500' : false,
@@ -169,9 +157,6 @@ class _AddCategoryWidgetState extends State<AddCategoryWidget> {
         }
       });
 
-
-      // Clear array after use.
-     // holder_1.clear();
     }
 
 

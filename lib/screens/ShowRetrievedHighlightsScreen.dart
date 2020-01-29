@@ -112,7 +112,7 @@ class _ShowRetrievedHightlightsScreenState
                               switch (Provider.of<AppData>(context).whatActionButton) {
                                 case 'Save':
                                   {
-                                    widget.obj[index] = Provider.of<AppData>(context).savedString;
+                                    widget.obj[index]['highlight'] = Provider.of<AppData>(context).savedString;
                                   }
                                   break;
 

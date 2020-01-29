@@ -176,7 +176,7 @@ Future<bool> showMediumDialog(BuildContext context){
                     });
 
                     print(resp.data);
-                    Navigator.popAndPushNamed(context, MediumHighlightsScreen.id);
+                   // Navigator.popAndPushNamed(context, MediumHighlightsScreen.id);
 
                },
           ),

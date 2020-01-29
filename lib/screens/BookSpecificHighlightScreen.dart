@@ -7,6 +7,8 @@ import 'package:reading_retention_tool/screens/CategoryScreen.dart';
 import 'package:reading_retention_tool/screens/UserBooksListScreen.dart';
 import 'package:reading_retention_tool/customIcons/my_flutter_app_icons.dart';
 import 'package:reading_retention_tool/utils/color_utility.dart';
+import 'package:share/share.dart';
+
 
 class BookSpecificHighlightScreen extends StatefulWidget {
   final String bookId;
@@ -58,9 +60,10 @@ class _BookSpecificHighlightScreenState
               Navigator.popAndPushNamed(context, UserBooksListScreen.id);
             }),
         title: Text(
-          'Book List',
+          'Manage Highlights',
           style: TextStyle(
             color: kDarkSocialBtnColor,
+            fontSize: 18.0
           ),
         ),
         brightness: Brightness.light,
@@ -102,8 +105,10 @@ class _BookSpecificHighlightScreenState
                   } else {
                     highlights = snapshot.data['highlights'];
 
-                    for (var highly in highlights) {
+                    //highlights.forEach(f);
 
+                  for (var index = 0; index < highlights.length; index++) {
+                      
                       final highlightWidget =
                         Padding(
                             padding: EdgeInsets.all(10.0),
@@ -117,18 +122,18 @@ class _BookSpecificHighlightScreenState
                                     //contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 20.0, 0.0),
                                     contentPadding: EdgeInsets.all(20.0),
                                     subtitle: Text(
-                                        highly['highlight'].replaceAll(new RegExp(r' - '), ''),
+                                        highlights[index]['highlight'].replaceAll(new RegExp(r' - '), ''),
                                         style: TextStyle(color: kDarkColorBlack),
                                     ),
 
 
-                                    leading: Icon(CustomIcons.circle, size: 10.0, color: HexColor(highly['color']),),
+                                    leading: Icon(CustomIcons.circle, size: 10.0, color: HexColor(highlights[index]['color']),),
                                     trailing: PopupMenuButton(
                                         onSelected: (selectedDropDownItem) =>
                                             handlePopUpMenuAction(
                                                 selectedDropDownItem,
                                                 context,
-                                                highly['index'],
+                                                index,
                                                 highlights,
                                                 widget.bookId
                                             ),
@@ -163,7 +168,7 @@ class _BookSpecificHighlightScreenState
 }
 
 /// When a [PopUpMenuItem] is selected, we perform the action here
-void handlePopUpMenuAction(String value, BuildContext context, String index, List highlyObj, String bookName) {
+void handlePopUpMenuAction(String value, BuildContext context, int index, List highlyObj, String bookName) {
 
   //Saving the data here so it can be easily manipulated and saved back in
   //Firebase database store -----DONT KNOW ANY BETTER WAY TO DO THIS YET
@@ -172,33 +177,72 @@ void handlePopUpMenuAction(String value, BuildContext context, String index, Lis
   Provider.of<AppData>(context).setCategoryIndex(index);
 
   var intIndex =   Provider.of<AppData>(context).categoryIndex;
-  var highlightObj =  Provider.of<AppData>(context).bookSpecificHighlights;
-  var highlight = highlightObj[intIndex - 1];
+
+  //Had to create a list of type List<dynamic inorder to enable it get deleted from firebase>
+  var highlight = [];
+  highlight.add(highlyObj[intIndex]);
+
+  //TODO: Work on only saving data that is edited and not the whole array again.
 
   switch (value) {
     case 'Share':
       {
-
+        share(context, highlyObj[intIndex]['highlight'].replaceAll(RegExp(r'-\s[A-Za-z]+\s\d+'), ''));
       }
       break;
 
     case 'Edit':
       {
-        //statements;
-        print('');
+        editHighlightDialog(
+            context, highlyObj[index]['highlight'].replaceAll(new RegExp(r' - '), ''), index)
+            .then((val){
+          switch (Provider.of<AppData>(context).whatActionButton) {
+            case 'Save':
+              {
+                highlyObj[index]['highlight'] = Provider.of<AppData>(context).savedString;
+                Firestore.instance.collection("users")
+                    .document(Provider.of<AppData>(context).uid)
+                    .collection("books")
+                    .document(Provider.of<AppData>(context).bookName)
+                    .updateData({"highlights": highlyObj});
+              }
+              break;
+
+            case 'Favourite':
+              {
+
+              }
+              break;
+
+            case 'Delete':
+              {
+               /* widget.obj.removeAt(index);
+                widget.obj.length = widget.obj.length - 1;*/
+
+              }
+              break;
+
+            default:
+              {
+                //statements;
+              }
+              break;
+          }
+
+          print(val);
+        });
       }
       break;
 
     case 'Delete':
       {
 
-        Provider.of<AppData>(context).deleteBookSpecificHighlight(highlight);
-
-        Firestore.instance.collection("users")
+      Provider.of<AppData>(context).reduceNoOfHighlights(1);
+      Firestore.instance.collection("users")
             .document(Provider.of<AppData>(context).uid)
             .collection("books")
             .document(Provider.of<AppData>(context).bookName)
-            .updateData({"highlights": highlightObj});
+            .updateData({'highlights' : FieldValue.arrayRemove(highlight)});
 
       }
       break;
@@ -221,14 +265,59 @@ void handlePopUpMenuAction(String value, BuildContext context, String index, Lis
 
   print(value);
 }
-/*
 
-GestureDetector(
-child: Icon(
-CustomIcons.down_open,
-color: kHighlightColorDarkGrey,
-),
-onTap: () {
 
-},
-),*/
+Future<bool> editHighlightDialog(BuildContext context, String highlight, int index){
+
+  final _highlightController = TextEditingController(text: highlight);
+  //TODO: Inorder to update the list for the index when a tile is deleted we have to use set state
+  return showDialog(context: context,
+      builder: (BuildContext context){
+        return AlertDialog(
+          content: TextFormField(
+
+              decoration: InputDecoration(
+                border: InputBorder.none,
+              ),
+              maxLines: null,
+              controller: _highlightController,
+              //showing save button for all the tiles
+              onTap: () {
+                //something(obj[index].replaceAll(new RegExp(r' - '), ''));
+              }),
+          actions: <Widget>[
+            FlatButton(
+              child: Icon(
+                CustomIcons.check,
+                color: kHighlightColorDarkGrey,
+              ),
+              onPressed: () {
+                Provider.of<AppData>(context).setWhatActionButton('Save');
+                Provider.of<AppData>(context).setSavedHighlight(_highlightController.text);
+
+                Navigator.of(context).pop(true);
+                //print(_highlightController.text);
+              },
+            ),
+            FlatButton(
+              child: Icon(
+                CustomIcons.heart,
+                color: kHighlightColorDarkGrey,
+              ),
+              onPressed: () {
+                Provider.of<AppData>(context).setWhatActionButton('Favourite');
+                Navigator.of(context).pop(true);
+                /* ... */
+              },
+            ),
+          ],
+        );
+      }
+  );
+
+}
+
+void share(BuildContext context, String highlightString){
+
+  Share.share(highlightString, subject: 'Highlight from HighlightMyQuotes');
+}

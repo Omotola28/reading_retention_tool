@@ -4,6 +4,7 @@ import 'package:reading_retention_tool/module/app_data.dart';
 import 'package:reading_retention_tool/customIcons/my_flutter_app_icons.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:reading_retention_tool/screens/HomeScreen.dart';
+import 'dart:convert';
 
 
 class CategoryTile extends StatefulWidget {
@@ -25,6 +26,7 @@ class _CategoryTileState extends State<CategoryTile> {
   Widget build(BuildContext context) {
     var highlightObj = Provider.of<AppData>(context).bookSpecificHighlights;
     var index = Provider.of<AppData>(context).categoryIndex;
+    List categorised = [];
 
     return ListTile(
        leading:  Padding(
@@ -40,14 +42,15 @@ class _CategoryTileState extends State<CategoryTile> {
       onTap: (){
 
        String colorString = widget.categoryColor.toString(); //Gets the Colour Obj as a string
-       String colorHex = colorString.split('(0x')[1].split(')')[0];
+       String colorHex = colorString.split('(0xff')[1].split(')')[0];
 
 
-       highlightObj[index-1]['category'] = widget.categoryTitle;
-       highlightObj[index-1]['color'] = '#'+colorHex;
+       highlightObj[index]['category'] = widget.categoryTitle;
+       highlightObj[index]['color'] = '#'+colorHex;
 
       // print(Provider.of<AppData>(context).bookName);
 
+      //Saving the whole obj back to firebase datastore after adding category.
        _store.collection("users")
            .document(Provider.of<AppData>(context).uid)
            .collection("books")

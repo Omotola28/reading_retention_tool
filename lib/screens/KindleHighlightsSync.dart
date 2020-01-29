@@ -189,7 +189,7 @@ class _KindleHighlightsSync extends State<KindleHighlightsSync> {
                                              print(onData.type);
                                              if(onData.type == StorageTaskEventType.success)
 
-                                               Future.delayed(const Duration(seconds: 5), () {
+                                               Future.delayed(const Duration(seconds: 10), () {
 
                                                  getHighlights().then((highlights){
 
@@ -206,7 +206,6 @@ class _KindleHighlightsSync extends State<KindleHighlightsSync> {
                                                        'highlight' : value,
                                                        'category' : 'uncategorised',
                                                        'color' : '#808080',
-                                                       'index' : key
                                                      });
                                                    });
 
@@ -214,6 +213,7 @@ class _KindleHighlightsSync extends State<KindleHighlightsSync> {
                                                     //Set object for listbuilder to be accessed globally
                                                    Provider.of<AppData>(context).setHighlightListObject(
                                                        obj);
+                                                   Provider.of<AppData>(context).setNoOfHighlightsPerUser(obj.length);
                                                    Provider.of<AppData>(context).setBookName(_fileName);
                                                  });
 

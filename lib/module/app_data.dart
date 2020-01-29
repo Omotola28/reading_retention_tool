@@ -16,11 +16,10 @@ class AppData extends ChangeNotifier{
   String selectedCat;
   Color selectedCol;
   int categoryIndex;
-  List bookSpecificHighlights = [];
+  List bookSpecificHighlights = new List();
+  int noOfHighlights = 0;
 
-  List<Category> categories = [
-    Category(categoryName: 'Self Help', defaultColor: Colors.blueAccent),
-  ];
+  List<Category> categories = [];
 
   void setCurrentUserEmail (String currentEmail){
       email = currentEmail;
@@ -83,8 +82,8 @@ class AppData extends ChangeNotifier{
     notifyListeners();
   }
 
-  void setCategoryIndex(String index){
-     categoryIndex = int.parse(index);
+  void setCategoryIndex(int index){
+     categoryIndex = index;
      notifyListeners();
   }
 
@@ -103,5 +102,21 @@ void deleteBookSpecificHighlight(Object value){
 
     notifyListeners();
 }
+
+///Number of highlights for each user
+void setNoOfHighlightsPerUser(int number){
+    noOfHighlights += number;
+    notifyListeners();
+}
+
+void reduceNoOfHighlights(int number){
+    noOfHighlights -= number;
+    notifyListeners();
+}
+
+
+
+
+
 
 }

@@ -5,6 +5,8 @@ import 'package:reading_retention_tool/screens/HomeScreen.dart';
 import 'package:reading_retention_tool/custom_widgets/AddCategoryWidget.dart';
 import 'package:provider/provider.dart';
 import 'package:reading_retention_tool/module/app_data.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:reading_retention_tool/utils/color_utility.dart';
 
 class CategoryScreen extends StatefulWidget {
   static String id = 'category_screen';
@@ -29,9 +31,10 @@ class _CategoryScreenState extends State<CategoryScreen> {
               Navigator.popAndPushNamed(context, HomeScreen.id);
             }),
         title: Text(
-          'Book List',
+          'Categorise Highlight',
           style: TextStyle(
             color: kDarkSocialBtnColor,
+            fontSize: 18.0,
           ),
         ),
         brightness: Brightness.light,
@@ -59,18 +62,36 @@ class _CategoryScreenState extends State<CategoryScreen> {
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               Expanded(
-                child: ListView.builder(
-                    itemBuilder: (context, index) {
-                      return CategoryTile(
-                          categoryTitle: Provider.of<AppData>(context)
-                              .categories[index]
-                              .categoryName,
-                          categoryColor: Provider.of<AppData>(context)
-                              .categories[index]
-                              .defaultColor);
-                    },
-                    itemCount: Provider.of<AppData>(context).categories.length,
-                  ),
+                child: StreamBuilder<QuerySnapshot>(
+                    stream: Firestore.instance.collection('users')
+                        .document(Provider.of<AppData>(context).uid)
+                        .collection('categories').snapshots(),
+                    builder: (context, snapshot){
+                      List<ListTile> categoryList = [];
+                      if(snapshot.hasData){
+
+
+                        return ListView.builder(
+                          itemBuilder: (context, index) {
+
+                            //return Text(snapshot.data.documents[index].documentID.split('#')[0]);
+                            return CategoryTile(
+                                categoryTitle: snapshot.data.documents[index].documentID.split('#')[0],
+                                categoryColor: HexColor(snapshot.data.documents[index].documentID.split('#')[1]));
+                          },
+                          itemCount: snapshot.data.documents.length,
+                        );
+
+                      }
+                      else{
+
+                        return Text('Start adding data', style: TextStyle(color: Colors.black));
+                      }
+
+
+                    }
+
+                ),
               ),
               FlatButton.icon(
                 color: Colors.white,
@@ -92,56 +113,3 @@ class _CategoryScreenState extends State<CategoryScreen> {
   }
 }
 
-/*
-showCategoryDialog(BuildContext context) {
-  //final _highlightController = TextEditingController(text: highlight);
-
-  return showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text("Add Category"),
-          content: TextFormField(
-              cursorColor: kPrimaryColor,
-              decoration: InputDecoration(
-                enabledBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: kPrimaryColor, width: 2.0)),
-                focusedBorder: UnderlineInputBorder(
-                    borderSide: BorderSide(color: kPrimaryColor, width: 3.0)),
-              ),
-              maxLines: null,
-              //controller: _highlightController,
-              //showing save button for all the tiles
-              onTap: () {
-                //something(obj[index].replaceAll(new RegExp(r' - '), ''));
-              }),
-          actions: <Widget>[
-            FlatButton(
-              padding: EdgeInsets.all(10.0),
-              child: Text(
-                'Done',
-                style: TextStyle(fontSize: 15.0, color: kDarkColorBlack),
-              ),
-              onPressed: () {
-                Navigator.of(context).pop(true);
-                //print(_highlightController.text);
-              },
-            ),
-            FlatButton(
-              padding: EdgeInsets.all(10.0),
-              child: Text(
-                'Cancel',
-                style: TextStyle(color: Colors.red),
-              ),
-              onPressed: () {
-                Navigator.of(context).pop(true);
-                */
-/* ... *//*
-
-              },
-            ),
-          ],
-        );
-      });
-}
-*/

@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:reading_retention_tool/constants/constants.dart';
 import 'package:reading_retention_tool/module/app_data.dart';
 import 'package:reading_retention_tool/utils/color_utility.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AddCategoryWidget extends StatefulWidget {
   @override
@@ -106,6 +107,12 @@ class _AddCategoryWidgetState extends State<AddCategoryWidget> {
                           ),
                           onPressed: () {
                               Provider.of<AppData>(context).addCategory( newCategory, colCat);
+                              Firestore.instance.collection("users")
+                                  .document(Provider.of<AppData>(context).uid)
+                                  .collection("categories")
+                                  .document(newCategory+colCat)
+                                  .setData({});
+
                               Navigator.pop(context);
                           },
                         ),
@@ -158,8 +165,6 @@ class _AddCategoryWidgetState extends State<AddCategoryWidget> {
       });
 
     }
-
-
 
     return Padding(
       padding: const EdgeInsets.all(10.0),

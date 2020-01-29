@@ -28,7 +28,8 @@ class _HomeScreenState extends State<HomeScreen> {
   final _auth = UserAuth.auth;
   var userEmail;
   var uid;
-
+  bool expandFlag = false;
+  var cat = [];
 
   @override
   void initState() {
@@ -48,12 +49,38 @@ class _HomeScreenState extends State<HomeScreen> {
         .document(Provider.of<AppData>(context).uid)
         .collection('books').snapshots();
 
-    await for (var snapshot in books){
+   /* await for (var snapshot in books){
       for (var bookid in snapshot.documents)
       {
          print(bookid.documentID);
       }
-    }
+    }*/
+  }
+
+  void getNoOfHighlightsInCat()  {
+   /* final categorised = await _store.collection('users')
+        .document(Provider.of<AppData>(context).uid)
+        .collection('books').where("category", isEqualTo: "friendship",)
+        .getDocuments();*/
+
+    final dhf = Firestore.instance.collection('users').document(Provider.of<AppData>(context).uid)
+        .collection('books').getDocuments();
+
+    dhf.then((val){
+      for(var r in val.documents){
+        for(int i = 0; i < r.data.length; i++){
+          print(r.data[i]);
+        }
+      }
+    });
+
+
+   // print(categorised.documents.length);
+        /*categorised.then((results){
+          for(int i = 0; i < results.documents.length; i++){
+            print("We are here ${results.documents[i].data}");
+          }
+    });*/
   }
 
 
@@ -152,6 +179,75 @@ class _HomeScreenState extends State<HomeScreen> {
                       color: kHighlightColorGrey,
                     ),
                     ListTile(
+                      title: Text('Categories'),
+                      onTap: () {
+                        setState(() {
+                          expandFlag = !expandFlag;
+                        });
+
+                      },
+                      trailing: expandFlag ? Icon(CustomIcons.tag , color: kPrimaryColor,) : Icon(CustomIcons.tag),
+                    ),
+                    ExpandableContainer(
+                      expanded: expandFlag,
+                      child: Column(
+                        children: <Widget>[
+                          Expanded(
+                              child: StreamBuilder<QuerySnapshot>(
+                                  stream: Firestore.instance.collection('users')
+                                      .document(Provider.of<AppData>(context).uid)
+                                      .collection('categories').snapshots(),
+                                  builder: (context, snapshot){
+                                    if(snapshot.hasData){
+                                      return ListView.builder(
+                                        itemBuilder: (context, index) {
+
+                                          return Container(
+                                              decoration: BoxDecoration(border: new Border.all(
+                                                  width:0.5, color: Colors.grey),
+                                                  color: kLightYellowBG),
+                                              child: ListTile(
+                                                contentPadding: EdgeInsets.fromLTRB(30.0, 0, 0, 0),
+                                                title: Text(
+                                                  snapshot.data.documents[index].documentID.split('#')[0],
+                                                  style: TextStyle(
+                                                      fontWeight: FontWeight.bold,
+                                                      color: kDarkColorBlack),
+                                                ),
+                                              )
+                                          );
+                                        },
+                                        itemCount: snapshot.data.documents.length,
+                                      );
+
+                                    }
+                                    else{
+                                      return Text('No categories yet', style: TextStyle(color: Colors.black));
+                                    }
+                                  }
+                              )
+                          ),
+                          Expanded(
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: FlatButton.icon(
+                                  padding: EdgeInsets.fromLTRB(30.0, 0.0, 0.0, 0.0),
+                                  color: kLightYellowBG,
+                                  icon: Icon(Icons.border_color, size: 15.0,), //`Icon` to display
+                                  label: Text('Manage Category' ), //`Text` to display
+                                  onPressed: () {
+                                       getNoOfHighlightsInCat();
+                                  },
+                                ),
+                              ),
+                          ),
+                        ],
+                      )
+
+
+                    ),
+
+                    ListTile(
                       title: Text('Medium Articles'),
                       onTap: () {
                         // Update the state of the app
@@ -178,19 +274,6 @@ class _HomeScreenState extends State<HomeScreen> {
                       color: kHighlightColorGrey,
                     ),
                     ListTile(
-                      title: Text('Categories'),
-                      onTap: () {
-                        // Update the state of the app
-                        // ...
-                        // Then close the drawer
-                        Navigator.pop(context);
-                      },
-                      trailing: Icon(CustomIcons.tag),
-                    ),
-                    Divider(
-                      color: kHighlightColorGrey,
-                    ),
-                    ListTile(
                       title: Text('Favourites'),
                       onTap: () {
                         // Update the state of the app
@@ -199,6 +282,9 @@ class _HomeScreenState extends State<HomeScreen> {
                         Navigator.pop(context);
                       },
                       trailing: Icon(CustomIcons.favorite),
+                    ),
+                    Divider(
+                      color: kHighlightColorGrey,
                     ),
                   ],
                 ),
@@ -231,7 +317,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         style: kHeadingTextStyleDecoration.copyWith(fontSize: 25.0),
                       ),
                       Text(
-                        "20 out of 2000 highlights",
+                        Provider.of<AppData>(context).noOfHighlights.toString() + ' Highlights Added',
                         style: kTrailingTextStyleDecoration,
                       ),
                     ],
@@ -279,5 +365,36 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 }
+
+class ExpandableContainer extends StatelessWidget {
+  final bool expanded;
+  final double collapsedHeight;
+  final double expandedHeight;
+  final Widget child;
+
+  ExpandableContainer({
+    @required this.child,
+    this.collapsedHeight = 0.0,
+    this.expandedHeight = 300.0,
+    this.expanded = true,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    return AnimatedContainer(
+      duration: Duration(milliseconds: 500),
+      curve: Curves.easeInOut,
+      width: screenWidth,
+      height: expanded ? expandedHeight : collapsedHeight,
+      child: Container(
+        child: child,
+        decoration: BoxDecoration(border: Border.all(width: 0.2, color: kHighlightColorGrey)),
+      ),
+    );
+  }
+}
+
+
 
 

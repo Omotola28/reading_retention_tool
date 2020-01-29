@@ -69,18 +69,6 @@ class _UserBooksListScreenState extends State<UserBooksListScreen> {
                       if(snapshot.hasData){
 
 
-                        /*final books = snapshot.data.documents;
-
-                        for( var book in books )
-                        {
-                          final bookId = book.documentID;
-                          final textWidget =  ListTile(title: Text(bookId.split('.')[0]));
-                          bookList.add(textWidget);
-
-                        }
-                        print(bookList.length);*/
-
-
                         return ListView.builder(
                               itemCount: snapshot.data.documents.length,
                               itemBuilder: (context, index) {

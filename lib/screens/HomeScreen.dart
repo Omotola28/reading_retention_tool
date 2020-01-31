@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:reading_retention_tool/constants/constants.dart';
 import 'package:reading_retention_tool/module/auth.dart';
+import 'package:reading_retention_tool/screens/CategoryHighlightsScreen.dart';
 import 'package:reading_retention_tool/screens/GetStartedScreen.dart';
 import 'package:reading_retention_tool/custom_widgets/ServiceSync.dart';
 import 'package:reading_retention_tool/screens/KindleHighlightsSync.dart';
@@ -29,7 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
   var userEmail;
   var uid;
   bool expandFlag = false;
-  var cat = [];
+  List<dynamic> cat = [];
 
   @override
   void initState() {
@@ -40,7 +41,12 @@ class _HomeScreenState extends State<HomeScreen> {
       Provider.of<AppData>(context).setCurrentUid(val.uid);
         //userEmail = val.email;
     });
-   // userEmail = Provider.of<Data>(context).email;
+
+    Future.delayed(Duration.zero, () async {
+      final appData = Provider.of<AppData>(context);
+      await appData.init();
+    });
+
 
   }
 
@@ -57,31 +63,29 @@ class _HomeScreenState extends State<HomeScreen> {
     }*/
   }
 
-  void getNoOfHighlightsInCat()  {
-   /* final categorised = await _store.collection('users')
-        .document(Provider.of<AppData>(context).uid)
-        .collection('books').where("category", isEqualTo: "friendship",)
-        .getDocuments();*/
+/*void getNoOfHighlightsInCat()  async {
 
-    final dhf = Firestore.instance.collection('users').document(Provider.of<AppData>(context).uid)
-        .collection('books').getDocuments();
+    final snapshots = Firestore.instance.collection('users').document(Provider.of<AppData>(context).uid)
+        .collection('books').snapshots();
 
-    dhf.then((val){
-      for(var r in val.documents){
-        for(int i = 0; i < r.data.length; i++){
-          print(r.data[i]);
-        }
+      await for(var snapshot in snapshots ){
+         for( var snaps in snapshot.documents){
+           for(var i = 0; i < snaps.data['highlights'].length; i++){
+              if(snaps.data['highlights'][i]['category'] == 'Love'){
+                  cat.add(snaps.data['highlights'][i]);
+
+               // print(snaps.data['highlights'][i]);
+                //print(snaps.data['highlights'][i]);
+              }
+           }
+         }
       }
-    });
 
 
-   // print(categorised.documents.length);
-        /*categorised.then((results){
-          for(int i = 0; i < results.documents.length; i++){
-            print("We are here ${results.documents[i].data}");
-          }
-    });*/
-  }
+
+
+      //print('NOT SURE WHY NOT PRINIT ${cat}');
+  }*/
 
 
   @override
@@ -214,6 +218,15 @@ class _HomeScreenState extends State<HomeScreen> {
                                                       fontWeight: FontWeight.bold,
                                                       color: kDarkColorBlack),
                                                 ),
+                                                onTap: (){
+                                                  Navigator.of(context).pop();
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(builder: (context)
+                                                            => CategoryHighlightsScreen(snapshot.data.documents[index].documentID.split('#')[0])
+                                                    ),
+                                                  );
+                                                },
                                               )
                                           );
                                         },
@@ -236,7 +249,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                   icon: Icon(Icons.border_color, size: 15.0,), //`Icon` to display
                                   label: Text('Manage Category' ), //`Text` to display
                                   onPressed: () {
-                                       getNoOfHighlightsInCat();
+                                    /*Navigator.push(
+                                      context,
+                                      MaterialPageRoute(builder: (context)
+                                      => CategoryHighlightsScreen();
+                                      ),
+                                    );*/
+
                                   },
                                 ),
                               ),

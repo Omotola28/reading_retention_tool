@@ -2,6 +2,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:reading_retention_tool/module/category.dart';
 import 'package:flutter/material.dart';
 import 'package:reading_retention_tool/utils/color_utility.dart';
+import 'package:reading_retention_tool/module/notification_data.dart';
+import 'package:reading_retention_tool/utils/firestore_notification_service.dart';
+import 'package:reading_retention_tool/plugins/highlightNotificationPlugin.dart';
+import 'dart:async';
+import 'package:rxdart/rxdart.dart';
+
+
 
 class AppData extends ChangeNotifier{
 
@@ -16,8 +23,17 @@ class AppData extends ChangeNotifier{
   String selectedCat;
   Color selectedCol;
   int categoryIndex;
-  List bookSpecificHighlights = new List();
+  List bookSpecificHighlights = [];
   int noOfHighlights = 0;
+  List notificationHighlights = [];
+
+  List<NotificationData> _notifications = List();
+  HighlightNotificationPlugin _notificationPlugin = HighlightNotificationPlugin();
+
+  final _notificationsController = BehaviorSubject<List<NotificationData>>();
+  Function(List<NotificationData>) get _inNotifications => _notificationsController.sink.add;
+  Stream<List<NotificationData>> get outNotifications => _notificationsController.stream;
+
 
   List<Category> categories = [];
 
@@ -87,8 +103,25 @@ class AppData extends ChangeNotifier{
      notifyListeners();
   }
 
+  Future<void> init() async {
+    final notificationStream = await FirestoreNotificationService.getAllNotifications();
+    notificationStream.listen((querySnapshot) {
+      _notifications = querySnapshot.documents.map((doc) => NotificationData.fromDb(doc.data, doc.documentID)).toList();
+      startNotifications(_notifications);
+      _inNotifications(_notifications);
+    });
+  }
 
-///The function would help store list object that can be manipulated and saved in database
+  Future<void> cancelNotifications() async {
+    await _notificationPlugin.cancelAllNotifications();
+  }
+
+  Future<void> startNotifications(List<NotificationData> notifications) async {
+    await _notificationPlugin.scheduleAllNotifications(notifications);
+  }
+
+
+  ///The function would help store list object that can be manipulated and saved in database
 
 void setBookSpecificHighlightObj(List obj){
     bookSpecificHighlights = obj;
@@ -115,8 +148,38 @@ void reduceNoOfHighlights(int number){
 }
 
 
+///Set the add list of highlights to firestore service
+  Future<void> addNotification(List<NotificationData> notifications, String docId) async {
+    List<NotificationData> notificationData = [];
+    int id = 0;
+    for (var i = 0; i < 100; i++) {
+      bool exists = _checkIfIdExists(_notifications, i);
+      if (!exists) {
+        id = i;
+        break;
+      }
+    }
+
+  // print(notifications);
+    for(final notification in notifications){
+       notification.notificationId = id++;
+       notificationData.add(notification);
+    }
 
 
+
+   await FirestoreNotificationService.addNotification(notificationData, docId);
+  }
+
+  bool _checkIfIdExists(List<NotificationData> notifications, int id) {
+
+    for (final notification in notifications) {
+      if (notification.notificationId == id) {
+        return true;
+      }
+    }
+    return false;
+  }
 
 
 }

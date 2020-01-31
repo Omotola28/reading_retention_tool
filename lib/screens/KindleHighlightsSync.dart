@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:provider/provider.dart';
 import 'package:reading_retention_tool/constants/constants.dart';
 import 'package:flutter/services.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:reading_retention_tool/custom_widgets/ActionUserButton.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:reading_retention_tool/module/app_data.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:io';
@@ -98,8 +98,6 @@ class _KindleHighlightsSync extends State<KindleHighlightsSync> {
             icon: Image.asset(
               'Images/quotd.png',
             ),
-            // tooltip: 'Closes application',
-            //    onPressed: () => exit(0),
           ),
          ],
         ),

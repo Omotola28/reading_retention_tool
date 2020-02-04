@@ -33,14 +33,14 @@ class FirestoreNotificationService {
 
   }
 
- /* static Future<void> removeNotification(NotificationData notification) async {
+  static Future<void> removeNotification(NotificationData notification) async {
     final firebaseUser = await FirebaseAuth.instance.currentUser();
-
-    Firestore.instance
+    
+      Firestore.instance
         .collection("users")
         .document(firebaseUser.uid)
         .collection("notifications")
         .document(notification.id)
         .delete();
-  }*/
+  }
 }

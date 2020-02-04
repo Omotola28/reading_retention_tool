@@ -3,7 +3,7 @@ import 'package:reading_retention_tool/module/category.dart';
 import 'package:flutter/material.dart';
 import 'package:reading_retention_tool/utils/color_utility.dart';
 import 'package:reading_retention_tool/module/notification_data.dart';
-import 'package:reading_retention_tool/utils/firestore_notification_service.dart';
+import 'package:reading_retention_tool/service/firestore_notification_service.dart';
 import 'package:reading_retention_tool/plugins/highlightNotificationPlugin.dart';
 import 'dart:async';
 import 'package:rxdart/rxdart.dart';
@@ -26,6 +26,7 @@ class AppData extends ChangeNotifier{
   List bookSpecificHighlights = [];
   int noOfHighlights = 0;
   List notificationHighlights = [];
+  String payloadHighlight;
 
   List<NotificationData> _notifications = List();
   HighlightNotificationPlugin _notificationPlugin = HighlightNotificationPlugin();
@@ -36,6 +37,7 @@ class AppData extends ChangeNotifier{
 
 
   List<Category> categories = [];
+
 
   void setCurrentUserEmail (String currentEmail){
       email = currentEmail;
@@ -104,9 +106,11 @@ class AppData extends ChangeNotifier{
   }
 
   Future<void> init() async {
+
     final notificationStream = await FirestoreNotificationService.getAllNotifications();
     notificationStream.listen((querySnapshot) {
       _notifications = querySnapshot.documents.map((doc) => NotificationData.fromDb(doc.data, doc.documentID)).toList();
+
       startNotifications(_notifications);
       _inNotifications(_notifications);
     });
@@ -171,6 +175,8 @@ void reduceNoOfHighlights(int number){
    await FirestoreNotificationService.addNotification(notificationData, docId);
   }
 
+  //TODO: Have to check for exsisting highlights in firestore but this might be tricky since
+  //TODO: Its the ID we are using to check for duplicates but i dont know
   bool _checkIfIdExists(List<NotificationData> notifications, int id) {
 
     for (final notification in notifications) {
@@ -179,6 +185,11 @@ void reduceNoOfHighlights(int number){
       }
     }
     return false;
+  }
+
+  ///Remove notifications from notifications list
+  Future<void> removeNotification(NotificationData notification) async {
+    await FirestoreNotificationService.removeNotification(notification);
   }
 
 

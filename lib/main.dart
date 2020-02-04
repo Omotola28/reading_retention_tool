@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:reading_retention_tool/constants/route_constants.dart';
 import 'package:reading_retention_tool/screens/BookSpecificHighlightScreen.dart';
 import 'package:reading_retention_tool/screens/CategoryScreen.dart';
 import 'package:reading_retention_tool/screens/GetStartedScreen.dart';
+import 'package:reading_retention_tool/screens/HighlightOfTheDayScreen.dart';
 import 'package:reading_retention_tool/screens/HomeScreen.dart';
 import 'package:reading_retention_tool/screens/KindleHighlightsSync.dart';
 import 'package:reading_retention_tool/screens/MediumHighlightsScreen.dart';
@@ -13,9 +15,18 @@ import 'package:reading_retention_tool/screens/SignUpScreen.dart';
 import 'package:reading_retention_tool/screens/UserBooksListScreen.dart';
 import 'package:reading_retention_tool/screens/WelcomePage.dart';
 import 'package:reading_retention_tool/module/app_data.dart';
-import 'package:reading_retention_tool/screens/UserBooksListScreen.dart';
+import 'package:reading_retention_tool/service/navigation_service.dart';
+import 'package:reading_retention_tool/utils/locator.dart';
+import 'package:reading_retention_tool/screens/ForgotPasswordScreen.dart';
+import 'router.dart' as router;
 
 void main() {
+
+  //Was throwing error about trying to access information before the widgets were binded
+  WidgetsFlutterBinding.ensureInitialized();
+  //SetupLocator
+  setUpLocator();
+
 
   SystemUiOverlayStyle copyWith({
     Color systemNavigationBarColor,
@@ -38,6 +49,8 @@ void main() {
    */
   SystemChrome.setSystemUIOverlayStyle(copyWith());
 
+
+
   runApp(
     ChangeNotifierProvider<AppData>(
       builder: (context) => AppData(),
@@ -47,27 +60,9 @@ void main() {
           primaryColor: Color(0xFFFFFFFF),
           backgroundColor: Colors.white,
         ),
-        initialRoute: WelcomePage.id,
-        routes: {
-          WelcomePage.id : (context) => WelcomePage(),
-          HomeScreen.id : (context) => HomeScreen(),
-          GetStartedScreen.id : (context) => GetStartedScreen(),
-          SignInScreen.id : (context) => SignInScreen(),
-          SignUpScreen.id : (context) => SignUpScreen(),
-          KindleHighlightsSync.id : (context) => KindleHighlightsSync(),
-          MediumHighlightsScreen.id : (context) => MediumHighlightsScreen(),
-          ShowRetrievedHightlightsScreen.id : (context) =>
-              ShowRetrievedHightlightsScreen(Provider.of<AppData>(context).highlightObject, Provider.of<AppData>(context).bookName),
-          UserBooksListScreen.id : (context) => UserBooksListScreen(),
-          CategoryScreen.id : (context) => CategoryScreen(),
-
-
-        },
-        /*home: Scaffold(
-          body: SafeArea(
-            child: WelcomePage(),
-          ),
-        ),*/
+        navigatorKey: locator<NavigationService>().navigatorKey,
+        onGenerateRoute: router.generateRoute,
+        initialRoute: WelcomeScreenRoute,
       ),
     ),
   );

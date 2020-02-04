@@ -190,7 +190,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         });
 
                       },
-                      trailing: expandFlag ? Icon(CustomIcons.tag , color: kPrimaryColor,) : Icon(CustomIcons.tag),
+                      trailing: expandFlag ? Icon(CustomIcons.tag , color: kPrimaryColor) : Icon(CustomIcons.tag),
                     ),
                     ExpandableContainer(
                       expanded: expandFlag,
@@ -249,12 +249,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                   icon: Icon(Icons.border_color, size: 15.0,), //`Icon` to display
                                   label: Text('Manage Category' ), //`Text` to display
                                   onPressed: () {
-                                    /*Navigator.push(
-                                      context,
-                                      MaterialPageRoute(builder: (context)
-                                      => CategoryHighlightsScreen();
-                                      ),
-                                    );*/
 
                                   },
                                 ),

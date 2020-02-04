@@ -209,6 +209,7 @@ class _KindleHighlightsSync extends State<KindleHighlightsSync> {
 
                                                    //print(obj);
                                                     //Set object for listbuilder to be accessed globally
+                                                  //TODO: Might end up deleting this
                                                    Provider.of<AppData>(context).setHighlightListObject(
                                                        obj);
                                                    Provider.of<AppData>(context).setNoOfHighlightsPerUser(obj.length);
@@ -217,7 +218,9 @@ class _KindleHighlightsSync extends State<KindleHighlightsSync> {
 
                                                 // print(task);
                                                  Navigator.pushNamed(
-                                                     context, ShowRetrievedHightlightsScreen.id);
+                                                     context, ShowRetrievedHightlightsScreen.id,
+                                                     arguments: {'highlightObj' : obj, 'bookName' : _fileName},
+                                                 );
                                                });
 
                                            });

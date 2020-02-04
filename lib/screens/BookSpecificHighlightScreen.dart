@@ -7,7 +7,8 @@ import 'package:reading_retention_tool/screens/CategoryScreen.dart';
 import 'package:reading_retention_tool/screens/UserBooksListScreen.dart';
 import 'package:reading_retention_tool/customIcons/my_flutter_app_icons.dart';
 import 'package:reading_retention_tool/utils/color_utility.dart';
-import 'package:share/share.dart';
+import 'package:reading_retention_tool/utils/share.dart';
+
 
 
 class BookSpecificHighlightScreen extends StatefulWidget {
@@ -187,7 +188,7 @@ void handlePopUpMenuAction(String value, BuildContext context, int index, List h
   switch (value) {
     case 'Share':
       {
-        share(context, highlyObj[intIndex]['highlight'].replaceAll(RegExp(r'-\s[A-Za-z]+\s\d+'), ''));
+        ShareHighlight().share(context, highlyObj[intIndex]['highlight'].replaceAll(RegExp(r'-\s[A-Za-z]+\s\d+'), ''));
       }
       break;
 
@@ -317,7 +318,3 @@ Future<bool> editHighlightDialog(BuildContext context, String highlight, int ind
 
 }
 
-void share(BuildContext context, String highlightString){
-
-  Share.share(highlightString, subject: 'Highlight from HighlightMyQuotes');
-}

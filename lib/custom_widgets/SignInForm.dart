@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:reading_retention_tool/screens/ForgotPasswordScreen.dart';
 import 'package:reading_retention_tool/screens/HomeScreen.dart';
 import 'package:flutter/services.dart';
 import 'package:reading_retention_tool/constants/constants.dart';
@@ -16,7 +17,7 @@ class SignInForm extends StatefulWidget {
 class _SignInFormState extends State<SignInForm> {
 
   final _auth = FirebaseAuth.instance;
-//  final _sinInUsers = UserSignInAuth();
+
   String email, password;
   final _signInKey = GlobalKey<FormState>();
 
@@ -101,8 +102,13 @@ class _SignInFormState extends State<SignInForm> {
                                         ),
                                       ],
                                     ),
-                                    Text("Forgot Password?",
-                                      style: kTrailingTextStyleDecoration,
+                                    FlatButton(
+                                      child: Text("Forgot Password",
+                                        style: kTrailingTextStyleDecoration,
+                                      ),
+                                      onPressed: (){
+                                        Navigator.pushNamed(context, ForgotPasswordScreen.id);
+                                      },
                                     ),
                                   ],
                                 )

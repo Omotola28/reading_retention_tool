@@ -1,9 +1,18 @@
+import 'package:flutter/cupertino.dart';
+import 'package:reading_retention_tool/constants/route_constants.dart';
+import 'package:reading_retention_tool/service/navigation_service.dart';
+import 'package:reading_retention_tool/utils/locator.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:reading_retention_tool/module/notification_data.dart';
+import 'package:reading_retention_tool/screens/HighlightOfTheDayScreen.dart';
 import 'dart:async';
+
 
 class HighlightNotificationPlugin {
   FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin;
+
+  final NavigationService _navigationService = locator<NavigationService>();
+
 
   HighlightNotificationPlugin() {
     _initializeNotifications();
@@ -27,6 +36,11 @@ class HighlightNotificationPlugin {
     if (payload != null) {
       print('notification payload: ' + payload);
     }
+
+
+    await _navigationService.navigateTo(HighlightOfTheDayRoute, arguments: payload);
+
+
   }
 
   Future<void> showWeeklyAtDayAndTime(Time time, Day day, int id, String title, String description) async {
@@ -56,6 +70,11 @@ class HighlightNotificationPlugin {
       'show daily channel id',
       'show daily channel name',
       'show daily description',
+      ongoing: true,
+      importance: Importance.Max,
+      priority: Priority.High,
+      autoCancel: true,
+      enableLights: true,
     );
     final iOSPlatformChannelSpecifics = IOSNotificationDetails();
     final platformChannelSpecifics = NotificationDetails(
@@ -68,6 +87,7 @@ class HighlightNotificationPlugin {
       description,
       time,
       platformChannelSpecifics,
+      payload: description ,
     );
   }
 

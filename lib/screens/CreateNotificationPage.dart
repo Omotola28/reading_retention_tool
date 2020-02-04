@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:reading_retention_tool/constants/constants.dart';
@@ -52,13 +53,15 @@ class _CreateNotificationPageState extends State<CreateNotificationPage> with Si
 
   @override
   Widget build(BuildContext context) {
-
+    final textTheme = Theme
+        .of(context)
+        .textTheme;
     return Scaffold(
       appBar: AppBar(
         brightness: Brightness.light,
         iconTheme: IconThemeData(color: kDarkColorBlack),
         elevation: 0.0,
-        title: Text('Create Notification'),
+        title: Text('Create Notification', style: TextStyle(color: kDarkColorBlack),),
         actions: <Widget>[
           new IconButton(
             onPressed: () {
@@ -77,20 +80,32 @@ class _CreateNotificationPageState extends State<CreateNotificationPage> with Si
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
 
-         /*   StreamBuilder<List<NotificationData>>(
+          StreamBuilder<List<NotificationData>>(
               stream: Provider.of<AppData>(context).outNotifications,
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
-                  print("Hi");
                   final notifications = snapshot.data;
                   _fadeInController.forward();
                   if (notifications.isEmpty)
                     return Expanded(
-                      child: Center(
-                        child: Image.asset(
-                          'Images/create_notification.png',
-                          width: 300,
-                          height: 300,
+                      child: Padding(
+                        padding: const EdgeInsets.all(8),
+                        child: Column(
+                          children: <Widget>[
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.all(12.0),
+                                child: AspectRatio(
+                                  aspectRatio: 1,
+                                  child: Image.asset(
+                                    'Images/create_notification.png',
+                                    width: 50,
+                                    height: 50,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     );
@@ -115,49 +130,65 @@ class _CreateNotificationPageState extends State<CreateNotificationPage> with Si
                     ),
                   );
                 }
-                return Expanded(child: SizedBox());
-              },
-            ),*/
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(8),
-                  child: Column(
-                    children: <Widget>[
-                     Expanded(
-                        child: Padding(
-                          padding: const EdgeInsets.all(12.0),
-                          child: AspectRatio(
-                            aspectRatio: 1,
-                            child: Image.asset(
-                              'Images/create_notification.png',
-                              width: 50,
-                              height: 50,
+                return Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.all(8),
+                    child: Column(
+                      children: <Widget>[
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.all(12.0),
+                            child: AspectRatio(
+                              aspectRatio: 1,
+                              child: Image.asset(
+                                'Images/create_notification.png',
+                                width: 50,
+                                height: 50,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      SizedBox(height: 12),
-                      OutlineButton(
-                        padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
-                        onPressed: selectTime,
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            Icon(Icons.access_time),
-                            SizedBox(width: 4),
-                            Text(selectedTime.format(context)),
-                          ],
-                        ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-              ),
+                );
+              },
             ),
 
+            SizedBox(height: 12),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Text('Set Daily Time',
+                  style: textTheme.headline.copyWith(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15.0,
+                  color: Theme
+                      .of(context)
+                      .brightness == Brightness.dark ? Colors.grey
+                      .shade300 : Colors.grey.shade800
+                  ),
+                ),
+                SizedBox(width: 12),
+                OutlineButton(
+                  padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 12),
+                  onPressed: selectTime,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Icon(Icons.access_time),
+                      SizedBox(width: 4),
+                      Text(selectedTime.format(context)),
+                    ],
+                  ),
+                ),
+              ],
+            ),
             OutlineButton(
               disabledBorderColor: kPrimaryColor,
               onPressed: () => createNotification(),
-              child: Text('Create Notification',
+              child: Text('Set Notification',
                 style: TextStyle(
                     color: kPrimaryColor,
                     letterSpacing: 1
@@ -229,7 +260,8 @@ class NotificationTile extends StatelessWidget {
                   Text(
                     notification.title,
                     style: textTheme.title.copyWith(
-                      fontWeight: FontWeight.normal,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18.0
                     ),
                   ),
                   Text(
@@ -243,10 +275,8 @@ class NotificationTile extends StatelessWidget {
                     children: <Widget>[
                       Icon(
                         Icons.access_time,
-                        size: 28,
-                        color: Theme
-                            .of(context)
-                            .accentColor,
+                        size: 20,
+                        color: kPrimaryColor
                       ),
                       SizedBox(width: 12),
                       Text(
@@ -255,6 +285,7 @@ class NotificationTile extends StatelessWidget {
                             2, '0')}',
                         style: textTheme.headline.copyWith(
                           fontWeight: FontWeight.bold,
+                          fontSize: 18.0,
                           color: Theme
                               .of(context)
                               .brightness == Brightness.dark ? Colors.grey
@@ -267,8 +298,8 @@ class NotificationTile extends StatelessWidget {
               ),
             ),
             IconButton(
-              onPressed: null,
-              icon: Icon(Icons.delete, size: 32),
+              onPressed: () => Provider.of<AppData>(context).removeNotification(notification),
+              icon: Icon(Icons.delete, size: 25),
             ),
           ],
         ),

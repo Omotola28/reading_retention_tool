@@ -4,6 +4,7 @@ import 'package:reading_retention_tool/screens/GetStartedScreen.dart';
 import 'package:reading_retention_tool/screens/HighlightOfTheDayScreen.dart';
 import 'package:reading_retention_tool/screens/HomeScreen.dart';
 import 'package:reading_retention_tool/screens/KindleHighlightsSync.dart';
+import 'package:reading_retention_tool/screens/ManageCategory.dart';
 import 'package:reading_retention_tool/screens/ShowRetrievedHighlightsScreen.dart';
 import 'package:reading_retention_tool/screens/SignInScreen.dart';
 import 'package:reading_retention_tool/screens/SignUpScreen.dart';
@@ -51,6 +52,12 @@ Route<dynamic> generateRoute(RouteSettings settings){
       case SignUpRoute :
         return MaterialPageRoute(builder: (context) => SignUpScreen());
 
+      case UserBooksListRoute :
+        return MaterialPageRoute(builder: (context) => UserBooksListScreen());
+
+      case ManageCategoryRoute :
+        return MaterialPageRoute(builder: (context) => ManageCategory());
+
       default:
         return MaterialPageRoute(builder: (context) => UndefinedScreen());
     }
@@ -58,14 +65,3 @@ Route<dynamic> generateRoute(RouteSettings settings){
 }
 
 
-/*const String WelcomeScreenRoute = 'welcome_screen';
-const String HomeScreenRoute = 'home_screen';
-const String GetStartedScreenRoute = 'getstarted_screen';
-const String KindleHighlightsSyncRoute = 'kindle_highlights_sync_screen';
-const String MediumHighlightsRoute = 'medium_highlights_screen';
-const String ShowRetrievedHightlightsRoute = 'show_retrieved_highlights_screen';
-const String UserBooksListRoute = 'user_booklist_screen';
-const String CategoryRoute = 'category_screen';
-const String HighlightOfTheDayRoute = 'highlight_of_the_day_screen';
-const String SignInRoute = 'signIn_screen';
-const String SignUpRoute = 'signUp_screen';*/

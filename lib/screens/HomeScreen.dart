@@ -10,6 +10,7 @@ import 'package:reading_retention_tool/custom_widgets/ServiceSync.dart';
 import 'package:reading_retention_tool/screens/KindleHighlightsSync.dart';
 import 'package:reading_retention_tool/module/app_data.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:reading_retention_tool/screens/ManageCategory.dart';
 import 'package:reading_retention_tool/screens/UserBooksListScreen.dart';
 import 'package:reading_retention_tool/customIcons/my_flutter_app_icons.dart';
 import 'dart:async';
@@ -31,6 +32,7 @@ class _HomeScreenState extends State<HomeScreen> {
   var uid;
   bool expandFlag = false;
   List<dynamic> cat = [];
+  int categoryLength = 0;
 
   @override
   void initState() {
@@ -55,37 +57,7 @@ class _HomeScreenState extends State<HomeScreen> {
         .document(Provider.of<AppData>(context).uid)
         .collection('books').snapshots();
 
-   /* await for (var snapshot in books){
-      for (var bookid in snapshot.documents)
-      {
-         print(bookid.documentID);
-      }
-    }*/
   }
-
-/*void getNoOfHighlightsInCat()  async {
-
-    final snapshots = Firestore.instance.collection('users').document(Provider.of<AppData>(context).uid)
-        .collection('books').snapshots();
-
-      await for(var snapshot in snapshots ){
-         for( var snaps in snapshot.documents){
-           for(var i = 0; i < snaps.data['highlights'].length; i++){
-              if(snaps.data['highlights'][i]['category'] == 'Love'){
-                  cat.add(snaps.data['highlights'][i]);
-
-               // print(snaps.data['highlights'][i]);
-                //print(snaps.data['highlights'][i]);
-              }
-           }
-         }
-      }
-
-
-
-
-      //print('NOT SURE WHY NOT PRINIT ${cat}');
-  }*/
 
 
   @override
@@ -173,9 +145,12 @@ class _HomeScreenState extends State<HomeScreen> {
                     ListTile(
                       title: Text('Books'),
                       onTap: () {
-                        // Update the state of the app
-                        //getStreamBookIds();
-                        Navigator.popAndPushNamed(context, UserBooksListScreen.id );
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context)
+                          => UserBooksListScreen(),
+                          ),
+                        );
                       },
                       trailing: Icon(CustomIcons.book),
                     ),
@@ -196,13 +171,15 @@ class _HomeScreenState extends State<HomeScreen> {
                       expanded: expandFlag,
                       child: Column(
                         children: <Widget>[
-                          Expanded(
+                          Flexible(
+                              flex: 4,
                               child: StreamBuilder<QuerySnapshot>(
                                   stream: Firestore.instance.collection('users')
                                       .document(Provider.of<AppData>(context).uid)
                                       .collection('categories').snapshots(),
                                   builder: (context, snapshot){
                                     if(snapshot.hasData){
+                                      categoryLength = snapshot.data.documents.length;
                                       return ListView.builder(
                                         itemBuilder: (context, index) {
 
@@ -234,26 +211,34 @@ class _HomeScreenState extends State<HomeScreen> {
                                       );
 
                                     }
-                                    else{
-                                      return Text('No categories yet', style: TextStyle(color: Colors.black));
-                                    }
+
+                                    return Text('No categories yet', style: TextStyle(color: Colors.black));
+
                                   }
+
                               )
                           ),
+                          categoryLength != 0 ?
                           Expanded(
-                              child: Align(
-                                alignment: Alignment.centerLeft,
-                                child: FlatButton.icon(
-                                  padding: EdgeInsets.fromLTRB(30.0, 0.0, 0.0, 0.0),
-                                  color: kLightYellowBG,
-                                  icon: Icon(Icons.border_color, size: 15.0,), //`Icon` to display
-                                  label: Text('Manage Category' ), //`Text` to display
-                                  onPressed: () {
-
-                                  },
-                                ),
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: FlatButton.icon(
+                                padding: EdgeInsets.fromLTRB(30.0, 0.0, 0.0, 0.0),
+                                color: kLightYellowBG,
+                                icon: Icon(Icons.border_color, size: 15.0,), //`Icon` to display
+                                label: Text('Manage Category' ), //`Text` to display
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context)
+                                    => ManageCategory()
+                                    ),
+                                  );
+                                },
                               ),
-                          ),
+                            ),
+                          ): Container(),
                         ],
                       )
 

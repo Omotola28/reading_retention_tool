@@ -8,8 +8,6 @@ import 'package:reading_retention_tool/screens/HomeScreen.dart';
 
 class UserBooksListScreen extends StatefulWidget {
 
-  static String id = 'user_books_lists';
-
   @override
   _UserBooksListScreenState createState() => _UserBooksListScreenState();
 }

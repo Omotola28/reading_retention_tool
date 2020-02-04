@@ -1,7 +1,6 @@
 import 'package:flutter/widgets.dart';
 import 'dart:async';
 
-import 'package:reading_retention_tool/screens/HighlightOfTheDayScreen.dart';
 
 class NavigationService{
 

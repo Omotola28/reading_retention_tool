@@ -58,7 +58,12 @@ class _BookSpecificHighlightScreenState
               color: kDarkColorBlack,
             ),
             onPressed: () {
-              Navigator.popAndPushNamed(context, UserBooksListScreen.id);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context)
+                => UserBooksListScreen()
+                ),
+              );
             }),
         title: Text(
           'Manage Highlights',

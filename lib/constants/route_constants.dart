@@ -10,6 +10,7 @@ const String HighlightOfTheDayRoute = 'highlight_of_the_day_screen';
 const String SignInRoute = 'signIn_screen';
 const String SignUpRoute = 'signUp_screen';
 const String ManageCategoryRoute = 'signUp_screen';
+const String ResetPasswordRoute = 'resetPassword_screen';
 
 
 

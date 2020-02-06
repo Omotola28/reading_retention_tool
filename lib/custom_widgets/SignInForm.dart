@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:reading_retention_tool/screens/ForgotPasswordScreen.dart';
+import 'package:reading_retention_tool/custom_widgets/ResetPasswordForm.dart';
+import 'package:reading_retention_tool/screens/ResetPasswordScreen.dart';
 import 'package:reading_retention_tool/screens/HomeScreen.dart';
 import 'package:flutter/services.dart';
 import 'package:reading_retention_tool/constants/constants.dart';
@@ -107,7 +108,7 @@ class _SignInFormState extends State<SignInForm> {
                                         style: kTrailingTextStyleDecoration,
                                       ),
                                       onPressed: (){
-                                        Navigator.pushNamed(context, ForgotPasswordScreen.id);
+                                        Navigator.pushNamed(context, ResetPasswordScreen.id);
                                       },
                                     ),
                                   ],

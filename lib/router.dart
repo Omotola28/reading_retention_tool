@@ -11,6 +11,7 @@ import 'package:reading_retention_tool/screens/SignUpScreen.dart';
 import 'package:reading_retention_tool/screens/UndefinedScreen.dart';
 import 'package:reading_retention_tool/screens/UserBooksListScreen.dart';
 import 'package:reading_retention_tool/screens/WelcomePage.dart';
+import 'package:reading_retention_tool/screens/ResetPasswordScreen.dart';
 import 'package:reading_retention_tool/constants/route_constants.dart';
 
 
@@ -57,6 +58,9 @@ Route<dynamic> generateRoute(RouteSettings settings){
 
       case ManageCategoryRoute :
         return MaterialPageRoute(builder: (context) => ManageCategory());
+
+      case ResetPasswordRoute :
+        return MaterialPageRoute(builder: (context) => ResetPasswordScreen());
 
       default:
         return MaterialPageRoute(builder: (context) => UndefinedScreen());

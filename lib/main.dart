@@ -13,11 +13,11 @@ import 'package:reading_retention_tool/screens/ShowRetrievedHighlightsScreen.dar
 import 'package:reading_retention_tool/screens/SignInScreen.dart';
 import 'package:reading_retention_tool/screens/SignUpScreen.dart';
 import 'package:reading_retention_tool/screens/UserBooksListScreen.dart';
+import 'package:reading_retention_tool/screens/ResetPasswordScreen.dart';
 import 'package:reading_retention_tool/screens/WelcomePage.dart';
 import 'package:reading_retention_tool/module/app_data.dart';
 import 'package:reading_retention_tool/service/navigation_service.dart';
 import 'package:reading_retention_tool/utils/locator.dart';
-import 'package:reading_retention_tool/screens/ForgotPasswordScreen.dart';
 import 'router.dart' as router;
 
 void main() {

@@ -27,7 +27,12 @@ class _UserBooksListScreenState extends State<UserBooksListScreen> {
              ),
 
              onPressed: () {
-                  Navigator.popAndPushNamed(context, HomeScreen.id);
+               Navigator.push(
+                 context,
+                 MaterialPageRoute(builder: (context)
+                 => HomeScreen()
+                 ),
+               );
                }
 
          ),

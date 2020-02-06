@@ -28,7 +28,13 @@ class _CategoryScreenState extends State<CategoryScreen> {
               color: kDarkColorBlack,
             ),
             onPressed: () {
-              Navigator.popAndPushNamed(context, HomeScreen.id);
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context)
+                => HomeScreen()
+                ),
+              );
             }),
         title: Text(
           'Categorise Highlight',

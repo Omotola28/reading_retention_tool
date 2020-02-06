@@ -128,7 +128,20 @@ class _SignInFormState extends State<SignInForm> {
                           try {
                             final result = await _auth.signInWithEmailAndPassword(email: email, password: password);
                             print("Result $result");
-                            result != null ? Navigator.popAndPushNamed(context, HomeScreen.id): print(result);
+                            if(result != null ){
+                              Navigator.pop(context);
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context)
+                                => HomeScreen()
+                                ),
+                              );
+                            }
+                            else{
+                              print(result);
+                            }
+
+
                           } on PlatformException catch (e) {
                                   print(e);
                             switch (e.code) {

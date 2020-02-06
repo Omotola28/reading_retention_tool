@@ -57,7 +57,13 @@ class _CategoryTileState extends State<CategoryTile> {
            .document(Provider.of<AppData>(context).bookName)
            .updateData({"highlights": highlightObj});
 
-       Navigator.popAndPushNamed(context, HomeScreen.id, );
+       Navigator.pop(context);
+       Navigator.push(
+         context,
+         MaterialPageRoute(builder: (context)
+         => HomeScreen()
+         ),
+       );
 
       },
     );

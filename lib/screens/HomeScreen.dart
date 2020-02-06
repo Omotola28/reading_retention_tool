@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:http/http.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:reading_retention_tool/constants/constants.dart';
 import 'package:reading_retention_tool/module/auth.dart';
@@ -13,11 +14,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:reading_retention_tool/screens/ManageCategory.dart';
 import 'package:reading_retention_tool/screens/UserBooksListScreen.dart';
 import 'package:reading_retention_tool/customIcons/my_flutter_app_icons.dart';
+import 'package:oauth1/oauth1.dart' as oauth1;
 import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
+import 'package:crypto/crypto.dart';
+import 'package:http/http.dart' as http;
 
 class HomeScreen extends StatefulWidget {
 
-  static String id = 'home_screen';
 
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -58,6 +63,83 @@ class _HomeScreenState extends State<HomeScreen> {
         .collection('books').snapshots();
 
   }
+
+  Future doLogin(
+      String email,
+      String password
+      ) async {
+
+    var url = "https://www.instapaper.com/api/1/oauth/access_token";
+
+    Map<String, dynamic> body = {
+      'x_auth_username' : '${email}',
+      'x_auth_password' : '${password}',
+      'x_auth_mode' : 'client_auth'
+    };
+
+
+    var ms = (new DateTime.now()).millisecondsSinceEpoch;
+
+    final response = await http.post(url,
+        body: body,
+        headers: {
+          HttpHeaders.authorizationHeader : 'OAuth oauth_consumer_key="287b4ea14bdd4f488a7721abda57c261",oauth_signature_method="HMAC-SHA1",oauth_timestamp="${(ms / 1000).round()}",oauth_nonce="IHEaM65PpHN",oauth_version="1.0",oauth_signature=""'
+        },
+        encoding: Encoding.getByName("utf-8")
+    );
+
+
+    if (response.statusCode == 200) {
+      // If the call to the server was successful, parse the JSON
+      print(response.body);
+     // return Login.fromJson(json.decode(response.body));
+    } else {
+      print('RESPONSE ' + response.body);
+      throw Exception('Failed to load post');
+    }
+  }
+
+/*
+  static final INSTAPAPER_API_URL_ACCESS_TOKEN="https://www.instapaper.com/api/1/oauth/access_token";
+  static final INSTAPAPER_API_KEY = '287b4ea14bdd4f488a7721abda57c261';
+  static final INSTAPAPER_SECRET_KEY = 'b0354423a77c43feb07671cd2a67d4ed';
+
+  static final platform = new oauth1.Platform(
+      '',
+      '',
+      INSTAPAPER_API_URL_ACCESS_TOKEN,
+      oauth1.SignatureMethods.hmacSha1// signature method
+  );
+
+
+  static final clientCredentials = new oauth1.ClientCredentials(INSTAPAPER_API_KEY, INSTAPAPER_SECRET_KEY);
+
+  var auth = new oauth1.Authorization(clientCredentials, platform);
+
+  oauth1.Credentials _tempCredentials;
+
+  Future<String> getRequestTokenUrl() async {
+
+    final response = await auth.requestTemporaryCredentials('oob');
+    _tempCredentials = response.credentials;
+    print(response);
+   // return "${auth.getResourceOwnerAuthorizationURI(_tempCredentials.token)}";
+  }
+
+  // get real token with pin code input from user
+  Future<oauth1.Client> requestToken(String verifier) async {
+    final response = await auth.requestTokenCredentials(_tempCredentials, verifier);
+    _tempCredentials = null;
+
+    // save the token to local storage
+    //_saveToken(response.credentials);
+
+    // this is the oauth1 client that we can use as httpClient to call other APIs that needed authentication.
+    var authClient = oauth1.Client(platform.signatureMethod, clientCredentials, response.credentials);
+    return authClient;
+  }
+
+*/
 
 
   @override
@@ -261,10 +343,12 @@ class _HomeScreenState extends State<HomeScreen> {
                     ListTile(
                       title: Text('Instapaper Articles'),
                       onTap: () {
-                        // Update the state of the app
-                        // ...
-                        // Then close the drawer
-                        Navigator.pop(context);
+
+                        doLogin('omotolashogunle@gmail.com', '@Matilda28').then((val){
+                          print(val);
+                        });
+                        //instapaper();
+                        //Navigator.pop(context);
                       },
                       trailing: Icon(CustomIcons.doc),
                     ),
@@ -362,6 +446,26 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
     );
   }
+
+  void _makeInstapaperAccessTokenRequest() async{
+    // set up POST request arguments
+    String url = 'https://www.instapaper.com/api/1/oauth/access_token';
+    Map<String, String> headers = {"Content-type": "application/x-www-form-urlencoded"};
+    String json = '{"title": "Hello", "body": "body text", "userId": 1}';
+    // make POST request
+    Response response = await post(url, headers: headers, body: json);
+    // check the status code for the result
+    int statusCode = response.statusCode;
+    // this API passes back the id of the new item added to the body
+    String body = response.body;
+    // {
+    //   "title": "Hello",
+    //   "body": "body text",
+    //   "userId": 1,
+    //   "id": 101
+    // }
+
+  }
 }
 
 class ExpandableContainer extends StatelessWidget {
@@ -394,5 +498,36 @@ class ExpandableContainer extends StatelessWidget {
 }
 
 
+
+
+
+Future<Post> fetchPost() async {
+  final response = await http.post(
+    'https://www.instapaper.com/api/1/oauth/access_token',
+    headers: {HttpHeaders.authorizationHeader: "Basic your_api_token_here"},
+  );
+  final responseJson = json.decode(response.body);
+
+  return Post.fromJson(responseJson);
+}
+
+class Post {
+  final int userId;
+  final int id;
+  final String title;
+  final String body;
+
+  Post({this.userId, this.id, this.title, this.body});
+
+  factory Post.fromJson(Map<String, dynamic> json) {
+    return Post(
+      userId: json['userId'],
+      id: json['id'],
+      title: json['title'],
+      body: json['body'],
+    );
+  }
+
+}
 
 

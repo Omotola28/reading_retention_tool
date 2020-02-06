@@ -226,7 +226,13 @@ class _CreateNotificationPageState extends State<CreateNotificationPage> with Si
      Provider.of<AppData>(context).addNotification(notificationData, widget.categoryId);
 
 
-     Navigator.popAndPushNamed(context, HomeScreen.id);
+     Navigator.pop(context);
+     Navigator.push(
+       context,
+       MaterialPageRoute(builder: (context)
+       => HomeScreen()
+       ),
+     );
      //Navigator.of(context).pop();
     }
 }

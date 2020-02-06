@@ -60,7 +60,13 @@ class _ShowRetrievedHightlightsScreenState
                   .collection("books")
                   .document(widget._fileName)
                   .setData({"highlights": widget.obj}, merge: true);
-              Navigator.popAndPushNamed(context, HomeScreen.id);
+           Navigator.pop(context);
+           Navigator.push(
+             context,
+             MaterialPageRoute(builder: (context)
+             => HomeScreen()
+             ),
+           );
             }
 
             ),

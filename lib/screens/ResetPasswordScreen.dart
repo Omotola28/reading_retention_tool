@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:reading_retention_tool/custom_widgets/SignInForm.dart';
 import 'package:reading_retention_tool/constants/constants.dart';
 import 'package:reading_retention_tool/screens/SignInScreen.dart';
 import 'package:reading_retention_tool/screens/SignUpScreen.dart';
@@ -43,11 +42,12 @@ class ResetPasswordScreen extends StatelessWidget {
                     ),
                   GestureDetector(
                     onTap: () {
-                      Navigator.pushNamed(context, SignUpScreen.id);
-                     /* Navigator.push(context, MaterialPageRoute(builder: (context){
-                        SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
-                        return SignUpScreen();
-                      }));*/
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context)
+                        => SignUpScreen()
+                        ),
+                      );
                     },
                     child: Text(
                       "Sign Up",
@@ -79,11 +79,12 @@ class ResetPasswordScreen extends StatelessWidget {
                   ),
                   GestureDetector(
                     onTap: () {
-                      Navigator.pushNamed(context, SignInScreen.id);
-                      /* Navigator.push(context, MaterialPageRoute(builder: (context){
-                        SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
-                        return SignUpScreen();
-                      }));*/
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context)
+                        => SignInScreen()
+                        ),
+                      );
                     },
                     child: Text(
                       "Sign In",

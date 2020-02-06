@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:reading_retention_tool/custom_widgets/SignInForm.dart';
 import 'package:reading_retention_tool/constants/constants.dart';
+import 'package:reading_retention_tool/screens/SignInScreen.dart';
 import 'package:reading_retention_tool/screens/SignUpScreen.dart';
 import 'package:reading_retention_tool/custom_widgets/ResetPasswordForm.dart';
 
@@ -59,8 +60,46 @@ class ResetPasswordScreen extends StatelessWidget {
                     ),
                   ),
                 ],
+
               ),
             ),
+            Padding(
+              padding: const EdgeInsets.only(top: 5.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text(
+                    "Do you have an account? ",
+                    style: TextStyle(
+                      fontFamily: 'NotoSans',
+                      fontSize: 12.0,
+                      color: kHighlightColorDarkGrey,
+                      decoration: TextDecoration.none,
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pushNamed(context, SignInScreen.id);
+                      /* Navigator.push(context, MaterialPageRoute(builder: (context){
+                        SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
+                        return SignUpScreen();
+                      }));*/
+                    },
+                    child: Text(
+                      "Sign In",
+                      style: TextStyle(
+                        fontFamily: 'NotoSans',
+                        fontSize: 12.0,
+                        color: kSecondaryColor,
+                        decoration: TextDecoration.none,
+                      ),
+                    ),
+                  ),
+                ],
+
+              ),
+            ),
+
           ],
         ),
       ),

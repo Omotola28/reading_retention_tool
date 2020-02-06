@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:reading_retention_tool/constants/route_constants.dart';
 import 'package:reading_retention_tool/screens/HomeScreen.dart';
 import 'package:flutter/services.dart';
 import 'package:reading_retention_tool/constants/constants.dart';
 import 'package:reading_retention_tool/custom_widgets/ActionUserButton.dart';
 import 'package:reading_retention_tool/custom_widgets/UserTextInputField.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:reading_retention_tool/screens/SignInScreen.dart';
 
 
 
@@ -17,7 +19,7 @@ class _ResetPasswordFormState extends State<ResetPasswordForm> {
 
   final _auth = FirebaseAuth.instance;
 
-  String email;
+  String email, _warning;
   final _resetPasswordKey = GlobalKey<FormState>();
 
   @override
@@ -57,6 +59,7 @@ class _ResetPasswordFormState extends State<ResetPasswordForm> {
                             savedValue:  (value) => email = value,
                             inputType: TextInputType.emailAddress,
                           ),
+
                         ],
                       ),
                     ),
@@ -69,7 +72,11 @@ class _ResetPasswordFormState extends State<ResetPasswordForm> {
                           form.save();
 
                           try {
-                            print("email: $email");
+                            final result = await _auth.sendPasswordResetEmail(email: email);
+                            _warning = "A Password reset link has been sent to $email";
+                            setState(() {
+                              Navigator.pushNamed(context, SignInScreen.id);
+                            });
                           } on PlatformException catch (e) {
                                   print(e);
                             switch (e.code) {

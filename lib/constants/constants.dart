@@ -8,6 +8,8 @@ const kDarkColorBlack = Color(0xFF010203);
 const kDarkSocialBtnColor = Color(0xFF393636);
 const kLightYellowBG = Color.fromRGBO(250, 249, 242, 1);
 
+const kNoPhotoUrl = 'https://images.unsplash.com/photo-1569414753782-7b8cef3ad2e8?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1650&q=80';
+
 const kTrailingTextStyleDecoration = TextStyle(
   fontFamily: 'NotoSans',
   fontSize: 12.0,

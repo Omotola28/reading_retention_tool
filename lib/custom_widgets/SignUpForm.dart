@@ -2,14 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:reading_retention_tool/constants/constants.dart';
 import 'package:reading_retention_tool/custom_widgets/ActionUserButton.dart';
 import 'package:reading_retention_tool/custom_widgets/UserTextInputField.dart';
-import 'package:reading_retention_tool/constants/User.dart';
+import 'package:reading_retention_tool/module/user.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:reading_retention_tool/screens/SignInScreen.dart';
+import 'package:reading_retention_tool/service/auth_service.dart';
 
-/*enum PlatformExceptionKeys{
-  ERROR_INVALID_EMAIL,
-}*/
+
 
 class SignUpForm extends StatefulWidget {
   @override
@@ -19,7 +18,7 @@ class SignUpForm extends StatefulWidget {
 class _SignUpFormState extends State<SignUpForm> {
 
   final _auth = FirebaseAuth.instance;
-  final _user = User();
+  User _user;
   final _signUpKey = GlobalKey<FormState>();
 
   @override
@@ -60,12 +59,12 @@ class _SignUpFormState extends State<SignUpForm> {
                               return 'Please enter your Name';
                             }
                             setState(() {
-                              _user.name = value;
+                             _user.displayName = value;
                             });
                             return null;
                           },
                           value: false,
-                          savedValue:  (value) => _user.name = value,
+                          savedValue:  (value) => _user.displayName = value,
                         ),
                         UserTextInputField(
                           labelText: 'Email', validate: (value) {
@@ -73,12 +72,12 @@ class _SignUpFormState extends State<SignUpForm> {
                             return 'Please enter your first name';
                           }
                           setState(() {
-                            _user.email = value;
+                           _user.email = value;
                           });
                           return null;
                         },
                           value: false, inputType: TextInputType.emailAddress,
-                          savedValue:  (value) => _user.email = value,
+                          savedValue:  (value) =>  _user.email = value,
                         ),
                         UserTextInputField(labelText: 'Password',
                           validate: (value) {
@@ -120,12 +119,12 @@ class _SignUpFormState extends State<SignUpForm> {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
-                                Checkbox(value: _user.rememberMe, onChanged: (val){
+                               /* Checkbox(value: _user.rememberMe, onChanged: (val){
                                   setState(() {
-                                    _user.rememberMe = val;
+                                   // _user.rememberMe = val;
                                   });
                                 }, activeColor: kPrimaryColor,
-                                ),
+                                ),*/
                                 Text(
                                   "I agree with your Privacy Policy",
                                   style: kTrailingTextStyleDecoration,
@@ -147,9 +146,9 @@ class _SignUpFormState extends State<SignUpForm> {
                             {
                               form.save();
                               try{
-                                final result = await _auth.createUserWithEmailAndPassword(email: _user.email, password: _user.password);
-                                print("Sign Up result: $result");
-                                result  != null ? Navigator.popAndPushNamed(context, SignInScreen.id) : print(result);
+                                final result = await UserAuth.registerUser(_user.email, _user.password, _user.displayName);
+
+                                 result  != null ? Navigator.popAndPushNamed(context, SignInScreen.id) : print(result);
                               } on PlatformException catch (e) {
                                 //e.code
                                 switch(e.code)

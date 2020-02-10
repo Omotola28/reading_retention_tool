@@ -19,12 +19,16 @@ class ServiceSync extends StatelessWidget {
   final String subtitle;
   final String screen;
 
+  final HttpsCallable callable = CloudFunctions.instance.getHttpsCallable(
+    functionName: 'syncInsapaper',
+  );
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
         switch (screen) {
-          case 'kindle_highlights_sync_screen':
+          case 'kindle':
             {
               Navigator.pushNamed(context, screen);
             }
@@ -36,6 +40,12 @@ class ServiceSync extends StatelessWidget {
                 //TODO:clear value set in medium name
                 print("MEDIUM ${Provider.of<AppData>(context).mediumUsername}");
               });
+            }
+            break;
+
+          case 'instapaper':
+            {
+
             }
             break;
 
@@ -175,7 +185,7 @@ Future<bool> showMediumDialog(BuildContext context){
                       'uid': Provider.of<AppData>(context).uid
                     });
 
-                    print(resp.data);
+                    print(resp);
                    // Navigator.popAndPushNamed(context, MediumHighlightsScreen.id);
 
                },

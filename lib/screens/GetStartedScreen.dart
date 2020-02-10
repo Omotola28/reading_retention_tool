@@ -1,16 +1,80 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+import 'package:reading_retention_tool/module/User.dart';
+import 'package:reading_retention_tool/screens/HomeScreen.dart';
+import 'package:reading_retention_tool/service/auth_service.dart';
 import 'SignUpScreen.dart';
 import 'package:reading_retention_tool/custom_widgets/ActionUserButton.dart';
 import 'package:reading_retention_tool/constants/constants.dart';
 import 'package:reading_retention_tool/custom_widgets/SocialMediaButtons.dart';
 import 'package:reading_retention_tool/screens/SignInScreen.dart';
+import 'dart:async';
+import 'package:provider/provider.dart';
+import 'package:reading_retention_tool/module/app_data.dart';
 
-//import 'CarouselWidget.dart';
+final GoogleSignIn googleSignIn = GoogleSignIn();
 
-class GetStartedScreen extends StatelessWidget {
+class GetStartedScreen extends StatefulWidget {
+  @override
+  _GetStartedScreenState createState() => _GetStartedScreenState();
+}
 
-  static String id = 'getstarted_screen';
+class _GetStartedScreenState extends State<GetStartedScreen> {
+
+  bool isAuth = false;
+
+
+  googleLogIn() {
+    googleSignIn.signIn();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    googleSignIn.onCurrentUserChanged.listen((account){
+       handleSignInWithGoogle(account);
+    }, onError: (err){
+      print('This is an $err');
+    });
+
+    googleSignIn.signInSilently(suppressErrors: false)
+        .then((account){
+            handleSignInWithGoogle(account);
+    }).catchError((err){
+      print('Sign in failed $err');
+    });
+  }
+
+
+
+  handleSignInWithGoogle(GoogleSignInAccount account){
+    if(account != null){
+     var user = UserAuth.createUserWithGoogle();
+
+     user.then((userData){
+       Provider.of<AppData>(context).setUserData(userData);
+     });
+
+     Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context)
+           => HomeScreen()
+        ),
+      );
+     // print('User signed in $account');
+      setState(() {
+        isAuth = true;
+      });
+
+
+    }
+    else{
+      setState(() {
+        isAuth = false;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +137,7 @@ class GetStartedScreen extends StatelessWidget {
                           },
                           ),
                           SocialMediaButtons(icon: FontAwesomeIcons.google, onTap: (){
-
+                                googleLogIn();
                           },
                           ),
                         ],
@@ -123,6 +187,7 @@ class GetStartedScreen extends StatelessWidget {
     );
   }
 }
+
 
 
 

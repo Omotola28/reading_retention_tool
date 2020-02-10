@@ -5,6 +5,7 @@ import 'package:reading_retention_tool/utils/color_utility.dart';
 import 'package:reading_retention_tool/module/notification_data.dart';
 import 'package:reading_retention_tool/service/firestore_notification_service.dart';
 import 'package:reading_retention_tool/plugins/highlightNotificationPlugin.dart';
+import 'package:reading_retention_tool/module/user.dart';
 import 'dart:async';
 import 'package:rxdart/rxdart.dart';
 
@@ -28,6 +29,8 @@ class AppData extends ChangeNotifier{
   List notificationHighlights = [];
   String payloadHighlight;
 
+  User userData;
+
   List<NotificationData> _notifications = List();
   HighlightNotificationPlugin _notificationPlugin = HighlightNotificationPlugin();
 
@@ -37,6 +40,11 @@ class AppData extends ChangeNotifier{
 
 
   List<Category> categories = [];
+
+  setUserData(User data){
+    userData = data;
+    notifyListeners();
+  }
 
 
   void setCurrentUserEmail (String currentEmail){
@@ -123,6 +131,7 @@ class AppData extends ChangeNotifier{
   Future<void> startNotifications(List<NotificationData> notifications) async {
     await _notificationPlugin.scheduleAllNotifications(notifications);
   }
+
 
 
   ///The function would help store list object that can be manipulated and saved in database

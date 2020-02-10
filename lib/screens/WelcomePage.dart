@@ -8,7 +8,6 @@ import 'package:reading_retention_tool/constants/constants.dart';
 
 class WelcomePage extends StatefulWidget {
 
-  static String id = 'welcome_screen';
 
   @override
   _WelcomePage createState() => _WelcomePage();
@@ -25,10 +24,13 @@ class _WelcomePage extends State<WelcomePage> {
 
   void loadGetStartedScreen(){
     Future.delayed(Duration(seconds: 3), () {
-      Navigator.pushNamed(context, GetStartedScreen.id);
-     /* Navigator.push(context, MaterialPageRoute(builder: (context){
-        return GetStartedScreen();
-      }));*/
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context)
+        => GetStartedScreen()
+        ),
+      );
+
     });
   }
 

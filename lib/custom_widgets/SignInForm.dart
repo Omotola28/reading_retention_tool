@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:reading_retention_tool/custom_widgets/ResetPasswordForm.dart';
-import 'package:reading_retention_tool/screens/ResetPasswordScreen.dart';
+import 'package:provider/provider.dart';
+import 'package:reading_retention_tool/module/user.dart';
+import 'package:reading_retention_tool/module/app_data.dart';
 import 'package:reading_retention_tool/screens/HomeScreen.dart';
 import 'package:flutter/services.dart';
 import 'package:reading_retention_tool/constants/constants.dart';
 import 'package:reading_retention_tool/custom_widgets/ActionUserButton.dart';
 import 'package:reading_retention_tool/custom_widgets/UserTextInputField.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:reading_retention_tool/service/auth_service.dart';
 
 
 
@@ -108,7 +111,12 @@ class _SignInFormState extends State<SignInForm> {
                                         style: kTrailingTextStyleDecoration,
                                       ),
                                       onPressed: (){
-                                        Navigator.pushNamed(context, ResetPasswordScreen.id);
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(builder: (context)
+                                          => ResetPasswordForm()
+                                          ),
+                                        );
                                       },
                                     ),
                                   ],
@@ -127,8 +135,10 @@ class _SignInFormState extends State<SignInForm> {
                           form.save();
                           print("email: $email, password: $password");
                           try {
-                            final result = await _auth.signInWithEmailAndPassword(email: email, password: password);
-                            print("Result $result");
+                            final result = await UserAuth.signInUser(email, password);
+
+                            Provider.of<AppData>(context).setUserData(result);
+
                             if(result != null ){
                               Navigator.pop(context);
                               Navigator.push(
@@ -141,8 +151,6 @@ class _SignInFormState extends State<SignInForm> {
                             else{
                               print(result);
                             }
-
-
                           } on PlatformException catch (e) {
                                   print(e);
                             switch (e.code) {

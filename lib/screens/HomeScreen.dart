@@ -1,25 +1,24 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:http/http.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:reading_retention_tool/constants/constants.dart';
-import 'package:reading_retention_tool/module/auth.dart';
+import 'package:reading_retention_tool/custom_widgets/AppBar.dart';
+import 'package:reading_retention_tool/service/auth_service.dart';
+import 'package:reading_retention_tool/screens/ActivityFeedPage.dart';
 import 'package:reading_retention_tool/screens/CategoryHighlightsScreen.dart';
 import 'package:reading_retention_tool/screens/GetStartedScreen.dart';
-import 'package:reading_retention_tool/custom_widgets/ServiceSync.dart';
-import 'package:reading_retention_tool/screens/KindleHighlightsSync.dart';
 import 'package:reading_retention_tool/module/app_data.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:reading_retention_tool/screens/ManageCategory.dart';
+import 'package:reading_retention_tool/screens/NearbyLibraryPage.dart';
+import 'package:reading_retention_tool/screens/ServiceSyncListPage.dart';
 import 'package:reading_retention_tool/screens/UserBooksListScreen.dart';
 import 'package:reading_retention_tool/customIcons/my_flutter_app_icons.dart';
-import 'package:oauth1/oauth1.dart' as oauth1;
 import 'dart:async';
-import 'dart:convert';
-import 'dart:io';
-import 'package:crypto/crypto.dart';
-import 'package:http/http.dart' as http;
+import 'package:cloud_functions/cloud_functions.dart';
+
+
 
 class HomeScreen extends StatefulWidget {
 
@@ -38,6 +37,10 @@ class _HomeScreenState extends State<HomeScreen> {
   bool expandFlag = false;
   List<dynamic> cat = [];
   int categoryLength = 0;
+  PageController pageController;
+  int pageIndex = 0;
+
+
 
   @override
   void initState() {
@@ -46,125 +49,50 @@ class _HomeScreenState extends State<HomeScreen> {
     loggedUser.then((val){
       Provider.of<AppData>(context).setCurrentUserEmail(val.email);
       Provider.of<AppData>(context).setCurrentUid(val.uid);
-        //userEmail = val.email;
     });
+
 
     Future.delayed(Duration.zero, () async {
       final appData = Provider.of<AppData>(context);
       await appData.init();
     });
 
+    //Navigation page controller
+    pageController = PageController(initialPage: 0);
+
 
   }
 
-  void getStreamBookIds() async{
+  getStreamBookIds() async{
     final books = await _store.collection('users')
         .document(Provider.of<AppData>(context).uid)
         .collection('books').snapshots();
 
   }
 
-  Future doLogin(
-      String email,
-      String password
-      ) async {
+  onPageChanged(int pageIndex){
+    setState(() {
+      this.pageIndex = pageIndex;
+    });
 
-    var url = "https://www.instapaper.com/api/1/oauth/access_token";
-
-    Map<String, dynamic> body = {
-      'x_auth_username' : '${email}',
-      'x_auth_password' : '${password}',
-      'x_auth_mode' : 'client_auth'
-    };
-
-
-    var ms = (new DateTime.now()).millisecondsSinceEpoch;
-
-    final response = await http.post(url,
-        body: body,
-        headers: {
-          HttpHeaders.authorizationHeader : 'OAuth oauth_consumer_key="287b4ea14bdd4f488a7721abda57c261",oauth_signature_method="HMAC-SHA1",oauth_timestamp="${(ms / 1000).round()}",oauth_nonce="IHEaM65PpHN",oauth_version="1.0",oauth_signature=""'
-        },
-        encoding: Encoding.getByName("utf-8")
-    );
-
-
-    if (response.statusCode == 200) {
-      // If the call to the server was successful, parse the JSON
-      print(response.body);
-     // return Login.fromJson(json.decode(response.body));
-    } else {
-      print('RESPONSE ' + response.body);
-      throw Exception('Failed to load post');
-    }
   }
 
-/*
-  static final INSTAPAPER_API_URL_ACCESS_TOKEN="https://www.instapaper.com/api/1/oauth/access_token";
-  static final INSTAPAPER_API_KEY = '287b4ea14bdd4f488a7721abda57c261';
-  static final INSTAPAPER_SECRET_KEY = 'b0354423a77c43feb07671cd2a67d4ed';
+  onTap(int pageIndex){
+    pageController.animateToPage(pageIndex, duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
+  }
 
-  static final platform = new oauth1.Platform(
-      '',
-      '',
-      INSTAPAPER_API_URL_ACCESS_TOKEN,
-      oauth1.SignatureMethods.hmacSha1// signature method
+  //TODO: DELETE ONCE DONE WITH TESTING
+  final HttpsCallable callable = CloudFunctions.instance.getHttpsCallable(
+    functionName: 'syncInstapaper',
   );
-
-
-  static final clientCredentials = new oauth1.ClientCredentials(INSTAPAPER_API_KEY, INSTAPAPER_SECRET_KEY);
-
-  var auth = new oauth1.Authorization(clientCredentials, platform);
-
-  oauth1.Credentials _tempCredentials;
-
-  Future<String> getRequestTokenUrl() async {
-
-    final response = await auth.requestTemporaryCredentials('oob');
-    _tempCredentials = response.credentials;
-    print(response);
-   // return "${auth.getResourceOwnerAuthorizationURI(_tempCredentials.token)}";
-  }
-
-  // get real token with pin code input from user
-  Future<oauth1.Client> requestToken(String verifier) async {
-    final response = await auth.requestTokenCredentials(_tempCredentials, verifier);
-    _tempCredentials = null;
-
-    // save the token to local storage
-    //_saveToken(response.credentials);
-
-    // this is the oauth1 client that we can use as httpClient to call other APIs that needed authentication.
-    var authClient = oauth1.Client(platform.signatureMethod, clientCredentials, response.credentials);
-    return authClient;
-  }
-
-*/
 
 
   @override
   Widget build(BuildContext context) {
-    userEmail = Provider.of<AppData>(context).email;
+    final currentUser =  Provider.of<AppData>(context).userData;
+
     return Scaffold(
-        appBar: AppBar(
-          brightness: Brightness.light,
-          iconTheme: IconThemeData(color: kDarkColorBlack),
-          elevation: 0.0,
-          actions: <Widget>[
-            new IconButton(
-              onPressed: () {
-                //do something
-              },
-              padding: EdgeInsets.all(0.0),
-              iconSize: 100.0,
-              icon: Image.asset(
-                'Images/quotd.png',
-              ),
-              // tooltip: 'Closes application',
-              //    onPressed: () => exit(0),
-            ),
-          ],
-        ),
+        appBar: header(),
         drawer: Drawer(
           child: Column(
             children: <Widget>[
@@ -182,18 +110,36 @@ class _HomeScreenState extends State<HomeScreen> {
                           )
                       ),
                     ),
-                    UserAccountsDrawerHeader(
-                      accountName: Text(
-                        "Hi! :)",
-                        style: kTrailingTextStyleDecoration,
-                      ),
-                      accountEmail: Text(
-                        // '',
-                        userEmail != null ? userEmail : '',
-                        style: kHeadingTextStyleDecoration,
-                      ),
-                      currentAccountPicture: CircleAvatar(
-                        backgroundColor: kPrimaryColor,
+                    Padding(
+                      padding: const EdgeInsets.only(left: 5.0),
+                      child: UserAccountsDrawerHeader(
+                        accountName: Text(
+                          "Hi! :)",
+                          style: kTrailingTextStyleDecoration,
+                        ),
+                        accountEmail: Text(
+                          currentUser != null ? currentUser.displayName : '',
+                          //userEmail != null ? userEmail : '',
+                          style: kHeadingTextStyleDecoration,
+                        ),
+                        currentAccountPicture: Container(
+                          width: 300,
+                          height: 300,
+                          decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: kPrimaryColor,
+                              image: currentUser.photoUrl != '' ? DecorationImage(
+                                  fit: BoxFit.fill,
+                                  image: NetworkImage(currentUser.photoUrl)
+                              )
+                                  : DecorationImage(
+                                    fit: BoxFit.fill,
+                                    image: NetworkImage(kNoPhotoUrl),
+                              )
+                              //borderRadius: BorderRadius.circular(50.0)
+                          ),
+
+                        )
                       ),
                     ),
                     ListTile(
@@ -342,13 +288,18 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     ListTile(
                       title: Text('Instapaper Articles'),
-                      onTap: () {
+                      onTap: () async {
 
-                        doLogin('omotolashogunle@gmail.com', '@Matilda28').then((val){
-                          print(val);
+                       print(Provider.of<AppData>(context).uid);
+                        dynamic resp = await callable.call(<String, dynamic>{
+                          'username': 'omotolashogunle@gmail.com',
+                          'password': '@Matilda28',
+                          'uid' : Provider.of<AppData>(context).uid
                         });
-                        //instapaper();
-                        //Navigator.pop(context);
+
+
+                        print(resp.data);
+
                       },
                       trailing: Icon(CustomIcons.doc),
                     ),
@@ -378,93 +329,48 @@ class _HomeScreenState extends State<HomeScreen> {
 
                 ),
                 onTap: () {
-                  _auth.signOut();
-                  Navigator.pushNamed(context, GetStartedScreen.id);
+                 // _auth.signOut();
+                  googleSignIn.signOut();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context)
+                    => GetStartedScreen()
+                    ),
+                  );
 
                 },
               ),
             ],
           ),
         ),
-        body: SafeArea(
-          child: SingleChildScrollView(
-            child: Container(
-              color: Colors.white,
-              child: Column(
-                children: <Widget>[
-                  Column(
-                    children: <Widget>[
-                      Text(
-                        "Sync Highlights",
-                        style: kHeadingTextStyleDecoration.copyWith(fontSize: 25.0),
-                      ),
-                      Text(
-                        Provider.of<AppData>(context).noOfHighlights.toString() + ' Highlights Added',
-                        style: kTrailingTextStyleDecoration,
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: 30.0,
-                  ),
-                  Column(
-                    children: <Widget>[
-                      ListView(
-                        shrinkWrap: true,
-                        padding: const EdgeInsets.all(20.0),
-                        children: <Widget>[
-                             ServiceSync(
-                               thumbnail: Image.asset("Images/Instapaper.png"),
-                               title: "Instatpaper",
-                               subtitle: "Sync all your highlights from articles you have read online"
-                             ),
-                             ServiceSync(
-                                thumbnail: Image.asset("Images/medium.png"),
-                                title: "Medium",
-                                subtitle: "Sync highlights from medium",
-                                screen: 'medium',
-                             ),
-                            ServiceSync(
-                              thumbnail: Image.asset("Images/kindle.png"),
-                              title: "Kindle",
-                              subtitle: "Sync highlights from your kindle ebooks/app",
-                              screen: KindleHighlightsSync.id,
-                            ),
-                            ServiceSync(
-                              thumbnail: Image.asset("Images/hmq.png"),
-                              title: "Highlight My Quotes",
-                              subtitle: "Add highlights manually from print books you have read"
-                            ),
-                            ],
-                          )
-                        ],
-                      ),
-                    ],
-                  )
-            ),
-          ),
+        body: PageView(
+          children: <Widget>[
+            ServiceSyncListPage(),
+            NearbyLibraryPage(),
+            ActivityFeedPage(),
+          ],
+
+          controller: pageController,
+          onPageChanged: onPageChanged,
+          physics: NeverScrollableScrollPhysics(),
         ),
+      bottomNavigationBar: CupertinoTabBar(
+          currentIndex: pageIndex,
+          onTap: onTap,
+          activeColor: kPrimaryColor,
+          items: [
+            BottomNavigationBarItem(icon: Icon(Icons.home)),
+            BottomNavigationBarItem(icon: Icon(Icons.library_books)),
+            BottomNavigationBarItem(icon: Icon(Icons.notifications_active))
+          ],
+      ),
     );
   }
 
-  void _makeInstapaperAccessTokenRequest() async{
-    // set up POST request arguments
-    String url = 'https://www.instapaper.com/api/1/oauth/access_token';
-    Map<String, String> headers = {"Content-type": "application/x-www-form-urlencoded"};
-    String json = '{"title": "Hello", "body": "body text", "userId": 1}';
-    // make POST request
-    Response response = await post(url, headers: headers, body: json);
-    // check the status code for the result
-    int statusCode = response.statusCode;
-    // this API passes back the id of the new item added to the body
-    String body = response.body;
-    // {
-    //   "title": "Hello",
-    //   "body": "body text",
-    //   "userId": 1,
-    //   "id": 101
-    // }
-
+  @override
+  void dispose() {
+    super.dispose();
+    pageController.dispose();
   }
 }
 
@@ -499,35 +405,5 @@ class ExpandableContainer extends StatelessWidget {
 
 
 
-
-
-Future<Post> fetchPost() async {
-  final response = await http.post(
-    'https://www.instapaper.com/api/1/oauth/access_token',
-    headers: {HttpHeaders.authorizationHeader: "Basic your_api_token_here"},
-  );
-  final responseJson = json.decode(response.body);
-
-  return Post.fromJson(responseJson);
-}
-
-class Post {
-  final int userId;
-  final int id;
-  final String title;
-  final String body;
-
-  Post({this.userId, this.id, this.title, this.body});
-
-  factory Post.fromJson(Map<String, dynamic> json) {
-    return Post(
-      userId: json['userId'],
-      id: json['id'],
-      title: json['title'],
-      body: json['body'],
-    );
-  }
-
-}
 
 

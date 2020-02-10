@@ -7,8 +7,6 @@ import 'package:reading_retention_tool/custom_widgets/ResetPasswordForm.dart';
 
 class ResetPasswordScreen extends StatelessWidget {
 
-  static String id = 'resetPassword_screen';
-
   @override
   Widget build(BuildContext context) {
     return SafeArea(

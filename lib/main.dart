@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:reading_retention_tool/constants/constants.dart';
 import 'package:reading_retention_tool/constants/route_constants.dart';
 import 'package:reading_retention_tool/screens/BookSpecificHighlightScreen.dart';
 import 'package:reading_retention_tool/screens/CategoryScreen.dart';
@@ -58,6 +59,7 @@ void main() {
         debugShowCheckedModeBanner: false,
         theme: ThemeData.light().copyWith(
           primaryColor: Color(0xFFFFFFFF),
+          accentColor: kSecondaryColor,
           backgroundColor: Colors.white,
         ),
         navigatorKey: locator<NavigationService>().navigatorKey,

@@ -24,6 +24,7 @@ class _WelcomePage extends State<WelcomePage> {
 
   void loadGetStartedScreen(){
     Future.delayed(Duration(seconds: 3), () {
+      Navigator.pop(context);
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context)

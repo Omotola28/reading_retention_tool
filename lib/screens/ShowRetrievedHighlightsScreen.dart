@@ -12,7 +12,6 @@ import 'package:reading_retention_tool/screens/HomeScreen.dart';
 
 class ShowRetrievedHightlightsScreen extends StatefulWidget {
 
-  static String id = 'show_retrieved_highlights_screen';
 
   //List object for the builder, was better to pass it than store in provider
   List obj = [];

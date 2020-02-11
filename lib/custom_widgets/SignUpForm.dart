@@ -18,7 +18,7 @@ class SignUpForm extends StatefulWidget {
 class _SignUpFormState extends State<SignUpForm> {
 
   final _auth = FirebaseAuth.instance;
-  User _user;
+  User _user = User();
   final _signUpKey = GlobalKey<FormState>();
 
   @override
@@ -55,39 +55,42 @@ class _SignUpFormState extends State<SignUpForm> {
                         ),
                         UserTextInputField(labelText: 'Name',
                           validate: (value) {
-                            if (value.isEmpty) {
-                              return 'Please enter your Name';
+                            if (value.isEmpty ||  value.trim().length < 5 ) {
+                              return 'Username too short enter atleast 5 characters';
                             }
-                            setState(() {
-                             _user.displayName = value;
-                            });
+                            else if ( value.trim().length > 12 ){
+                              return 'Username is too long, recommend 5-11 characters';
+                            }
+
                             return null;
+
+
                           },
                           value: false,
                           savedValue:  (value) => _user.displayName = value,
                         ),
                         UserTextInputField(
                           labelText: 'Email', validate: (value) {
-                          if (value.isEmpty) {
-                            return 'Please enter your first name';
+                          if (value.isEmpty || !RegExp(pattern).hasMatch(value)) {
+                            return 'Invalid email format';
                           }
-                          setState(() {
-                           _user.email = value;
-                          });
-                          return null;
+                          else {
+
+                            return null;
+                          }
+
                         },
                           value: false, inputType: TextInputType.emailAddress,
                           savedValue:  (value) =>  _user.email = value,
                         ),
                         UserTextInputField(labelText: 'Password',
                           validate: (value) {
-                            if (value.isEmpty) {
-                              return 'Please enter a password';
+                            if (value.isEmpty || value.trim().length < 7 ) {
+                              return 'Password is too short';
                             }
-                            setState(() {
-                              _user.password = value;
-                            });
+
                             return null;
+
                           },
                           value: true,
                           savedValue:  (value) => _user.password = value,

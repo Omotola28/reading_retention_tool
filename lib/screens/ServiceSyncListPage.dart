@@ -32,7 +32,7 @@ class _ServiceSyncListPageState extends State<ServiceSyncListPage> {
                     ],
                   ),
                   SizedBox(
-                    height: 30.0,
+                    height: 8.0,
                   ),
                   Column(
                     children: <Widget>[

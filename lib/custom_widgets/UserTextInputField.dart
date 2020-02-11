@@ -25,6 +25,7 @@ class UserTextInputField extends StatelessWidget {
         obscureText: value,
         validator: validate,
         onSaved: savedValue,
+        autovalidate: true,
       ),
     );
   }

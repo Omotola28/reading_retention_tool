@@ -54,7 +54,7 @@ void main() {
 
   runApp(
     ChangeNotifierProvider<AppData>(
-      builder: (context) => AppData(),
+      create: (context) => AppData(),
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData.light().copyWith(

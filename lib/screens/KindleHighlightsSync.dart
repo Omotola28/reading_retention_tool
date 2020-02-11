@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:reading_retention_tool/constants/constants.dart';
 import 'package:flutter/services.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:reading_retention_tool/custom_widgets/ActionUserButton.dart';
+import 'package:reading_retention_tool/custom_widgets/AppBar.dart';
 import 'package:reading_retention_tool/module/app_data.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:io';
@@ -30,6 +32,7 @@ class _KindleHighlightsSync extends State<KindleHighlightsSync> {
   FileType _pickingType;
   final _firestore = Firestore.instance;
   var _highlightObject;
+  DocumentSnapshot highlightData;
   List obj = [];
   StorageUploadTask task;
   StorageReference firebaseStorageRef;
@@ -37,15 +40,18 @@ class _KindleHighlightsSync extends State<KindleHighlightsSync> {
 
   TextEditingController _controller = new TextEditingController();
 
+  //Get highlights to push to next screen
   Future<DocumentSnapshot> getHighlights() async{
 
       final highlights =
-        await _firestore.collection("users")
+        await _firestore.collection("kindle")
             .document(Provider.of<AppData>(context).uid).collection('books')
             .document(_fileName).get();
 
-
-      return highlights;
+      if(highlights.exists)
+      {
+        return highlights;
+      }
 
   }
 
@@ -62,6 +68,7 @@ class _KindleHighlightsSync extends State<KindleHighlightsSync> {
     _path = null;
   }
 
+  //Handling selecting files from file storage
   void _openFileExplorer() async {
       setState(() => _loadingPath = true);
       try {
@@ -84,23 +91,7 @@ class _KindleHighlightsSync extends State<KindleHighlightsSync> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        brightness: Brightness.light,
-        iconTheme: IconThemeData(color: kDarkColorBlack),
-        elevation: 0.0,
-        actions: <Widget>[
-          new IconButton(
-            onPressed: () {
-              //do something
-            },
-            padding: EdgeInsets.all(0.0),
-            iconSize: 100.0,
-            icon: Image.asset(
-              'Images/quotd.png',
-            ),
-          ),
-         ],
-        ),
+      appBar: header(),
         body: SafeArea(
           child: Container(
             child: Center(
@@ -110,6 +101,7 @@ class _KindleHighlightsSync extends State<KindleHighlightsSync> {
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
+                        SvgPicture.asset('Images/upload.svg', height: 200,),
                         Builder(
                           builder: (BuildContext context) => _loadingPath
                               ? Padding(
@@ -122,7 +114,7 @@ class _KindleHighlightsSync extends State<KindleHighlightsSync> {
                               child: ListView.separated(
                                 itemCount: 1,
                                 itemBuilder: (BuildContext context, int index) {
-                                  //'File $index: '
+
                                   final String name = _fileName;
                                   final path = _path;
 
@@ -148,8 +140,8 @@ class _KindleHighlightsSync extends State<KindleHighlightsSync> {
                                                     fontSize: 20.0
                                                 ),
                                               ),
-                                              const Padding(padding: EdgeInsets.only(bottom: 2.0)),
-                                              Text(
+                                              //const Padding(padding: EdgeInsets.only(bottom: 2.0)),
+                                             /* Text(
                                                 path,
                                                 maxLines: 2,
                                                 overflow: TextOverflow.ellipsis,
@@ -157,7 +149,7 @@ class _KindleHighlightsSync extends State<KindleHighlightsSync> {
                                                   fontSize: 10.0,
                                                   color: kHighlightColorGrey,
                                                 ),
-                                              ),
+                                              ),*/
                                             ],
                                           ),
                                         ),
@@ -174,7 +166,6 @@ class _KindleHighlightsSync extends State<KindleHighlightsSync> {
                           )
                               : Container(),
                         ),
-                        //CUSTOM BUTTON FOR APP
                         ActionUserButton(color: Colors.white, title: 'Select File', onPressed: () => _openFileExplorer()),
                         task != null ? Padding(
                           padding: const EdgeInsets.all(10.0),
@@ -183,16 +174,46 @@ class _KindleHighlightsSync extends State<KindleHighlightsSync> {
                                       ActionUserButton(color: Colors.white, title: 'Upload File', onPressed: (){
                                            _uploadStatus(File(_path));
 
-                                           task.events.listen((onData){
+                                           task.events.listen((onData) async {
                                              print(onData.type);
-                                             if(onData.type == StorageTaskEventType.success)
+                                             if(onData.type == StorageTaskEventType.success){
+                                               highlightData =
+                                               await _firestore.collection("kindle")
+                                                   .document(Provider.of<AppData>(context).uid).collection('books')
+                                                   .document(_fileName).get().catchError((e) => print(e));
 
-                                               Future.delayed(const Duration(seconds: 10), () {
+                                               if(highlightData.exists){
 
-                                                 getHighlights().then((highlights){
+                                                 Map<String, dynamic> highlighted = jsonDecode(
+                                                     highlightData.data['highlights']);
 
-                                                  // print(highlights.data);
-                                                  Provider.of<AppData>(context).setUploadedHighlights(
+                                                 highlighted.forEach((key, value) {
+                                                   obj.add({
+                                                     'highlight' : value,
+                                                     'category' : 'uncategorised',
+                                                     'color' : '#808080',
+                                                   });
+                                                 });
+                                               }
+
+                                               Navigator.pushNamed(
+                                                     context, 'show_retrieved_highlights_screen',
+                                                     arguments: {'highlightObj' : obj, 'bookName' : _fileName},
+                                               );
+
+                                             }
+
+
+
+
+
+
+                                              /* Future.delayed(const Duration(seconds: 10), () async {
+
+                                                 await getHighlights().then((highlights){
+
+                                                  print(highlights.data);
+                                                 /* Provider.of<AppData>(context).setUploadedHighlights(
                                                        highlights);
 
 
@@ -205,23 +226,20 @@ class _KindleHighlightsSync extends State<KindleHighlightsSync> {
                                                        'category' : 'uncategorised',
                                                        'color' : '#808080',
                                                      });
-                                                   });
+                                                   });*/
 
-                                                   //print(obj);
-                                                    //Set object for listbuilder to be accessed globally
-                                                  //TODO: Might end up deleting this
-                                                   Provider.of<AppData>(context).setHighlightListObject(
-                                                       obj);
-                                                   Provider.of<AppData>(context).setNoOfHighlightsPerUser(obj.length);
-                                                   Provider.of<AppData>(context).setBookName(_fileName);
+                                                  /* Provider.of<AppData>(context).setHighlightListObject(
+                                                       obj);*/
+                                                  /* Provider.of<AppData>(context).setNoOfHighlightsPerUser(obj.length);
+                                                   Provider.of<AppData>(context).setBookName(_fileName);*/
                                                  });
 
-                                                // print(task);
-                                                 Navigator.pushNamed(
-                                                     context, ShowRetrievedHightlightsScreen.id,
+
+                                                 /*Navigator.pushNamed(
+                                                     context, 'show_retrieved_highlights_screen',
                                                      arguments: {'highlightObj' : obj, 'bookName' : _fileName},
-                                                 );
-                                               });
+                                                 );*/
+                                               }); */
 
                                            });
                         }),
@@ -249,8 +267,6 @@ class _KindleHighlightsSync extends State<KindleHighlightsSync> {
       task = firebaseStorageRef.putFile(file);
     });
 
-
-
     return StreamBuilder(
       stream: task.events,
       builder: (BuildContext context, snapshot) {
@@ -275,7 +291,6 @@ class _KindleHighlightsSync extends State<KindleHighlightsSync> {
             ),
             subtitle: subtitle,
           );
-
       },
     );
   }

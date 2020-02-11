@@ -3,6 +3,7 @@ import 'package:reading_retention_tool/constants/constants.dart';
 import 'package:provider/provider.dart';
 import 'package:reading_retention_tool/module/app_data.dart';
 import 'package:cloud_functions/cloud_functions.dart';
+import 'package:reading_retention_tool/screens/KindleHighlightsSync.dart';
 import 'package:reading_retention_tool/screens/MediumHighlightsScreen.dart';
 
 class ServiceSync extends StatelessWidget {
@@ -30,7 +31,12 @@ class ServiceSync extends StatelessWidget {
         switch (screen) {
           case 'kindle':
             {
-              Navigator.pushNamed(context, screen);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context)
+                => KindleHighlightsSync()
+                ),
+              );
             }
             break;
 

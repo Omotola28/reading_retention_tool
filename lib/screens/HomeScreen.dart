@@ -128,12 +128,13 @@ class _HomeScreenState extends State<HomeScreen> {
                           decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               color: kPrimaryColor,
-                              image: currentUser.photoUrl != '' ? DecorationImage(
+                              image: currentUser.photoUrl != null ? DecorationImage(
                                   fit: BoxFit.fill,
                                   image: NetworkImage(currentUser.photoUrl)
                               )
                                   : DecorationImage(
                                     fit: BoxFit.fill,
+                                    //colorFilter: ColorFilter.mode(kPrimaryColor, BlendMode.color),
                                     image: NetworkImage(kNoPhotoUrl),
                               )
                               //borderRadius: BorderRadius.circular(50.0)

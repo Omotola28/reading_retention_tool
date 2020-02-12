@@ -64,7 +64,7 @@ class _UserBooksListScreenState extends State<UserBooksListScreen> {
             children: <Widget>[
               Expanded(
                 child: StreamBuilder<QuerySnapshot>(
-                    stream: _store.collection('users')
+                    stream: _store.collection('kindle')
                         .document(Provider.of<AppData>(context).uid)
                         .collection('books').snapshots(),
                     builder: (context, snapshot){
@@ -80,7 +80,8 @@ class _UserBooksListScreenState extends State<UserBooksListScreen> {
                                   child: ListTile(
                                     title: Text(snapshot.data.documents[index].documentID.split('.')[0]),
                                     onTap: (){
-                                      Navigator.push(
+
+                                     Navigator.push(
                                         context,
                                         MaterialPageRoute(builder: (context)
                                         => BookSpecificHighlightScreen(snapshot.data.documents[index].documentID)),

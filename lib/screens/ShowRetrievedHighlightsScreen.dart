@@ -7,16 +7,13 @@ import 'package:reading_retention_tool/customIcons/my_flutter_app_icons.dart';
 import 'package:reading_retention_tool/module/app_data.dart';
 import 'package:reading_retention_tool/constants/constants.dart';
 import 'dart:async';
-
-import 'package:reading_retention_tool/screens/HomeScreen.dart';
+import 'package:reading_retention_tool/screens/UserBooksListScreen.dart';
 
 class ShowRetrievedHightlightsScreen extends StatefulWidget {
 
-
-  //List object for the builder, was better to pass it than store in provider
-  List obj = [];
+  //List obj = [];
   String _fileName;
-  ShowRetrievedHightlightsScreen(this.obj, this._fileName);
+  ShowRetrievedHightlightsScreen(this._fileName);
 
   @override
   _ShowRetrievedHightlightsScreenState createState() =>
@@ -27,18 +24,41 @@ class _ShowRetrievedHightlightsScreenState
     extends State<ShowRetrievedHightlightsScreen> {
 
   final _store = Firestore.instance;
+  int objLength;
+  bool userHasData = false;
+
+  Future<DocumentSnapshot> _getKindleHighlights() async {
+        var data =  await _store
+        .collection('kindle')
+        .document(Provider.of<AppData>(context).uid)
+        .collection('books')
+        .document(widget._fileName).get();
+
+        if(data.exists){
+          setState(() {
+            userHasData = true;
+          });
+        }
+        else{
+          setState(() {
+            userHasData = false;
+          });
+        }
+
+        return data;
+  }
 
   @override
   void initState() {
     super.initState();
+   // _getKindleHighlights();
 
+    //objLength = widget.obj.length;
   }
 
   @override
   void dispose() {
-    print("I am done");
     super.dispose();
-
   }
 
 
@@ -54,16 +74,16 @@ class _ShowRetrievedHightlightsScreenState
                 color: kDarkColorBlack,
             ),
             onPressed: () {
-           _store.collection("users")
+           /*_store.collection("kindle")
                   .document(Provider.of<AppData>(context).uid)
                   .collection("books")
                   .document(widget._fileName)
-                  .setData({"highlights": widget.obj}, merge: true);
+                  .setData({"highlights": widget.obj}, merge: true);*/
            Navigator.pop(context);
            Navigator.push(
              context,
              MaterialPageRoute(builder: (context)
-             => HomeScreen()
+             => UserBooksListScreen()
              ),
            );
             }
@@ -93,67 +113,94 @@ class _ShowRetrievedHightlightsScreenState
         ],
       ),
 
-     body: ListView.builder(
-        itemCount: widget.obj == null ? 0 : widget.obj.length,
-        itemBuilder: (context, index) {
-          return Padding(
-            padding: const EdgeInsets.all(10.0),
-            child: Card(
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  ListTile(
-                    contentPadding: EdgeInsets.all(20.0),
-                    subtitle: Text(widget.obj[index]['highlight'].replaceAll(new RegExp(r' - '), '')),
-                    trailing: GestureDetector(
-                        child: Icon(
-                            CustomIcons.down_open,
-                            color: kHighlightColorDarkGrey,
-                        ),
-                      onTap: (){
-                            showHighlightDialog(
-                                context, widget.obj[index]['highlight'].replaceAll(new RegExp(r' - '), ''), index)
-                                .then((val){
-                              switch (Provider.of<AppData>(context).whatActionButton) {
-                                case 'Save':
-                                  {
-                                    widget.obj[index]['highlight'] = Provider.of<AppData>(context).savedString;
-                                  }
-                                  break;
+     body: FutureBuilder (
+       future:  _getKindleHighlights(),
+       builder: (context, snapshot) {
+         List<Widget> widgetHighlights = [];
 
-                                case 'Favourite':
-                                  {
-                                    //statements;
-                                    print('hhjhjhj');
-                                  }
-                                  break;
+         if(userHasData)  {
 
-                                case 'Delete':
-                                  {
-                                    widget.obj.removeAt(index);
-                                    widget.obj.length = widget.obj.length - 1;
+           List highlights = snapshot.data['highlights'];
 
-                                  }
-                                  break;
+           for (var index = 0; index < highlights.length; index++) {
 
-                                default:
-                                  {
-                                    //statements;
-                                  }
-                                  break;
-                              }
+             final highlightWidget =
+             Padding(
+               padding: const EdgeInsets.all(10.0),
+               child: Card(
+                 child: Column(
+                   mainAxisSize: MainAxisSize.min,
+                   children: <Widget>[
+                     ListTile(
+                       contentPadding: EdgeInsets.all(20.0),
+                       subtitle: Text(highlights[index]['highlight'].replaceAll(new RegExp(r' - '), ''),),
+                       trailing: GestureDetector(
+                         child: Icon(
+                           CustomIcons.down_open,
+                           color: kHighlightColorDarkGrey,
+                         ),
+                         onTap: (){
+                           showHighlightDialog(
+                               context,
+                               highlights[index]['highlight'].replaceAll(new RegExp(r' - '), ''), index)
+                               .then((val){
+                             switch (Provider.of<AppData>(context).whatActionButton) {
+                               case 'Save':
+                                 {
+                                   highlights[index]['highlight'] = Provider.of<AppData>(context).savedString;
+                                 }
+                                 break;
 
-                                  print(val);
-                            });
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
-      ),
+                               case 'Favourite':
+                                 {
+                                   //statements;
+                                   print('hhjhjhj');
+                                 }
+                                 break;
+
+                               case 'Delete':
+                                 {
+                                   /*widget.obj.removeAt(index);
+                                   widget.obj.length = widget.obj.length - 1;
+                                   setState(() {
+                                     objLength = widget.obj.length;
+                                   });*/
+
+                                 }
+                                 break;
+
+                               default:
+                                 {
+                                   //statements;
+                                 }
+                                 break;
+                             }
+
+                             print(val);
+                           });
+                         },
+                       ),
+                     ),
+                   ],
+                 ),
+               ),
+             );
+
+             widgetHighlights.add(highlightWidget);
+           }
+         } else {
+           return Center(
+             child: CircularProgressIndicator(),
+           );
+         }
+         return ListView.builder(
+           itemCount: snapshot.data['highlights'].length == null ? 0 : snapshot.data['highlights'].length,
+           itemBuilder: (context, index) {
+             return widgetHighlights[index];
+           },
+         );
+       }
+     ),
     );
   }
 }

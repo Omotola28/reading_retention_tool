@@ -35,7 +35,7 @@ Route<dynamic> generateRoute(RouteSettings settings){
         Map<String,dynamic> arguments = settings.arguments;
 
         return MaterialPageRoute(builder: (context) =>
-            ShowRetrievedHightlightsScreen(arguments['highlightObj'], arguments['bookName']));
+            ShowRetrievedHightlightsScreen(arguments['bookName']));
 
       case UserBooksListRoute :
         return MaterialPageRoute(builder: (context) => UserBooksListScreen());

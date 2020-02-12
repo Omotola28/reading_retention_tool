@@ -17,6 +17,7 @@ class BookSpecificHighlightScreen extends StatefulWidget {
 
   BookSpecificHighlightScreen(this.bookId);
 
+
   //static String id = 'book_specific_highlight';
 
   @override
@@ -28,7 +29,6 @@ class _BookSpecificHighlightScreenState
     extends State<BookSpecificHighlightScreen> {
   final _store = Firestore.instance;
   var highlights = [];
-
 
 
   static const _menuItems = <String>[
@@ -97,7 +97,7 @@ class _BookSpecificHighlightScreenState
           Expanded(
             child: StreamBuilder(
                 stream: _store
-                    .collection('users')
+                    .collection('kindle')
                     .document(Provider.of<AppData>(context).uid)
                     .collection('books')
                     .document(widget.bookId)
@@ -111,7 +111,7 @@ class _BookSpecificHighlightScreenState
                   } else {
                     highlights = snapshot.data['highlights'];
 
-                    //highlights.forEach(f);
+
 
                   for (var index = 0; index < highlights.length; index++) {
                       
@@ -125,7 +125,6 @@ class _BookSpecificHighlightScreenState
                                 mainAxisSize: MainAxisSize.min,
                                 children: <Widget>[
                                   ListTile(
-                                    //contentPadding: EdgeInsets.fromLTRB(10.0, 0.0, 20.0, 0.0),
                                     contentPadding: EdgeInsets.all(20.0),
                                     subtitle: Text(
                                         highlights[index]['highlight'].replaceAll(new RegExp(r' - '), ''),
@@ -184,6 +183,7 @@ void handlePopUpMenuAction(String value, BuildContext context, int index, List h
 
   var intIndex =   Provider.of<AppData>(context).categoryIndex;
 
+  print(index);
   //Had to create a list of type List<dynamic inorder to enable it get deleted from firebase>
   var highlight = [];
   highlight.add(highlyObj[intIndex]);
@@ -206,7 +206,7 @@ void handlePopUpMenuAction(String value, BuildContext context, int index, List h
             case 'Save':
               {
                 highlyObj[index]['highlight'] = Provider.of<AppData>(context).savedString;
-                Firestore.instance.collection("users")
+                Firestore.instance.collection("kindle")
                     .document(Provider.of<AppData>(context).uid)
                     .collection("books")
                     .document(Provider.of<AppData>(context).bookName)
@@ -222,6 +222,8 @@ void handlePopUpMenuAction(String value, BuildContext context, int index, List h
 
             case 'Delete':
               {
+
+
                /* widget.obj.removeAt(index);
                 widget.obj.length = widget.obj.length - 1;*/
 

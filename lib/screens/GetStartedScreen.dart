@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -13,7 +14,7 @@ import 'dart:async';
 import 'package:provider/provider.dart';
 import 'package:reading_retention_tool/module/app_data.dart';
 
-final GoogleSignIn googleSignIn = GoogleSignIn();
+
 
 class GetStartedScreen extends StatefulWidget {
   @override
@@ -24,21 +25,22 @@ class _GetStartedScreenState extends State<GetStartedScreen> {
 
   bool isAuth = false;
 
-
-  googleLogIn() {
-    googleSignIn.signIn();
-  }
-
   @override
   void initState() {
     super.initState();
-    googleSignIn.onCurrentUserChanged.listen((account){
+    print(FirebaseAuth.instance.currentUser().then((val){
+      print('FIREBASEUSER $val');
+    }));
+
+    print( 'GOOGLE ${UserAuth.googleSignIn.currentUser}');
+
+    UserAuth.googleSignIn.onCurrentUserChanged.listen((account){
        handleSignInWithGoogle(account);
     }, onError: (err){
       print('This is an $err');
     });
 
-    googleSignIn.signInSilently(suppressErrors: false)
+    UserAuth.googleSignIn.signInSilently(suppressErrors: false)
         .then((account){
             handleSignInWithGoogle(account);
     }).catchError((err){
@@ -137,7 +139,7 @@ class _GetStartedScreenState extends State<GetStartedScreen> {
                           },
                           ),
                           SocialMediaButtons(icon: FontAwesomeIcons.google, onTap: (){
-                                googleLogIn();
+                                UserAuth.googleLogIn();
                           },
                           ),
                         ],

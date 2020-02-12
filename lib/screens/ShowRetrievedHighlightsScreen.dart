@@ -11,7 +11,6 @@ import 'package:reading_retention_tool/screens/UserBooksListScreen.dart';
 
 class ShowRetrievedHightlightsScreen extends StatefulWidget {
 
-  //List obj = [];
   String _fileName;
   ShowRetrievedHightlightsScreen(this._fileName);
 
@@ -30,7 +29,7 @@ class _ShowRetrievedHightlightsScreenState
   Future<DocumentSnapshot> _getKindleHighlights() async {
         var data =  await _store
         .collection('kindle')
-        .document(Provider.of<AppData>(context).uid)
+        .document(Provider.of<AppData>(context).userData.id)
         .collection('books')
         .document(widget._fileName).get();
 
@@ -51,9 +50,6 @@ class _ShowRetrievedHightlightsScreenState
   @override
   void initState() {
     super.initState();
-   // _getKindleHighlights();
-
-    //objLength = widget.obj.length;
   }
 
   @override
@@ -74,11 +70,7 @@ class _ShowRetrievedHightlightsScreenState
                 color: kDarkColorBlack,
             ),
             onPressed: () {
-           /*_store.collection("kindle")
-                  .document(Provider.of<AppData>(context).uid)
-                  .collection("books")
-                  .document(widget._fileName)
-                  .setData({"highlights": widget.obj}, merge: true);*/
+
            Navigator.pop(context);
            Navigator.push(
              context,

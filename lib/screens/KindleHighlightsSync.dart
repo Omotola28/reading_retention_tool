@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -10,9 +11,7 @@ import 'package:reading_retention_tool/custom_widgets/AppBar.dart';
 import 'package:reading_retention_tool/module/app_data.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:uuid/uuid.dart';
-import 'package:uuid/uuid_util.dart';
 import 'dart:io';
-import 'dart:convert';
 import 'dart:async';
 
 
@@ -44,7 +43,7 @@ class _KindleHighlightsSync extends State<KindleHighlightsSync> {
   TextEditingController _controller = new TextEditingController();
 
   //Get highlights to push to next screen
-  Future<DocumentSnapshot> getHighlights() async {
+  /*Future<DocumentSnapshot> getHighlights() async {
     final highlights =
     await _firestore.collection("kindle")
         .document(Provider
@@ -56,7 +55,7 @@ class _KindleHighlightsSync extends State<KindleHighlightsSync> {
       return highlights;
     }
   }
-
+*/
   @override
   void initState() {
     super.initState();
@@ -189,15 +188,6 @@ class _KindleHighlightsSync extends State<KindleHighlightsSync> {
                               print(onData.type);
                               if (onData.type == StorageTaskEventType.success) {
 
-                                /* highlightData =
-                                await _firestore.collection("kindle")
-                                    .document(Provider
-                                    .of<AppData>(context)
-                                    .uid).collection('books')
-                                    .document(_fileName).get().catchError((e) =>
-                                    print(e));*/
-
-
                                Navigator.pushNamed(
                                   context,
                                   'show_retrieved_highlights_screen',
@@ -205,40 +195,6 @@ class _KindleHighlightsSync extends State<KindleHighlightsSync> {
                                     'bookName': _fileName
                                   },
                                 );
-                               /* highlightData =
-                                await _firestore.collection("kindle")
-                                    .document(Provider
-                                    .of<AppData>(context)
-                                    .uid).collection('books')
-                                    .document(_fileName).get().catchError((e) =>
-                                    print(e));
-*/
-
-                               /* Future.delayed(
-                                    const Duration(seconds: 10), () async {
-                                  if (highlightData.exists) {
-                                    Map<String,
-                                        dynamic> highlighted = jsonDecode(
-                                        highlightData.data['highlights']);
-
-                                    highlighted.forEach((key, value) {
-                                      obj.add({
-                                        'id' : uuid.v4(),
-                                        'highlight': value,
-                                        'category': 'uncategorised',
-                                        'color': '#808080',
-                                      });
-                                    });
-                                    Navigator.pushNamed(
-                                      context,
-                                      'show_retrieved_highlights_screen',
-                                      arguments: {
-                                        'highlightObj': obj,
-                                        'bookName': _fileName
-                                      },
-                                    );
-                                  }
-                                });*/
                               }
                             });
                           }),
@@ -261,9 +217,7 @@ class _KindleHighlightsSync extends State<KindleHighlightsSync> {
 
   Widget _uploadStatus(File file) {
     setState(() {
-      firebaseStorageRef = FirebaseStorage.instance.ref().child("${Provider
-          .of<AppData>(context)
-          .uid}_${_fileName}");
+      firebaseStorageRef = FirebaseStorage.instance.ref().child("${Provider.of<AppData>(context).userData.id}_${_fileName}");
       task = firebaseStorageRef.putFile(file);
     });
 

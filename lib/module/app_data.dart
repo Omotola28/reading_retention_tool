@@ -28,8 +28,8 @@ class AppData extends ChangeNotifier{
   int noOfHighlights = 0;
   List notificationHighlights = [];
   String payloadHighlight;
-
   User userData;
+  bool isCustomSignIn = false;
 
   List<NotificationData> _notifications = List();
   HighlightNotificationPlugin _notificationPlugin = HighlightNotificationPlugin();
@@ -201,5 +201,10 @@ void reduceNoOfHighlights(int number){
     await FirestoreNotificationService.removeNotification(notification);
   }
 
+  ///set custom sign in
+  setCustomSignIn(bool value){
+    isCustomSignIn = value;
+    notifyListeners();
+  }
 
 }

@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:reading_retention_tool/module/notification_data.dart';
 import 'dart:async';
 import 'package:random_string/random_string.dart';
+import 'package:reading_retention_tool/service/auth_service.dart';
 
 class FirestoreNotificationService {
   static Future<Stream<QuerySnapshot>> getAllNotifications() async {

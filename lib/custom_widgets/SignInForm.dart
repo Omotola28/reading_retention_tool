@@ -137,9 +137,10 @@ class _SignInFormState extends State<SignInForm> {
                           try {
                             final result = await UserAuth.signInUser(email, password);
 
-                            Provider.of<AppData>(context).setUserData(result);
 
                             if(result != null ){
+                              Provider.of<AppData>(context).setUserData(result);
+                              Provider.of<AppData>(context).setCustomSignIn(true);
                               Navigator.pop(context);
                               Navigator.push(
                                 context,

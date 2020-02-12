@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:reading_retention_tool/constants/constants.dart';
 import 'package:reading_retention_tool/custom_widgets/AppBar.dart';
+import 'package:reading_retention_tool/module/user.dart';
 import 'package:reading_retention_tool/service/auth_service.dart';
 import 'package:reading_retention_tool/screens/ActivityFeedPage.dart';
 import 'package:reading_retention_tool/screens/CategoryHighlightsScreen.dart';
@@ -31,7 +32,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
   final _store = Firestore.instance;
   Future<FirebaseUser> loggedUser;
-  final _auth = UserAuth.auth;
   var userEmail;
   var uid;
   bool expandFlag = false;
@@ -39,18 +39,13 @@ class _HomeScreenState extends State<HomeScreen> {
   int categoryLength = 0;
   PageController pageController;
   int pageIndex = 0;
+  var currentUser;
 
 
 
   @override
   void initState() {
     super.initState();
-    loggedUser = UserAuth.getCurrentUser();
-    loggedUser.then((val){
-      Provider.of<AppData>(context).setCurrentUserEmail(val.email);
-      Provider.of<AppData>(context).setCurrentUid(val.uid);
-    });
-
 
     Future.delayed(Duration.zero, () async {
       final appData = Provider.of<AppData>(context);
@@ -60,8 +55,8 @@ class _HomeScreenState extends State<HomeScreen> {
     //Navigation page controller
     pageController = PageController(initialPage: 0);
 
-
   }
+
 
   getStreamBookIds() async{
     final books = await _store.collection('users')
@@ -89,7 +84,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final currentUser =  Provider.of<AppData>(context).userData;
+
 
     return Scaffold(
         appBar: header(),
@@ -118,7 +113,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           style: kTrailingTextStyleDecoration,
                         ),
                         accountEmail: Text(
-                          currentUser != null ? currentUser.displayName : '',
+                          Provider.of<AppData>(context).userData != null ? Provider.of<AppData>(context).userData.displayName : '',
                           //userEmail != null ? userEmail : '',
                           style: kHeadingTextStyleDecoration,
                         ),
@@ -128,14 +123,12 @@ class _HomeScreenState extends State<HomeScreen> {
                           decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               color: kPrimaryColor,
-                              image: currentUser.photoUrl != null ? DecorationImage(
+                              image: DecorationImage(
                                   fit: BoxFit.fill,
-                                  image: NetworkImage(currentUser.photoUrl)
-                              )
-                                  : DecorationImage(
-                                    fit: BoxFit.fill,
-                                    //colorFilter: ColorFilter.mode(kPrimaryColor, BlendMode.color),
-                                    image: NetworkImage(kNoPhotoUrl),
+                                  image: NetworkImage(
+                                      Provider.of<AppData>(context).userData.photoUrl == null ? null :
+                                      Provider.of<AppData>(context).userData.photoUrl
+                                  )
                               )
                               //borderRadius: BorderRadius.circular(50.0)
                           ),
@@ -330,8 +323,17 @@ class _HomeScreenState extends State<HomeScreen> {
 
                 ),
                 onTap: () {
-                 // _auth.signOut();
-                  googleSignIn.signOut();
+
+                  if(Provider.of<AppData>(context).isCustomSignIn){
+                    UserAuth.auth.signOut();
+                    Provider.of<AppData>(context).setCustomSignIn(false);
+
+                  }
+                  else{
+                    UserAuth.googleSignIn.signOut();
+                  }
+
+                  Navigator.pop(context);
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context)

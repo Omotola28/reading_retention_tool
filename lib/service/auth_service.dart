@@ -12,25 +12,30 @@ class UserAuth {
   static final auth = FirebaseAuth.instance;
   static FirebaseUser loggedUser;
   static final userRef = Firestore.instance.collection('users');
-  static User currentUser;
+  static var currentUser;
+  static GoogleSignIn googleSignIn = GoogleSignIn();
+
 
   static Future<FirebaseUser> getCurrentUser() async {
+    var user;
+
     try {
-      final user = await auth.currentUser();
+      user = await auth.currentUser();
+
       if (user != null) {
-        loggedUser = user;
+        currentUser = user;
+      }
+      else{
+        currentUser = googleSignIn.currentUser;
       }
     }
     catch (e) {
       print("Error $e");
     }
-    return loggedUser;
+
+    return currentUser;
   }
 
-  //TODO: Register new user using the same attributes as googlecreateuser
-  //TODO: Check if user exsist is working
-  //TODO: Create a test page to tick things you are testing
-  //TODO: Create scenario for users
   static Future<User> registerUser(String email, String password, String displayName) async {
 
     final registeredUser = await auth.createUserWithEmailAndPassword(
@@ -44,7 +49,7 @@ class UserAuth {
         "email": registeredUser.user.email,
         "username": displayName,
         "displayname": displayName,
-        "photoUrl": '',
+        "photoUrl": 'https://images.unsplash.com/photo-1569414753782-7b8cef3ad2e8?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1650&q=80',
         "timeStamp": DateTime.now()
       }).catchError((e) => print(e));
 
@@ -55,12 +60,21 @@ class UserAuth {
   }
 
   static Future<User> createUserWithGoogle() async {
-    final GoogleSignInAccount user = googleSignIn.currentUser;
-    DocumentSnapshot doc = await userRef.document(user.id).get();
+    final GoogleSignInAccount userAccount =  googleSignIn.currentUser;
 
-    if (!doc.exists) {
-      userRef.document(user.id).setData({
-        "id": user.id,
+    final GoogleSignInAuthentication googleSignInAuthentication = await userAccount.authentication;
+
+    final AuthCredential credential = GoogleAuthProvider.getCredential(
+      accessToken: googleSignInAuthentication.accessToken,
+      idToken: googleSignInAuthentication.idToken,
+    );
+
+    final AuthResult authResult = await auth.signInWithCredential(credential);
+    final FirebaseUser user = authResult.user;
+
+
+      userRef.document(user.uid).setData({
+        "id": user.uid,
         "email": user.email,
         "username": user.email.substring(0, 5),
         "displayname": user.displayName,
@@ -68,8 +82,7 @@ class UserAuth {
         "timeStamp": DateTime.now()
       }).catchError((e) => print(e));
 
-      doc = await userRef.document(user.id).get();
-    }
+      DocumentSnapshot doc = await userRef.document(user.uid).get();
 
     return User.fromDocument(doc);
 
@@ -89,6 +102,10 @@ class UserAuth {
       doc = await userRef.document(signInUser.user.uid).get();
       return User.fromDocument(doc);
     }
+  }
+
+  static googleLogIn() {
+    googleSignIn.signIn();
   }
 
 }

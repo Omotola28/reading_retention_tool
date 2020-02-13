@@ -6,11 +6,15 @@ import 'package:reading_retention_tool/utils/color_utility.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class AddCategoryWidget extends StatefulWidget {
+
+
   @override
-  _AddCategoryWidgetState createState() => _AddCategoryWidgetState();
+  AddCategoryWidgetState createState() => AddCategoryWidgetState();
 }
 
-class _AddCategoryWidgetState extends State<AddCategoryWidget> {
+class AddCategoryWidgetState extends State<AddCategoryWidget> {
+
+
 
   String colCat;
   String newCategory;
@@ -85,7 +89,7 @@ class _AddCategoryWidgetState extends State<AddCategoryWidget> {
                       child: TextAndDivider(),
                     ),
 
-                   //Shows the list of colours
+                   ///Shows the list of colours
                    Wrap(
                      children: checkVals.keys.map((String key){
                         return colorCircle(context, key, HexColor(key));
@@ -106,10 +110,9 @@ class _AddCategoryWidgetState extends State<AddCategoryWidget> {
                             ),
                           ),
                           onPressed: () {
-                              Provider.of<AppData>(context).addCategory( newCategory, colCat);
-                              Firestore.instance.collection("users")
-                                  .document(Provider.of<AppData>(context).uid)
-                                  .collection("categories")
+                              Firestore.instance.collection("category")
+                                  .document(Provider.of<AppData>(context).userData.id)
+                                  .collection('userCategories')
                                   .document(newCategory+colCat)
                                   .setData({});
 
@@ -124,7 +127,9 @@ class _AddCategoryWidgetState extends State<AddCategoryWidget> {
                                 color: kPrimaryColor
                               ),
                             ),
-                            onPressed: null,
+                            onPressed: () {
+                              Navigator.pop(context);
+                            },
 
                         )
                       ],

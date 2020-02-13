@@ -65,7 +65,7 @@ class _UserBooksListScreenState extends State<UserBooksListScreen> {
               Expanded(
                 child: StreamBuilder<QuerySnapshot>(
                     stream: _store.collection('kindle')
-                        .document(Provider.of<AppData>(context).uid)
+                        .document(Provider.of<AppData>(context).userData.id)
                         .collection('books').snapshots(),
                     builder: (context, snapshot){
                       List<ListTile> bookList = [];

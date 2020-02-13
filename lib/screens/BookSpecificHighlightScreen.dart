@@ -3,7 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:reading_retention_tool/constants/constants.dart';
 import 'package:provider/provider.dart';
 import 'package:reading_retention_tool/module/app_data.dart';
-import 'package:reading_retention_tool/screens/CategoryScreen.dart';
+import 'package:reading_retention_tool/constants/route_constants.dart';
 import 'package:reading_retention_tool/screens/UserBooksListScreen.dart';
 import 'package:reading_retention_tool/customIcons/my_flutter_app_icons.dart';
 import 'package:reading_retention_tool/utils/color_utility.dart';
@@ -98,7 +98,7 @@ class _BookSpecificHighlightScreenState
             child: StreamBuilder(
                 stream: _store
                     .collection('kindle')
-                    .document(Provider.of<AppData>(context).uid)
+                    .document(Provider.of<AppData>(context).userData.id)
                     .collection('books')
                     .document(widget.bookId)
                     .snapshots(),
@@ -124,28 +124,50 @@ class _BookSpecificHighlightScreenState
                               child: Column(
                                 mainAxisSize: MainAxisSize.min,
                                 children: <Widget>[
-                                  ListTile(
-                                    contentPadding: EdgeInsets.all(20.0),
-                                    subtitle: Text(
-                                        highlights[index]['highlight'].replaceAll(new RegExp(r' - '), ''),
-                                        style: TextStyle(color: kDarkColorBlack),
-                                    ),
-
-
-                                    leading: Icon(CustomIcons.circle, size: 10.0, color: HexColor(highlights[index]['color']),),
-                                    trailing: PopupMenuButton(
-                                        onSelected: (selectedDropDownItem) =>
-                                            handlePopUpMenuAction(
-                                                selectedDropDownItem,
-                                                context,
-                                                index,
-                                                highlights,
-                                                widget.bookId
+                                  Container(
+                                    child: Stack(
+                                      children: <Widget>[
+                                          Positioned(
+                                              child: Padding(
+                                                padding: const EdgeInsets.all(8.0),
+                                                child: Icon(CustomIcons.circle, size: 8.0, color: HexColor(highlights[index]['color'])),
+                                              ),
+                                              top: 5.0,
+                                          ),
+                                          Container(
+                                            padding: EdgeInsets.fromLTRB(30.0, 30.0, 30.0, 30.0),
+                                            width: MediaQuery.of(context).size.width*0.8,
+                                            child: Align(
+                                              child: Text(
+                                                  highlights[index]['highlight'].replaceAll(new RegExp(r' - '), ''),
+                                                  style: TextStyle(color: kDarkColorBlack),
+                                                  maxLines: 50,
+                                                  softWrap: true,
+                                              ),
+                                              alignment: Alignment.center,
                                             ),
-                                        itemBuilder: (BuildContext context) => _pop
-                                    ),
 
-                                  ),
+
+                                          ),
+                                        Align(
+                                          alignment: Alignment.topRight,
+                                          child: PopupMenuButton(
+                                              onSelected: (selectedDropDownItem) =>
+                                              handlePopUpMenuAction(
+                                              selectedDropDownItem,
+                                              context,
+                                              index,
+                                              highlights,
+                                              widget.bookId
+                                             ),
+                                              itemBuilder: (BuildContext context) => _pop
+                                          ),
+                                        ),
+
+                                      ]
+
+                                    ),
+                                  )
                                 ],
                               ),
                             ),
@@ -188,6 +210,7 @@ void handlePopUpMenuAction(String value, BuildContext context, int index, List h
   var highlight = [];
   highlight.add(highlyObj[intIndex]);
 
+
   //TODO: Work on only saving data that is edited and not the whole array again.
 
   switch (value) {
@@ -207,7 +230,7 @@ void handlePopUpMenuAction(String value, BuildContext context, int index, List h
               {
                 highlyObj[index]['highlight'] = Provider.of<AppData>(context).savedString;
                 Firestore.instance.collection("kindle")
-                    .document(Provider.of<AppData>(context).uid)
+                    .document(Provider.of<AppData>(context).userData.id)
                     .collection("books")
                     .document(Provider.of<AppData>(context).bookName)
                     .updateData({"highlights": highlyObj});
@@ -220,24 +243,10 @@ void handlePopUpMenuAction(String value, BuildContext context, int index, List h
               }
               break;
 
-            case 'Delete':
-              {
-
-
-               /* widget.obj.removeAt(index);
-                widget.obj.length = widget.obj.length - 1;*/
-
-              }
-              break;
-
             default:
-              {
-                //statements;
-              }
               break;
           }
 
-          print(val);
         });
       }
       break;
@@ -246,8 +255,8 @@ void handlePopUpMenuAction(String value, BuildContext context, int index, List h
       {
 
       Provider.of<AppData>(context).reduceNoOfHighlights(1);
-      Firestore.instance.collection("users")
-            .document(Provider.of<AppData>(context).uid)
+      Firestore.instance.collection("kindle")
+            .document(Provider.of<AppData>(context).userData.id)
             .collection("books")
             .document(Provider.of<AppData>(context).bookName)
             .updateData({'highlights' : FieldValue.arrayRemove(highlight)});
@@ -259,7 +268,7 @@ void handlePopUpMenuAction(String value, BuildContext context, int index, List h
       {
 
 
-        Navigator.popAndPushNamed(context, CategoryScreen.id, );
+        Navigator.popAndPushNamed(context, CategoryRoute );
 
       }
       break;

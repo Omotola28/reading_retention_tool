@@ -81,8 +81,9 @@ class _ShowRetrievedHightlightsScreenState
             }
 
             ),
-        title: Text('Edit Highlights', style: TextStyle(
+        title: Text('Kindle Highlights', style: TextStyle(
           color: kDarkSocialBtnColor,
+          fontSize: 18.0
         ),
         ),
         brightness: Brightness.light,
@@ -126,19 +127,21 @@ class _ShowRetrievedHightlightsScreenState
                      ListTile(
                        contentPadding: EdgeInsets.all(20.0),
                        subtitle: Text(highlights[index]['highlight'].replaceAll(new RegExp(r' - '), ''),),
-                       trailing: GestureDetector(
-                         child: Icon(
+                       //trailing: GestureDetector(
+                        /* child: Icon(
                            CustomIcons.down_open,
                            color: kHighlightColorDarkGrey,
                          ),
                          onTap: (){
-                           showHighlightDialog(
+
+                  *//*         showHighlightDialog(
                                context,
                                highlights[index]['highlight'].replaceAll(new RegExp(r' - '), ''), index)
                                .then((val){
                              switch (Provider.of<AppData>(context).whatActionButton) {
                                case 'Save':
                                  {
+                                   print(highlights[index]['highlight'] );
                                    highlights[index]['highlight'] = Provider.of<AppData>(context).savedString;
                                  }
                                  break;
@@ -152,11 +155,6 @@ class _ShowRetrievedHightlightsScreenState
 
                                case 'Delete':
                                  {
-                                   /*widget.obj.removeAt(index);
-                                   widget.obj.length = widget.obj.length - 1;
-                                   setState(() {
-                                     objLength = widget.obj.length;
-                                   });*/
 
                                  }
                                  break;
@@ -169,9 +167,9 @@ class _ShowRetrievedHightlightsScreenState
                              }
 
                              print(val);
-                           });
-                         },
-                       ),
+                           });*//*
+                         },*/
+                       //),
                      ),
                    ],
                  ),
@@ -197,6 +195,8 @@ class _ShowRetrievedHightlightsScreenState
   }
 }
 
+//NO POINT HAVING TWO SCREENS THAT DO THE SAME THING.
+/*
 Future<bool> showHighlightDialog(BuildContext context, String highlight, int index){
 
     final _highlightController = TextEditingController(text: highlight);
@@ -226,7 +226,6 @@ Future<bool> showHighlightDialog(BuildContext context, String highlight, int ind
                       Provider.of<AppData>(context).setSavedHighlight(_highlightController.text);
 
                       Navigator.of(context).pop(true);
-                      //print(_highlightController.text);
                     },
                   ),
                   FlatButton(
@@ -237,7 +236,9 @@ Future<bool> showHighlightDialog(BuildContext context, String highlight, int ind
                     onPressed: () {
                       Provider.of<AppData>(context).setWhatActionButton('Favourite');
                       Navigator.of(context).pop(true);
-                      /* ... */
+                      */
+/* ... *//*
+
                     },
                   ),
                   FlatButton(
@@ -248,7 +249,9 @@ Future<bool> showHighlightDialog(BuildContext context, String highlight, int ind
                     onPressed: () {
                       Provider.of<AppData>(context).setWhatActionButton('Delete');
                       Navigator.of(context).pop(true);
-                      /* ... */
+                      */
+/* ... *//*
+
                     },
                   ),
                 ],
@@ -256,4 +259,5 @@ Future<bool> showHighlightDialog(BuildContext context, String highlight, int ind
     }
     );
 
-}
+
+}*/

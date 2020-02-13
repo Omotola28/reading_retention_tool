@@ -9,8 +9,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:reading_retention_tool/utils/color_utility.dart';
 
 class CategoryScreen extends StatefulWidget {
-  static String id = 'category_screen';
-
 
   @override
   _CategoryScreenState createState() => _CategoryScreenState();
@@ -69,18 +67,16 @@ class _CategoryScreenState extends State<CategoryScreen> {
             children: <Widget>[
               Expanded(
                 child: StreamBuilder<QuerySnapshot>(
-                    stream: Firestore.instance.collection('users')
-                        .document(Provider.of<AppData>(context).uid)
-                        .collection('categories').snapshots(),
+                    stream: Firestore.instance.collection('category')
+                        .document(Provider.of<AppData>(context).userData.id)
+                        .collection('userCategories').snapshots(),
                     builder: (context, snapshot){
-                      List<ListTile> categoryList = [];
+
                       if(snapshot.hasData){
-
-
                         return ListView.builder(
                           itemBuilder: (context, index) {
 
-                            //return Text(snapshot.data.documents[index].documentID.split('#')[0]);
+
                             return CategoryTile(
                                 categoryTitle: snapshot.data.documents[index].documentID.split('#')[0],
                                 categoryColor: HexColor(snapshot.data.documents[index].documentID.split('#')[1]));
@@ -89,10 +85,7 @@ class _CategoryScreenState extends State<CategoryScreen> {
                         );
 
                       }
-                      else{
-
-                        return Text('Start adding data', style: TextStyle(color: Colors.black));
-                      }
+                      return Center(child: Text('Start adding data', style: TextStyle(color: Colors.black)));
 
 
                     }

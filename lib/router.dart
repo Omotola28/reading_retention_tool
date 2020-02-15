@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:reading_retention_tool/screens/CategoryScreen.dart';
+import 'package:reading_retention_tool/screens/CategoriseHighlightScreen.dart';
 import 'package:reading_retention_tool/screens/GetStartedScreen.dart';
 import 'package:reading_retention_tool/screens/HighlightOfTheDayScreen.dart';
 import 'package:reading_retention_tool/screens/HomeScreen.dart';
@@ -10,6 +10,7 @@ import 'package:reading_retention_tool/screens/SignInScreen.dart';
 import 'package:reading_retention_tool/screens/SignUpScreen.dart';
 import 'package:reading_retention_tool/screens/UndefinedScreen.dart';
 import 'package:reading_retention_tool/screens/UserBooksListScreen.dart';
+import 'package:reading_retention_tool/screens/WaitingToLoginScreen.dart';
 import 'package:reading_retention_tool/screens/WelcomePage.dart';
 import 'package:reading_retention_tool/screens/ResetPasswordScreen.dart';
 import 'package:reading_retention_tool/constants/route_constants.dart';
@@ -41,7 +42,7 @@ Route<dynamic> generateRoute(RouteSettings settings){
         return MaterialPageRoute(builder: (context) => UserBooksListScreen());
 
       case CategoryRoute :
-        return MaterialPageRoute(builder: (context) => CategoryScreen());
+        return MaterialPageRoute(builder: (context) => CategoriseHighlightScreen());
 
       case HighlightOfTheDayRoute :
         var payload = settings.arguments;
@@ -61,6 +62,9 @@ Route<dynamic> generateRoute(RouteSettings settings){
 
       case ResetPasswordRoute :
         return MaterialPageRoute(builder: (context) => ResetPasswordScreen());
+
+      case WaitingToLoginRoute :
+        return MaterialPageRoute(builder: (context) => WaitingToLoginScreen());
 
       default:
         return MaterialPageRoute(builder: (context) => UndefinedScreen());

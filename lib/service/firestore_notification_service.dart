@@ -24,9 +24,9 @@ class FirestoreNotificationService {
 
     for(final notification in notifications){
      Firestore.instance
-          .collection("users")
-          .document(firebaseUser.uid)
           .collection("notifications")
+          .document(firebaseUser.uid)
+          .collection("userNotifications ")
           .document(docId+'-'+randomAlpha(5))
           .setData(notification.toJson());
     }

@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:reading_retention_tool/constants/constants.dart';
 import 'package:reading_retention_tool/customIcons/my_flutter_app_icons.dart';
+import 'package:reading_retention_tool/custom_widgets/AppBar.dart';
 import 'package:reading_retention_tool/module/app_data.dart';
 import 'package:reading_retention_tool/constants/constants.dart';
 import 'dart:async';
@@ -62,50 +63,9 @@ class _ShowRetrievedHightlightsScreenState
   @override
   Widget build(BuildContext context) {
 
+
     return Scaffold(
-      appBar: AppBar(
-        leading: FlatButton(
-            child: Icon(
-                Icons.arrow_back_ios,
-                color: kDarkColorBlack,
-            ),
-            onPressed: () {
-
-           Navigator.pop(context);
-           Navigator.push(
-             context,
-             MaterialPageRoute(builder: (context)
-             => UserBooksListScreen()
-             ),
-           );
-            }
-
-            ),
-        title: Text('Kindle Highlights', style: TextStyle(
-          color: kDarkSocialBtnColor,
-          fontSize: 18.0
-        ),
-        ),
-        brightness: Brightness.light,
-        iconTheme: IconThemeData(color: kDarkColorBlack),
-        elevation: 0.0,
-        actions: <Widget>[
-          new IconButton(
-            onPressed: () {
-              print('jhjkja');
-              //do something
-            },
-            padding: EdgeInsets.all(0.0),
-            iconSize: 100.0,
-            icon: Image.asset(
-              'Images/quotd.png',
-            ),
-            // tooltip: 'Closes application',
-            //    onPressed: () => exit(0),
-          ),
-        ],
-      ),
-
+      appBar:  header(headerText: 'Kindle Highlights', context: context , screen: UserBooksListScreen() ),
      body: FutureBuilder (
        future:  _getKindleHighlights(),
        builder: (context, snapshot) {

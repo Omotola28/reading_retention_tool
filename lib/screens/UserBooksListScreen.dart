@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:reading_retention_tool/constants/constants.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:reading_retention_tool/custom_widgets/AppBar.dart';
 import 'package:reading_retention_tool/module/app_data.dart';
 import 'package:provider/provider.dart';
 import 'package:reading_retention_tool/screens/BookSpecificHighlightScreen.dart';
@@ -19,46 +20,7 @@ class _UserBooksListScreenState extends State<UserBooksListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-       appBar: AppBar(
-         leading: FlatButton(
-             child: Icon(
-                 Icons.arrow_back_ios,
-                 color: kDarkColorBlack,
-             ),
-
-             onPressed: () {
-               Navigator.push(
-                 context,
-                 MaterialPageRoute(builder: (context)
-                 => HomeScreen()
-                 ),
-               );
-               }
-
-         ),
-         title: Text('Book List', style: TextStyle(
-           color: kDarkSocialBtnColor,
-         ),
-         ),
-         brightness: Brightness.light,
-         iconTheme: IconThemeData(color: kDarkColorBlack),
-         elevation: 0.0,
-         actions: <Widget>[
-           new IconButton(
-             onPressed: () {
-               print('jhjkja');
-               //do something
-             },
-             padding: EdgeInsets.all(0.0),
-             iconSize: 100.0,
-             icon: Image.asset(
-               'Images/quotd.png',
-             ),
-             // tooltip: 'Closes application',
-             //    onPressed: () => exit(0),
-           ),
-         ],
-       ),
+       appBar: header(headerText: 'Book List', screen: HomeScreen(), context: context),
       body: SafeArea(
           child: Column(
             children: <Widget>[
@@ -68,7 +30,7 @@ class _UserBooksListScreenState extends State<UserBooksListScreen> {
                         .document(Provider.of<AppData>(context).userData.id)
                         .collection('books').snapshots(),
                     builder: (context, snapshot){
-                      List<ListTile> bookList = [];
+
                       if(snapshot.hasData){
 
 

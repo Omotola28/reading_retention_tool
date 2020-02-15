@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:reading_retention_tool/constants/constants.dart';
 import 'package:provider/provider.dart';
+import 'package:reading_retention_tool/custom_widgets/AppBar.dart';
+import 'package:reading_retention_tool/custom_widgets/CustomHighlightTile.dart';
 import 'package:reading_retention_tool/module/app_data.dart';
 import 'package:reading_retention_tool/constants/route_constants.dart';
 import 'package:reading_retention_tool/screens/UserBooksListScreen.dart';
@@ -34,8 +36,8 @@ class _BookSpecificHighlightScreenState
   static const _menuItems = <String>[
     'Share',
     'Edit',
+    'Categorise',
     'Delete',
-    'Categorise'
   ];
 
   //Shows the popup menu for each tile
@@ -51,46 +53,7 @@ class _BookSpecificHighlightScreenState
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: FlatButton(
-            child: Icon(
-              Icons.arrow_back_ios,
-              color: kDarkColorBlack,
-            ),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context)
-                => UserBooksListScreen()
-                ),
-              );
-            }),
-        title: Text(
-          'Manage Highlights',
-          style: TextStyle(
-            color: kDarkSocialBtnColor,
-            fontSize: 18.0
-          ),
-        ),
-        brightness: Brightness.light,
-        iconTheme: IconThemeData(color: kDarkColorBlack),
-        elevation: 0.0,
-        actions: <Widget>[
-          new IconButton(
-            onPressed: () {
-              print('jhjkja');
-              //do something
-            },
-            padding: EdgeInsets.all(0.0),
-            iconSize: 100.0,
-            icon: Image.asset(
-              'Images/quotd.png',
-            ),
-            // tooltip: 'Closes application',
-            //    onPressed: () => exit(0),
-          ),
-        ],
-      ),
+      appBar: header(headerText: 'Manage Highlights', screen: UserBooksListScreen(), context: context),
       body: SafeArea(
           child: Column(
         children: <Widget>[
@@ -124,50 +87,22 @@ class _BookSpecificHighlightScreenState
                               child: Column(
                                 mainAxisSize: MainAxisSize.min,
                                 children: <Widget>[
-                                  Container(
-                                    child: Stack(
-                                      children: <Widget>[
-                                          Positioned(
-                                              child: Padding(
-                                                padding: const EdgeInsets.all(8.0),
-                                                child: Icon(CustomIcons.circle, size: 8.0, color: HexColor(highlights[index]['color'])),
-                                              ),
-                                              top: 5.0,
-                                          ),
-                                          Container(
-                                            padding: EdgeInsets.fromLTRB(30.0, 30.0, 30.0, 30.0),
-                                            width: MediaQuery.of(context).size.width*0.8,
-                                            child: Align(
-                                              child: Text(
-                                                  highlights[index]['highlight'].replaceAll(new RegExp(r' - '), ''),
-                                                  style: TextStyle(color: kDarkColorBlack),
-                                                  maxLines: 50,
-                                                  softWrap: true,
-                                              ),
-                                              alignment: Alignment.center,
+                                  CustomHighlightTile(
+                                    icon: Icon(CustomIcons.circle, size: 8.0, color: HexColor(highlights[index]['color'])),
+                                    text: highlights[index]['highlight'].replaceAll(new RegExp(r' - '), ''),
+
+                                    popMenu: PopupMenuButton(
+                                        onSelected: (selectedDropDownItem) =>
+                                            handlePopUpMenuAction(
+                                                selectedDropDownItem,
+                                                context,
+                                                index,
+                                                highlights,
+                                                widget.bookId
                                             ),
-
-
-                                          ),
-                                        Align(
-                                          alignment: Alignment.topRight,
-                                          child: PopupMenuButton(
-                                              onSelected: (selectedDropDownItem) =>
-                                              handlePopUpMenuAction(
-                                              selectedDropDownItem,
-                                              context,
-                                              index,
-                                              highlights,
-                                              widget.bookId
-                                             ),
-                                              itemBuilder: (BuildContext context) => _pop
-                                          ),
-                                        ),
-
-                                      ]
-
+                                        itemBuilder: (BuildContext context) => _pop
                                     ),
-                                  )
+                                    )
                                 ],
                               ),
                             ),

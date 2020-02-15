@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:reading_retention_tool/constants/constants.dart';
+import 'package:reading_retention_tool/screens/HomeScreen.dart';
 import 'package:reading_retention_tool/utils/share.dart';
 
 class HighlightOfTheDayScreen extends StatefulWidget {
@@ -22,6 +23,20 @@ class _HighlightOfTheDayScreenState extends State<HighlightOfTheDayScreen> {
         brightness: Brightness.light,
         iconTheme: IconThemeData(color: kDarkColorBlack),
         elevation: 0.0,
+        leading: FlatButton(
+            child: Icon(
+              Icons.arrow_back_ios,
+              color: kDarkColorBlack,
+            ),
+            onPressed: () {
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context)
+                => HomeScreen()
+                ),
+              );
+            }),
         title: Text(
           'Highlight of the Day',
           style: TextStyle(

@@ -3,11 +3,13 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:reading_retention_tool/constants/constants.dart';
+import 'package:reading_retention_tool/custom_widgets/AppBar.dart';
 import 'package:reading_retention_tool/module/app_data.dart';
 import 'dart:async';
 import 'package:reading_retention_tool/module/notification_data.dart';
 import 'package:reading_retention_tool/plugins/highlightNotificationPlugin.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:reading_retention_tool/screens/CategoryHighlightsScreen.dart';
 import 'package:reading_retention_tool/screens/HomeScreen.dart';
 
 
@@ -57,25 +59,10 @@ class _CreateNotificationPageState extends State<CreateNotificationPage> with Si
         .of(context)
         .textTheme;
     return Scaffold(
-      appBar: AppBar(
-        brightness: Brightness.light,
-        iconTheme: IconThemeData(color: kDarkColorBlack),
-        elevation: 0.0,
-        title: Text('Create Notification', style: TextStyle(color: kDarkColorBlack),),
-        actions: <Widget>[
-          new IconButton(
-            onPressed: () {
-            },
-            padding: EdgeInsets.all(0.0),
-            iconSize: 100.0,
-            icon: Image.asset(
-              'Images/quotd.png',
-            ),
-          ),
-        ],
-      ),
+      appBar: header(headerText: 'Create Notification', context: context, screen: CategoryHighlightsScreen(widget.categoryId)),
       body: SafeArea(
         child: Column(
+          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
@@ -226,6 +213,7 @@ class _CreateNotificationPageState extends State<CreateNotificationPage> with Si
      Provider.of<AppData>(context).addNotification(notificationData, widget.categoryId);
 
 
+     //TODO: Show snackbar indicating that notifcations have been set for category daily
      Navigator.pop(context);
      Navigator.push(
        context,
@@ -276,12 +264,12 @@ class NotificationTile extends StatelessWidget {
                       fontWeight: FontWeight.normal,
                     ),
                   ),
-
+                  SizedBox(height: 8.0,),
                   Row(
                     children: <Widget>[
                       Icon(
                         Icons.access_time,
-                        size: 20,
+                        size: 15,
                         color: kPrimaryColor
                       ),
                       SizedBox(width: 12),
@@ -291,7 +279,7 @@ class NotificationTile extends StatelessWidget {
                             2, '0')}',
                         style: textTheme.headline.copyWith(
                           fontWeight: FontWeight.bold,
-                          fontSize: 18.0,
+                          fontSize: 15.0,
                           color: Theme
                               .of(context)
                               .brightness == Brightness.dark ? Colors.grey

@@ -23,14 +23,13 @@ class GetStartedScreen extends StatefulWidget {
 
 class _GetStartedScreenState extends State<GetStartedScreen> {
 
-  bool isAuth = false;
 
   @override
   void initState() {
     super.initState();
-    print(FirebaseAuth.instance.currentUser().then((val){
+    FirebaseAuth.instance.currentUser().then((val){
       print('FIREBASEUSER $val');
-    }));
+    });
 
     print( 'GOOGLE ${UserAuth.googleSignIn.currentUser}');
 
@@ -40,12 +39,6 @@ class _GetStartedScreenState extends State<GetStartedScreen> {
       print('This is an $err');
     });
 
-    UserAuth.googleSignIn.signInSilently(suppressErrors: false)
-        .then((account){
-            handleSignInWithGoogle(account);
-    }).catchError((err){
-      print('Sign in failed $err');
-    });
   }
 
 
@@ -53,6 +46,7 @@ class _GetStartedScreenState extends State<GetStartedScreen> {
   handleSignInWithGoogle(GoogleSignInAccount account){
     if(account != null){
      var user = UserAuth.createUserWithGoogle();
+
 
      user.then((userData){
        Provider.of<AppData>(context).setUserData(userData);
@@ -64,17 +58,6 @@ class _GetStartedScreenState extends State<GetStartedScreen> {
            => HomeScreen()
         ),
       );
-     // print('User signed in $account');
-      setState(() {
-        isAuth = true;
-      });
-
-
-    }
-    else{
-      setState(() {
-        isAuth = false;
-      });
     }
   }
 

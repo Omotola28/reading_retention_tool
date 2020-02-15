@@ -60,17 +60,17 @@ class UserAuth {
   }
 
   static Future<User> createUserWithGoogle() async {
-    final GoogleSignInAccount userAccount =  googleSignIn.currentUser;
+      final GoogleSignInAccount userAccount =  googleSignIn.currentUser;
 
-    final GoogleSignInAuthentication googleSignInAuthentication = await userAccount.authentication;
+      final GoogleSignInAuthentication googleSignInAuthentication = await userAccount.authentication;
 
-    final AuthCredential credential = GoogleAuthProvider.getCredential(
-      accessToken: googleSignInAuthentication.accessToken,
-      idToken: googleSignInAuthentication.idToken,
-    );
+      final AuthCredential credential = GoogleAuthProvider.getCredential(
+        accessToken: googleSignInAuthentication.accessToken,
+        idToken: googleSignInAuthentication.idToken,
+      );
 
-    final AuthResult authResult = await auth.signInWithCredential(credential);
-    final FirebaseUser user = authResult.user;
+      final AuthResult authResult = await auth.signInWithCredential(credential);
+      final FirebaseUser user = authResult.user;
 
 
       userRef.document(user.uid).setData({
@@ -84,13 +84,12 @@ class UserAuth {
 
       DocumentSnapshot doc = await userRef.document(user.uid).get();
 
-    return User.fromDocument(doc);
+      return User.fromDocument(doc);
 
   }
 
 
   static Future<User> signInUser(String email, String password) async {
-
 
     final signInUser = await auth.signInWithEmailAndPassword(
         email: email, password: password);
@@ -107,5 +106,11 @@ class UserAuth {
   static googleLogIn() {
     googleSignIn.signIn();
   }
+
+  static Future<bool> isFirebaseUserLoggedIn() async{
+    var user = await FirebaseAuth.instance.currentUser();
+    return user != null;
+  }
+
 
 }

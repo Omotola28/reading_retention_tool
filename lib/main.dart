@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:reading_retention_tool/constants/constants.dart';
 import 'package:reading_retention_tool/constants/route_constants.dart';
 import 'package:reading_retention_tool/screens/BookSpecificHighlightScreen.dart';
-import 'package:reading_retention_tool/screens/CategoryScreen.dart';
+import 'package:reading_retention_tool/screens/CategoriseHighlightScreen.dart';
 import 'package:reading_retention_tool/screens/GetStartedScreen.dart';
 import 'package:reading_retention_tool/screens/HighlightOfTheDayScreen.dart';
 import 'package:reading_retention_tool/screens/HomeScreen.dart';

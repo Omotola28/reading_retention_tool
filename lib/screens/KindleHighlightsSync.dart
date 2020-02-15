@@ -10,6 +10,7 @@ import 'package:reading_retention_tool/custom_widgets/ActionUserButton.dart';
 import 'package:reading_retention_tool/custom_widgets/AppBar.dart';
 import 'package:reading_retention_tool/module/app_data.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:reading_retention_tool/screens/HomeScreen.dart';
 import 'package:uuid/uuid.dart';
 import 'dart:io';
 import 'dart:async';
@@ -93,7 +94,7 @@ class _KindleHighlightsSync extends State<KindleHighlightsSync> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: header(),
+      appBar: header(headerText: 'Upload Highlight', screen: HomeScreen(), context: context),
       body: SafeArea(
         child: Container(
           child: Center(

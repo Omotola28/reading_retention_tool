@@ -1,10 +1,14 @@
+import 'dart:ffi';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:reading_retention_tool/constants/constants.dart';
 import 'package:reading_retention_tool/custom_widgets/AppBar.dart';
 import 'package:reading_retention_tool/module/user.dart';
+import 'package:flutter_image/network.dart';
 import 'package:reading_retention_tool/service/auth_service.dart';
 import 'package:reading_retention_tool/screens/ActivityFeedPage.dart';
 import 'package:reading_retention_tool/screens/CategoryHighlightsScreen.dart';
@@ -47,6 +51,7 @@ class _HomeScreenState extends State<HomeScreen> {
   void initState() {
     super.initState();
 
+
     Future.delayed(Duration.zero, () async {
       final appData = Provider.of<AppData>(context);
       await appData.init();
@@ -54,14 +59,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
     //Navigation page controller
     pageController = PageController(initialPage: 0);
-
-  }
-
-
-  getStreamBookIds() async{
-    final books = await _store.collection('users')
-        .document(Provider.of<AppData>(context).uid)
-        .collection('books').snapshots();
 
   }
 
@@ -85,16 +82,34 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
 
-
+    //print( Provider.of<AppData>(context).userData);
     return Scaffold(
-        appBar: header(),
+        appBar: AppBar(
+          brightness: Brightness.light,
+          iconTheme: IconThemeData(color: kDarkColorBlack),
+          elevation: 0.0,
+          actions: <Widget>[
+            new IconButton(
+              onPressed: () {
+                //do something
+              },
+              padding: EdgeInsets.all(0.0),
+              iconSize: 100.0,
+              icon: Image.asset(
+                'Images/quotd.png',
+              ),
+              // tooltip: 'Closes application',
+              //    onPressed: () => exit(0),
+            ),
+          ],
+        ),
         drawer: Drawer(
           child: Column(
             children: <Widget>[
               Expanded(
                 child: ListView(
                   children: <Widget>[
-                    Align(
+                   /* Align(
                       alignment: Alignment.topRight,
                       child: FlatButton(
                           onPressed: null,
@@ -104,39 +119,30 @@ class _HomeScreenState extends State<HomeScreen> {
                             height: 24.0,
                           )
                       ),
-                    ),
+                    ),*/
                     Padding(
                       padding: const EdgeInsets.only(left: 5.0),
                       child: UserAccountsDrawerHeader(
                         accountName: Text(
                           "Hi! :)",
-                          style: kTrailingTextStyleDecoration,
+                          style: kTrailingTextStyleDecoration.copyWith(color: kDarkColorBlack),
                         ),
                         accountEmail: Text(
                           Provider.of<AppData>(context).userData != null ? Provider.of<AppData>(context).userData.displayName : '',
-                          //userEmail != null ? userEmail : '',
+
                           style: kHeadingTextStyleDecoration,
                         ),
-                        currentAccountPicture: Container(
-                          width: 300,
-                          height: 300,
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: kPrimaryColor,
-                              image: DecorationImage(
-                                  fit: BoxFit.fill,
-                                  image: NetworkImage(
-                                      Provider.of<AppData>(context).userData.photoUrl == null ? null :
-                                      Provider.of<AppData>(context).userData.photoUrl
-                                  )
-                              )
-                              //borderRadius: BorderRadius.circular(50.0)
-                          ),
-
-                        )
+                        decoration: BoxDecoration(
+                          image: DecorationImage(
+                              image: NetworkImage(
+                                 kNoPhotoUrl
+                              ),
+                              fit: BoxFit.fill
+                          )
+                        ),
                       ),
                     ),
-                    ListTile(
+                  /*  ListTile(
                       leading: Image.asset(
                         "Images/notes.png",
                         width: 24.0,
@@ -149,11 +155,8 @@ class _HomeScreenState extends State<HomeScreen> {
                         // Then close the drawer
                         Navigator.pop(context);
                       },
-                    ),
-                    Divider(
-                      color: kHighlightColorGrey,
-                      thickness: 2.0,
-                    ),
+                    ),*/
+
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text("Browse",
@@ -193,12 +196,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       expanded: expandFlag,
                       child: Column(
                         children: <Widget>[
+                          Provider.of<AppData>(context).userData != null ?
                           Flexible(
-                              flex: 4,
+                              flex: 2,
                               child: StreamBuilder<QuerySnapshot>(
-                                  stream: Firestore.instance.collection('users')
-                                      .document(Provider.of<AppData>(context).uid)
-                                      .collection('categories').snapshots(),
+                                  stream: Firestore.instance.collection('category')
+                                      .document(Provider.of<AppData>(context).userData.id)
+                                      .collection('userCategories').snapshots(),
                                   builder: (context, snapshot){
                                     if(snapshot.hasData){
                                       categoryLength = snapshot.data.documents.length;
@@ -239,7 +243,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   }
 
                               )
-                          ),
+                          ) : CircularProgressIndicator(),
                           categoryLength != 0 ?
                           Expanded(
                             child: Align(
@@ -323,7 +327,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                 ),
                 onTap: () {
-
+                  //UserAuth.auth.signOut();
                   if(Provider.of<AppData>(context).isCustomSignIn){
                     UserAuth.auth.signOut();
                     Provider.of<AppData>(context).setCustomSignIn(false);
@@ -332,7 +336,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   else{
                     UserAuth.googleSignIn.signOut();
                   }
-
+                  UserAuth.googleSignIn.signOut();
                   Navigator.pop(context);
                   Navigator.push(
                     context,

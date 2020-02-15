@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:reading_retention_tool/module/app_data.dart';
 import 'package:reading_retention_tool/customIcons/my_flutter_app_icons.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:reading_retention_tool/screens/BookSpecificHighlightScreen.dart';
 import 'package:reading_retention_tool/screens/HomeScreen.dart';
 import 'dart:convert';
 
@@ -48,11 +49,10 @@ class _CategoryTileState extends State<CategoryTile> {
        highlightObj[index]['category'] = widget.categoryTitle;
        highlightObj[index]['color'] = '#'+colorHex;
 
-      // print(Provider.of<AppData>(context).bookName);
 
       //Saving the whole obj back to firebase datastore after adding category.
-       _store.collection("users")
-           .document(Provider.of<AppData>(context).uid)
+       _store.collection("kindle")
+           .document(Provider.of<AppData>(context).userData.id)
            .collection("books")
            .document(Provider.of<AppData>(context).bookName)
            .updateData({"highlights": highlightObj});
@@ -61,7 +61,7 @@ class _CategoryTileState extends State<CategoryTile> {
        Navigator.push(
          context,
          MaterialPageRoute(builder: (context)
-         => HomeScreen()
+         => BookSpecificHighlightScreen(Provider.of<AppData>(context).bookName)
          ),
        );
 

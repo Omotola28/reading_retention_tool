@@ -1,22 +1,22 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
-import 'package:provider/provider.dart';
 import 'package:reading_retention_tool/constants/constants.dart';
 import 'package:reading_retention_tool/custom_widgets/AppBar.dart';
 import 'package:reading_retention_tool/module/app_data.dart';
-import 'dart:async';
 import 'package:reading_retention_tool/module/notification_data.dart';
 import 'package:reading_retention_tool/plugins/highlightNotificationPlugin.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:reading_retention_tool/screens/CategoryHighlightsScreen.dart';
 import 'package:reading_retention_tool/screens/HomeScreen.dart';
-
+import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/widgets.dart';
+import 'package:provider/provider.dart';
+import 'dart:async';
 
 class CreateNotificationPage extends StatefulWidget {
 
   final List objNotifications;
   final String categoryId;
+
 
 
   CreateNotificationPage(this.objNotifications, this.categoryId);
@@ -55,6 +55,7 @@ class _CreateNotificationPageState extends State<CreateNotificationPage> with Si
 
   @override
   Widget build(BuildContext context) {
+
     final textTheme = Theme
         .of(context)
         .textTheme;
@@ -117,28 +118,7 @@ class _CreateNotificationPageState extends State<CreateNotificationPage> with Si
                     ),
                   );
                 }
-                return Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.all(8),
-                    child: Column(
-                      children: <Widget>[
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.all(12.0),
-                            child: AspectRatio(
-                              aspectRatio: 1,
-                              child: Image.asset(
-                                'Images/create_notification.png',
-                                width: 50,
-                                height: 50,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                );
+                return Container();
               },
             ),
 
@@ -200,20 +180,26 @@ class _CreateNotificationPageState extends State<CreateNotificationPage> with Si
     }
   }
 
+  int getTodayDate(){
+    DateTime now =  DateTime.now();
+    DateTime today = DateTime.utc(now.year, now.month, now.day);
+    return today.weekday + 1; //Number starts from 1 which is a Monday
+  }
+
   void createNotification() {
 
      final objData = widget.objNotifications;
      List<NotificationData> notificationData = [];
 
      objData.forEach((val){
-       notificationData.add(NotificationData(widget.categoryId, val, selectedTime.hour, selectedTime.minute));
+       notificationData.add(NotificationData(widget.categoryId, val['id'], val['notification'], selectedTime.hour, selectedTime.minute));
 
      });
 
-     Provider.of<AppData>(context).addNotification(notificationData, widget.categoryId);
+     Provider.of<AppData>(context).addNotification(notificationData);
 
 
-     //TODO: Show snackbar indicating that notifcations have been set for category daily
+     //TODO: Show snackbar indicating that notifications have been set for category daily
      Navigator.pop(context);
      Navigator.push(
        context,
@@ -235,6 +221,7 @@ class NotificationTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     final textTheme = Theme
         .of(context)
         .textTheme;

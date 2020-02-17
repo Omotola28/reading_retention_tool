@@ -10,7 +10,6 @@ import 'dart:async';
 import 'package:rxdart/rxdart.dart';
 
 
-
 class AppData extends ChangeNotifier{
 
   DocumentSnapshot highlights;
@@ -96,7 +95,7 @@ class AppData extends ChangeNotifier{
 
     var col = HexColor(color == null ? '#000000' : color);
 
-    final category = new Category(categoryName: categoryName, defaultColor: col);
+    final category = Category(categoryName: categoryName, defaultColor: col);
     categories.add(category);
     notifyListeners();
   }
@@ -116,6 +115,7 @@ class AppData extends ChangeNotifier{
   Future<void> init() async {
 
     final notificationStream = await FirestoreNotificationService.getAllNotifications();
+
     notificationStream.listen((querySnapshot) {
       _notifications = querySnapshot.documents.map((doc) => NotificationData.fromDb(doc.data, doc.documentID)).toList();
 
@@ -162,8 +162,37 @@ void reduceNoOfHighlights(int number){
 
 
 ///Set the add list of highlights to firestore service
-  Future<void> addNotification(List<NotificationData> notifications, String docId) async {
+  Future<void> addNotification(List<NotificationData> notifications) async {
+
     List<NotificationData> notificationData = [];
+    int id = 0;
+
+   /* for(final notification in notifications){
+       var notificationExsist =  await  _checkIfIdExists(notification.notificationIdString);
+       print(notificationExsist);
+
+    }*/
+
+
+    //Making sure that the notifications created increments according to how many notifications are stored
+    // In the database
+    var noOfNotifications = _checkIfIdExists();
+    noOfNotifications.then((value){
+      print(value);
+       value == 0 ? id = 0 : id = value - 1;
+    });
+
+    for(final notification in notifications){
+      print('ID $id');
+      notification.notificationId = id++;
+      notificationData.add(notification);
+    }
+
+
+    await FirestoreNotificationService.addNotification(notificationData);
+
+    //Get a snapshot of all th notifications in the database and check for if the id is already there!
+   /* List<NotificationData> notificationData = [];
     int id = 0;
     for (var i = 0; i < 100; i++) {
       bool exists = _checkIfIdExists(_notifications, i);
@@ -171,29 +200,28 @@ void reduceNoOfHighlights(int number){
         id = i;
         break;
       }
-    }
-
-  // print(notifications);
-    for(final notification in notifications){
-       notification.notificationId = id++;
-       notificationData.add(notification);
-    }
-
-
-
-   await FirestoreNotificationService.addNotification(notificationData, docId);
+    }*/
   }
 
   //TODO: Have to check for exsisting highlights in firestore but this might be tricky since
   //TODO: Its the ID we are using to check for duplicates but i dont know
-  bool _checkIfIdExists(List<NotificationData> notifications, int id) {
+  Future<int> _checkIfIdExists() async{
 
-    for (final notification in notifications) {
-      if (notification.notificationId == id) {
-        return true;
-      }
-    }
-    return false;
+    var noOfNotifications;
+
+    final snapShot = Firestore.instance
+        .collection('notifications')
+        .document(userData.id) //Should already be set when user signs in
+        .collection('userNotifications')
+        .getDocuments();
+
+    snapShot.then((value){
+      print('CHECKING ${value.documents.length}');
+      noOfNotifications = value.documents.length;
+    });
+
+    return noOfNotifications;
+
   }
 
   ///Remove notifications from notifications list

@@ -1,18 +1,14 @@
-import 'package:flutter/cupertino.dart';
 import 'package:reading_retention_tool/constants/route_constants.dart';
 import 'package:reading_retention_tool/service/navigation_service.dart';
 import 'package:reading_retention_tool/utils/locator.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:reading_retention_tool/module/notification_data.dart';
-import 'package:reading_retention_tool/screens/HighlightOfTheDayScreen.dart';
 import 'dart:async';
-
 
 class HighlightNotificationPlugin {
   FlutterLocalNotificationsPlugin _flutterLocalNotificationsPlugin;
 
   final NavigationService _navigationService = locator<NavigationService>();
-
 
   HighlightNotificationPlugin() {
     _initializeNotifications();
@@ -34,12 +30,8 @@ class HighlightNotificationPlugin {
 
   Future onSelectNotification(String payload) async {
     if (payload != null) {
-      print('notification payload: ' + payload);
+      await _navigationService.navigateTo(HighlightOfTheDayRoute, arguments: payload);
     }
-
-
-    await _navigationService.navigateTo(HighlightOfTheDayRoute, arguments: payload);
-
 
   }
 
@@ -62,6 +54,7 @@ class HighlightNotificationPlugin {
       day,
       time,
       platformChannelSpecifics,
+      payload: description
     );
   }
 
@@ -105,6 +98,7 @@ class HighlightNotificationPlugin {
   }
 
   Future<void> scheduleAllNotifications(List<NotificationData> notifications) async {
+
     for (final notification in notifications) {
       await showDailyAtTime(
         Time(notification.hour, notification.minute),

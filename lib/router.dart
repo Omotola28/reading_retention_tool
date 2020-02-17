@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:reading_retention_tool/screens/CategoriseHighlightScreen.dart';
+import 'package:reading_retention_tool/screens/CategoryHighlightsScreen.dart';
 import 'package:reading_retention_tool/screens/GetStartedScreen.dart';
 import 'package:reading_retention_tool/screens/HighlightOfTheDayScreen.dart';
 import 'package:reading_retention_tool/screens/HomeScreen.dart';
@@ -47,6 +48,10 @@ Route<dynamic> generateRoute(RouteSettings settings){
       case HighlightOfTheDayRoute :
         var payload = settings.arguments;
         return MaterialPageRoute(builder: (context) => HighlightOfTheDayScreen(payload));
+
+      case CategoryHighlightsRoute :
+        var categoryId = settings.arguments;
+        return MaterialPageRoute(builder: (context) => CategoryHighlightsScreen(categoryId));
 
       case SignInRoute :
         return MaterialPageRoute(builder: (context) => SignInScreen());

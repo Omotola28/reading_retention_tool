@@ -87,10 +87,12 @@ class _CategoryHighlightsScreenState extends State<CategoryHighlightsScreen> {
                                    );
 
                                    widgetHighlights.add(catHighlight);
-                                   notifications.add(snap.data['highlights'][i]['highlight'].replaceAll(new RegExp(r' - '), ''));
-
+                                   notifications.add(
+                                      { 'id' : snap.data['highlights'][i]['id'] ,
+                                        'notification' : snap.data['highlights'][i]['highlight'].replaceAll(new RegExp(r' - '), '')
+                                      }
+                                   );
                                 }
-                                //print(snap.data['highlights'][i]['category']);
                               }
                             }
 

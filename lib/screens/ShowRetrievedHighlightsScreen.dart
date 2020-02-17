@@ -1,12 +1,8 @@
-import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
-import 'package:reading_retention_tool/constants/constants.dart';
-import 'package:reading_retention_tool/customIcons/my_flutter_app_icons.dart';
 import 'package:reading_retention_tool/custom_widgets/AppBar.dart';
 import 'package:reading_retention_tool/module/app_data.dart';
-import 'package:reading_retention_tool/constants/constants.dart';
 import 'dart:async';
 import 'package:reading_retention_tool/screens/UserBooksListScreen.dart';
 

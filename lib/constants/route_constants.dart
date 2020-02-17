@@ -12,6 +12,8 @@ const String SignUpRoute = 'signUp_screen';
 const String ManageCategoryRoute = 'signUp_screen';
 const String ResetPasswordRoute = 'resetPassword_screen';
 const String WaitingToLoginRoute = 'waiting_screen';
+const String CategoryHighlightsRoute = 'category_hightlights_screen';
+
 
 
 

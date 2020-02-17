@@ -2,23 +2,24 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:reading_retention_tool/module/notification_data.dart';
 import 'dart:async';
-import 'package:random_string/random_string.dart';
-import 'package:reading_retention_tool/service/auth_service.dart';
+
 
 class FirestoreNotificationService {
   static Future<Stream<QuerySnapshot>> getAllNotifications() async {
 
     final firebaseUser = await FirebaseAuth.instance.currentUser();
 
-    final notificationCollectionStream = Firestore.instance
-        .collection("users")
-        .document(firebaseUser.uid)
-        .collection("notifications")
-        .snapshots();
+    final notificationCollectionStream =
+      Firestore.instance
+          .collection("notifications")
+          .document(firebaseUser.uid)
+          .collection("userNotifications")
+          .snapshots();
+
     return notificationCollectionStream;
   }
 
-  static Future<void> addNotification(List<NotificationData> notifications, String docId) async {
+  static Future<void> addNotification(List<NotificationData> notifications) async {
 
     final firebaseUser = await FirebaseAuth.instance.currentUser();
 
@@ -26,8 +27,8 @@ class FirestoreNotificationService {
      Firestore.instance
           .collection("notifications")
           .document(firebaseUser.uid)
-          .collection("userNotifications ")
-          .document(docId+'-'+randomAlpha(5))
+          .collection("userNotifications")
+          .document(notification.notificationIdString)
           .setData(notification.toJson());
     }
 
@@ -38,10 +39,10 @@ class FirestoreNotificationService {
     final firebaseUser = await FirebaseAuth.instance.currentUser();
     
       Firestore.instance
-        .collection("users")
-        .document(firebaseUser.uid)
         .collection("notifications")
-        .document(notification.id)
+        .document(firebaseUser.uid)
+        .collection("userNotifications")
+        .document(notification.notificationIdString)
         .delete();
   }
 }

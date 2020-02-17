@@ -6,6 +6,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:reading_retention_tool/constants/constants.dart';
+import 'package:reading_retention_tool/constants/route_constants.dart';
 import 'package:reading_retention_tool/custom_widgets/AppBar.dart';
 import 'package:reading_retention_tool/module/user.dart';
 import 'package:flutter_image/network.dart';
@@ -223,12 +224,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                                 ),
                                                 onTap: (){
                                                   Navigator.of(context).pop();
-                                                  Navigator.push(
+                                                  Navigator.pushNamed(context, CategoryHighlightsRoute, arguments: snapshot.data.documents[index].documentID.split('#')[0]);
+                                                 /* Navigator.push(
                                                     context,
                                                     MaterialPageRoute(builder: (context)
                                                             => CategoryHighlightsScreen(snapshot.data.documents[index].documentID.split('#')[0])
                                                     ),
-                                                  );
+                                                  );*/
                                                 },
                                               )
                                           );

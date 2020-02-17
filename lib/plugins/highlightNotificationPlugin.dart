@@ -63,11 +63,6 @@ class HighlightNotificationPlugin {
       'show daily channel id',
       'show daily channel name',
       'show daily description',
-      ongoing: true,
-      importance: Importance.Max,
-      priority: Priority.High,
-      autoCancel: true,
-      enableLights: true,
     );
     final iOSPlatformChannelSpecifics = IOSNotificationDetails();
     final platformChannelSpecifics = NotificationDetails(

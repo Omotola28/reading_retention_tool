@@ -10,7 +10,7 @@ import 'package:reading_retention_tool/custom_widgets/ActionUserButton.dart';
 import 'package:reading_retention_tool/constants/constants.dart';
 import 'package:reading_retention_tool/custom_widgets/SocialMediaButtons.dart';
 import 'package:reading_retention_tool/screens/SignInScreen.dart';
-import 'dart:async';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:provider/provider.dart';
 import 'package:reading_retention_tool/module/app_data.dart';
 
@@ -122,7 +122,7 @@ class _GetStartedScreenState extends State<GetStartedScreen> {
                           },
                           ),
                           SocialMediaButtons(icon: FontAwesomeIcons.google, onTap: (){
-                                UserAuth.googleLogIn();
+                            UserAuth.googleLogIn();
                           },
                           ),
                         ],

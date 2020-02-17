@@ -39,7 +39,7 @@ class _HighlightOfTheDayScreenState extends State<HighlightOfTheDayScreen> {
               color: kDarkColorBlack,
             ),
             onPressed: () {
-              Navigator.pop(context);
+              Navigator.pop(context, true);
               //widget._navigationService.goBack();
             }),
         title: Text(

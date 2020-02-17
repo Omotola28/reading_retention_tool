@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:reading_retention_tool/screens/CategoriseHighlightScreen.dart';
 import 'package:reading_retention_tool/screens/CategoryHighlightsScreen.dart';
+import 'package:reading_retention_tool/screens/CreateNotificationPage.dart';
 import 'package:reading_retention_tool/screens/GetStartedScreen.dart';
 import 'package:reading_retention_tool/screens/HighlightOfTheDayScreen.dart';
 import 'package:reading_retention_tool/screens/HomeScreen.dart';
@@ -67,6 +68,10 @@ Route<dynamic> generateRoute(RouteSettings settings){
 
       case ResetPasswordRoute :
         return MaterialPageRoute(builder: (context) => ResetPasswordScreen());
+
+      case CreateNotificationRoute :
+        var data = settings.arguments;
+        return MaterialPageRoute(builder: (context) => CreateNotificationPage(data));
 
       case WaitingToLoginRoute :
         return MaterialPageRoute(builder: (context) => WaitingToLoginScreen());

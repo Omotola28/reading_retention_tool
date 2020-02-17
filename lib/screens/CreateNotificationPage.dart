@@ -15,11 +15,9 @@ import 'dart:async';
 class CreateNotificationPage extends StatefulWidget {
 
   final List objNotifications;
-  final String categoryId;
 
 
-
-  CreateNotificationPage(this.objNotifications, this.categoryId);
+  CreateNotificationPage(this.objNotifications);
 
   @override
   _CreateNotificationPageState createState() => _CreateNotificationPageState();
@@ -43,7 +41,7 @@ class _CreateNotificationPageState extends State<CreateNotificationPage> with Si
       vsync: this,
       duration: const Duration(milliseconds: 300),
     );
-    notificationFuture = _notificationPlugin.getScheduledNotifications();
+   // notificationFuture = _notificationPlugin.getScheduledNotifications();
 
   }
 
@@ -60,7 +58,7 @@ class _CreateNotificationPageState extends State<CreateNotificationPage> with Si
         .of(context)
         .textTheme;
     return Scaffold(
-      appBar: header(headerText: 'Create Notification', context: context, screen: CategoryHighlightsScreen(widget.categoryId)),
+      appBar: header(headerText: 'Create Notification', context: context, screen: HomeScreen()),
       body: SafeArea(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -192,7 +190,7 @@ class _CreateNotificationPageState extends State<CreateNotificationPage> with Si
      List<NotificationData> notificationData = [];
 
      objData.forEach((val){
-       notificationData.add(NotificationData(widget.categoryId, val['id'], val['notification'], selectedTime.hour, selectedTime.minute));
+       notificationData.add(NotificationData('love', val['id'], val['notification'], selectedTime.hour, selectedTime.minute));
 
      });
 

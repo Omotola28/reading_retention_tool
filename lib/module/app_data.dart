@@ -176,11 +176,11 @@ void reduceNoOfHighlights(int number){
 
     //Making sure that the notifications created increments according to how many notifications are stored
     // In the database
-    var noOfNotifications = _checkIfIdExists();
+    /*var noOfNotifications = _checkIfIdExists();
     noOfNotifications.then((value){
       print(value);
        value == 0 ? id = 0 : id = value - 1;
-    });
+    });*/
 
     for(final notification in notifications){
       print('ID $id');

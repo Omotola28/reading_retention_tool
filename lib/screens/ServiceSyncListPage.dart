@@ -12,12 +12,14 @@ class ServiceSyncListPage extends StatefulWidget {
 class _ServiceSyncListPageState extends State<ServiceSyncListPage> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: SafeArea(
+    return SafeArea(
         child: SingleChildScrollView(
           child: Container(
+              width: MediaQuery.of(context).size.width,
+              height: MediaQuery.of(context).size.height,
               color: Colors.white,
               child: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   Column(
                     children: <Widget>[
@@ -31,9 +33,7 @@ class _ServiceSyncListPageState extends State<ServiceSyncListPage> {
                       ),
                     ],
                   ),
-                  SizedBox(
-                    height: 8.0,
-                  ),
+
                   Column(
                     children: <Widget>[
                       ListView(
@@ -71,7 +71,6 @@ class _ServiceSyncListPageState extends State<ServiceSyncListPage> {
               )
           ),
         ),
-      ),
-    );
+      );
   }
 }

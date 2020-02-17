@@ -42,7 +42,7 @@ class AddCategoryWidgetState extends State<AddCategoryWidget> {
       child: Container(
         color: Color(0xff757575),
         child: Container(
-          height: MediaQuery.of(context).size.height / 2,
+          height: MediaQuery.of(context).size.height,
           decoration: BoxDecoration(
               color: Colors.white,
               borderRadius: BorderRadius.only(

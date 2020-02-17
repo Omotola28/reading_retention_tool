@@ -16,7 +16,7 @@ class HighlightNotificationPlugin {
 
   void _initializeNotifications() {
     _flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-    final initializationSettingsAndroid = AndroidInitializationSettings('secondary_icon');
+    final initializationSettingsAndroid = AndroidInitializationSettings('appstore');
     final initializationSettingsIOS = IOSInitializationSettings();
     final initializationSettings = InitializationSettings(
       initializationSettingsAndroid,

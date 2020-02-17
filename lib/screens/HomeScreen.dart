@@ -143,21 +143,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                     ),
-                  /*  ListTile(
-                      leading: Image.asset(
-                        "Images/notes.png",
-                        width: 24.0,
-                        height: 24.0,
-                      ),
-                      title: Text('All Highlights'),
-                      onTap: () {
-                        // Update the state of the app
-                        // ...
-                        // Then close the drawer
-                        Navigator.pop(context);
-                      },
-                    ),*/
-
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Text("Browse",
@@ -363,10 +348,12 @@ class _HomeScreenState extends State<HomeScreen> {
           onPageChanged: onPageChanged,
           physics: NeverScrollableScrollPhysics(),
         ),
+
       bottomNavigationBar: CupertinoTabBar(
           currentIndex: pageIndex,
           onTap: onTap,
           activeColor: kPrimaryColor,
+          backgroundColor: Colors.white,
           items: [
             BottomNavigationBarItem(icon: Icon(Icons.home)),
             BottomNavigationBarItem(icon: Icon(Icons.library_books)),

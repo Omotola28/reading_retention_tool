@@ -40,8 +40,6 @@ class _CategoryHighlightsScreenState extends State<CategoryHighlightsScreen> {
                   child: OutlineButton(
                       disabledBorderColor: kPrimaryColor,
                       onPressed: () {
-                        //Navigator.pop(context);
-                       // Navigator.pushNamed(context, WaitingToLoginRoute);
                        Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context)

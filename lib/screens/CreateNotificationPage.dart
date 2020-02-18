@@ -15,9 +15,11 @@ import 'dart:async';
 class CreateNotificationPage extends StatefulWidget {
 
   final List objNotifications;
+  final String categoryId;
 
 
-  CreateNotificationPage(this.objNotifications);
+
+  CreateNotificationPage(this.objNotifications, this.categoryId);
 
   @override
   _CreateNotificationPageState createState() => _CreateNotificationPageState();
@@ -26,8 +28,8 @@ class CreateNotificationPage extends StatefulWidget {
 class _CreateNotificationPageState extends State<CreateNotificationPage> with SingleTickerProviderStateMixin {
 
   TimeOfDay selectedTime = TimeOfDay.now();
-  final HighlightNotificationPlugin _notificationPlugin = HighlightNotificationPlugin();
-  Future<List<PendingNotificationRequest>> notificationFuture;
+  /*final HighlightNotificationPlugin _notificationPlugin = HighlightNotificationPlugin();
+  Future<List<PendingNotificationRequest>> notificationFuture;*/
 
   AnimationController _fadeInController;
 
@@ -54,11 +56,11 @@ class _CreateNotificationPageState extends State<CreateNotificationPage> with Si
   @override
   Widget build(BuildContext context) {
 
-    final textTheme = Theme
+   /* final textTheme = Theme
         .of(context)
-        .textTheme;
+        .textTheme;*/
     return Scaffold(
-      appBar: header(headerText: 'Create Notification', context: context, screen: HomeScreen()),
+      appBar: header(headerText: 'Create Notification', context: context, screen: CategoryHighlightsScreen(widget.categoryId)),
       body: SafeArea(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -126,7 +128,7 @@ class _CreateNotificationPageState extends State<CreateNotificationPage> with Si
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
                 Text('Set Daily Time',
-                  style: textTheme.headline.copyWith(
+                  style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 15.0,
                   color: Theme
@@ -190,7 +192,7 @@ class _CreateNotificationPageState extends State<CreateNotificationPage> with Si
      List<NotificationData> notificationData = [];
 
      objData.forEach((val){
-       notificationData.add(NotificationData('love', val['id'], val['notification'], selectedTime.hour, selectedTime.minute));
+       notificationData.add(NotificationData(widget.categoryId, val['id'], val['notification'], selectedTime.hour, selectedTime.minute));
 
      });
 

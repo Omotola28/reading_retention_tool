@@ -41,14 +41,13 @@ class _CategoryHighlightsScreenState extends State<CategoryHighlightsScreen> {
                       disabledBorderColor: kPrimaryColor,
                       onPressed: () {
                         //Navigator.pop(context);
-                        Navigator.pushNamed(context, WaitingToLoginRoute, arguments: notifications);
-                      // Navigator.pushNamed(context, CreateNotificationRoute, arguments: notifications);
-                      /* Navigator.push(
+                       // Navigator.pushNamed(context, WaitingToLoginRoute);
+                       Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context)
                                  => CreateNotificationPage(notifications, widget.categoryId)
                           ),
-                        );*/
+                        );
 
                       },
                       child: Text('Create Notification',

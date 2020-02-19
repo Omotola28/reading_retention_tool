@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
+import 'package:reading_retention_tool/constants/constants.dart';
 import 'package:reading_retention_tool/custom_widgets/AppBar.dart';
 import 'package:reading_retention_tool/module/app_data.dart';
 import 'dart:async';
@@ -85,26 +86,51 @@ class _ShowRetrievedHightlightsScreenState
            List highlights = snapshot.data['highlights'];
 
            _saveNoOfHighlights(highlights.length);
-           for (var index = 0; index < highlights.length; index++) {
-
-             final highlightWidget =
-             Padding(
-               padding: const EdgeInsets.all(10.0),
-               child: Card(
+           if(highlights.isEmpty){
+             return Container(
+               child: Center(
                  child: Column(
-                   mainAxisSize: MainAxisSize.min,
+                   mainAxisAlignment: MainAxisAlignment.center,
+                   crossAxisAlignment: CrossAxisAlignment.center,
                    children: <Widget>[
-                     ListTile(
-                       contentPadding: EdgeInsets.all(20.0),
-                       subtitle: Text(highlights[index]['highlight'].replaceAll(new RegExp(r' - '), ''),),
+                     Image.asset(
+                       'Images/notfound.png',
+                     ),
+                     Text('No Highlights Extracted',
+                       style: TextStyle(
+                           color: kDarkColorBlack),
                      ),
                    ],
-                 ),
+                 )
+
+
                ),
              );
-
-             widgetHighlights.add(highlightWidget);
            }
+           else{
+             for (var index = 0; index < highlights.length; index++) {
+
+               var cleanseText = highlights[index]['highlight'].replaceAll(new RegExp(r' - '), '');
+               final highlightWidget =
+               Padding(
+                 padding: const EdgeInsets.all(10.0),
+                 child: Card(
+                   child: Column(
+                     mainAxisSize: MainAxisSize.min,
+                     children: <Widget>[
+                       ListTile(
+                         contentPadding: EdgeInsets.all(20.0),
+                         subtitle: Text(cleanseText),
+                       ),
+                     ],
+                   ),
+                 ),
+               );
+
+               widgetHighlights.add(highlightWidget);
+             }
+           }
+
          } else {
            return Center(
              child: CircularProgressIndicator(),

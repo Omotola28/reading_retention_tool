@@ -33,8 +33,8 @@ class _UserBooksListScreenState extends State<UserBooksListScreen> {
 
                       if(snapshot.hasData){
 
-
-                        return ListView.builder(
+                        if(snapshot.data.documents.isNotEmpty){
+                          return ListView.builder(
                               itemCount: snapshot.data.documents.length,
                               itemBuilder: (context, index) {
                                 return Card(
@@ -43,7 +43,7 @@ class _UserBooksListScreenState extends State<UserBooksListScreen> {
                                     title: Text(snapshot.data.documents[index].documentID.split('.')[0]),
                                     onTap: (){
 
-                                     Navigator.push(
+                                      Navigator.push(
                                         context,
                                         MaterialPageRoute(builder: (context)
                                         => BookSpecificHighlightScreen(snapshot.data.documents[index].documentID)),
@@ -55,6 +55,28 @@ class _UserBooksListScreenState extends State<UserBooksListScreen> {
                                 );
                               }
                           );
+                        }
+                        else{
+                          return Container(
+                            child: Center(
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: <Widget>[
+                                    Image.asset(
+                                      'Images/nobooks.png',
+                                    ),
+                                    Text('No Books Added Yet',
+                                      style: TextStyle(
+                                          color: kDarkColorBlack),
+                                    ),
+                                  ],
+                                ) 
+                            )
+                          );
+                        }
+
+
 
                       }
                       else{

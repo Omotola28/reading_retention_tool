@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:reading_retention_tool/constants/constants.dart';
 import 'package:flutter/services.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:reading_retention_tool/constants/route_constants.dart';
 import 'package:reading_retention_tool/custom_widgets/ActionUserButton.dart';
 import 'package:reading_retention_tool/custom_widgets/AppBar.dart';
 import 'package:reading_retention_tool/module/app_data.dart';
@@ -174,7 +175,7 @@ class _KindleHighlightsSync extends State<KindleHighlightsSync> {
 
                                Navigator.pushNamed(
                                   context,
-                                  'show_retrieved_highlights_screen',
+                                  ShowRetrievedHightlightsRoute,
                                   arguments: {
                                     'bookName': _fileName
                                   },

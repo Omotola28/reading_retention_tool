@@ -40,6 +40,7 @@ class _CategoryHighlightsScreenState extends State<CategoryHighlightsScreen> {
                   child: OutlineButton(
                       disabledBorderColor: kPrimaryColor,
                       onPressed: () {
+                       Navigator.pop(context);
                        Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context)
@@ -88,9 +89,9 @@ class _CategoryHighlightsScreenState extends State<CategoryHighlightsScreen> {
 
                                    widgetHighlights.add(catHighlight);
                                    notifications.add(
-                                      { 'id' : snap.data['highlights'][i]['id'] ,
-                                        'notification' : snap.data['highlights'][i]['highlight'].replaceAll(new RegExp(r' - '), '')
-                                      }
+                                       {  'id' : snap.data['highlights'][i]['id'] ,
+                                         'notification' : snap.data['highlights'][i]['highlight'].replaceAll(new RegExp(r' - '), '')
+                                       }
                                    );
                                 }
                               }

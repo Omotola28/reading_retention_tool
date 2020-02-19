@@ -44,6 +44,19 @@ class _ShowRetrievedHightlightsScreenState
         return data;
   }
 
+  _saveNoOfHighlights(int no) async {
+    DocumentSnapshot doc = await Firestore.instance
+                                          .collection('highlightsNo')
+                                          .document(Provider.of<AppData>(context).userData.id).get();
+
+    if(!doc.exists){
+      Firestore.instance.collection('highlightsNo').document(Provider.of<AppData>(context).userData.id).setData({
+        "number": no,
+      }).catchError((e) => print(e));
+    }
+
+  }
+
   @override
   void initState() {
     super.initState();
@@ -71,6 +84,7 @@ class _ShowRetrievedHightlightsScreenState
 
            List highlights = snapshot.data['highlights'];
 
+           _saveNoOfHighlights(highlights.length);
            for (var index = 0; index < highlights.length; index++) {
 
              final highlightWidget =
@@ -83,49 +97,6 @@ class _ShowRetrievedHightlightsScreenState
                      ListTile(
                        contentPadding: EdgeInsets.all(20.0),
                        subtitle: Text(highlights[index]['highlight'].replaceAll(new RegExp(r' - '), ''),),
-                       //trailing: GestureDetector(
-                        /* child: Icon(
-                           CustomIcons.down_open,
-                           color: kHighlightColorDarkGrey,
-                         ),
-                         onTap: (){
-
-                  *//*         showHighlightDialog(
-                               context,
-                               highlights[index]['highlight'].replaceAll(new RegExp(r' - '), ''), index)
-                               .then((val){
-                             switch (Provider.of<AppData>(context).whatActionButton) {
-                               case 'Save':
-                                 {
-                                   print(highlights[index]['highlight'] );
-                                   highlights[index]['highlight'] = Provider.of<AppData>(context).savedString;
-                                 }
-                                 break;
-
-                               case 'Favourite':
-                                 {
-                                   //statements;
-                                   print('hhjhjhj');
-                                 }
-                                 break;
-
-                               case 'Delete':
-                                 {
-
-                                 }
-                                 break;
-
-                               default:
-                                 {
-                                   //statements;
-                                 }
-                                 break;
-                             }
-
-                             print(val);
-                           });*//*
-                         },*/
-                       //),
                      ),
                    ],
                  ),

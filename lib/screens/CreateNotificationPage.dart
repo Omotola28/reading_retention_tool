@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
+import 'dart:collection';
 import 'dart:async';
 
 class CreateNotificationPage extends StatefulWidget {
@@ -34,6 +35,7 @@ class _CreateNotificationPageState extends State<CreateNotificationPage> with Si
   AnimationController _fadeInController;
 
 
+
   @override
   void initState() {
 
@@ -43,7 +45,8 @@ class _CreateNotificationPageState extends State<CreateNotificationPage> with Si
       vsync: this,
       duration: const Duration(milliseconds: 300),
     );
-   // notificationFuture = _notificationPlugin.getScheduledNotifications();
+     //notificationFuture = _notificationPlugin.getScheduledNotifications();
+
 
   }
 
@@ -51,14 +54,13 @@ class _CreateNotificationPageState extends State<CreateNotificationPage> with Si
   void dispose() {
     super.dispose();
     _fadeInController.dispose();
+
   }
 
   @override
   Widget build(BuildContext context) {
+    print(context);
 
-   /* final textTheme = Theme
-        .of(context)
-        .textTheme;*/
     return Scaffold(
       appBar: header(headerText: 'Create Notification', context: context, screen: CategoryHighlightsScreen(widget.categoryId)),
       body: SafeArea(
@@ -69,12 +71,13 @@ class _CreateNotificationPageState extends State<CreateNotificationPage> with Si
           children: <Widget>[
 
           StreamBuilder<List<NotificationData>>(
+
               stream: Provider.of<AppData>(context).outNotifications,
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   final notifications = snapshot.data;
                   _fadeInController.forward();
-                  if (notifications.isEmpty)
+                  if (notifications.isEmpty){
                     return Expanded(
                       child: Padding(
                         padding: const EdgeInsets.all(8),
@@ -97,6 +100,7 @@ class _CreateNotificationPageState extends State<CreateNotificationPage> with Si
                         ),
                       ),
                     );
+                  }
                   return Expanded(
                     child: AnimatedBuilder(
                       animation: _fadeInController,
@@ -189,14 +193,16 @@ class _CreateNotificationPageState extends State<CreateNotificationPage> with Si
   void createNotification() {
 
      final objData = widget.objNotifications;
+
      List<NotificationData> notificationData = [];
+
 
      objData.forEach((val){
        notificationData.add(NotificationData(widget.categoryId, val['id'], val['notification'], selectedTime.hour, selectedTime.minute));
-
      });
 
-     Provider.of<AppData>(context).addNotification(notificationData);
+
+      Provider.of<AppData>(context).addNotification(notificationData);
 
 
      //TODO: Show snackbar indicating that notifications have been set for category daily

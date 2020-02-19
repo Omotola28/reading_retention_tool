@@ -339,7 +339,7 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         body: PageView(
           children: <Widget>[
-            ServiceSyncListPage(),
+            ServiceSyncListPage(Provider.of<AppData>(context).userData.id),
             NearbyLibraryPage(),
             ActivityFeedPage(),
           ],

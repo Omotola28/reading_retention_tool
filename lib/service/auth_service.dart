@@ -1,9 +1,15 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:reading_retention_tool/constants/route_constants.dart';
 import 'package:reading_retention_tool/module/user.dart';
+import 'package:provider/provider.dart';
+import 'package:reading_retention_tool/module/app_data.dart';
 import 'package:reading_retention_tool/screens/GetStartedScreen.dart';
+import 'navigation_service.dart';
+import 'package:reading_retention_tool/utils/locator.dart';
 
 
 
@@ -14,6 +20,7 @@ class UserAuth {
   static final userRef = Firestore.instance.collection('users');
   static var currentUser;
   static GoogleSignIn googleSignIn = GoogleSignIn();
+  static final NavigationService _navigationService = locator<NavigationService>();
 
 
   static Future<FirebaseUser> getCurrentUser() async {
@@ -103,8 +110,32 @@ class UserAuth {
     }
   }
 
-  static googleLogIn() {
-    googleSignIn.signIn();
+  static Future<User> googleLogIn() async {
+    GoogleSignInAccount googleSignInAcct = await googleSignIn.signIn();
+    final GoogleSignInAuthentication googleSignInAuthentication = await googleSignInAcct.authentication;
+
+    final AuthCredential credential = GoogleAuthProvider.getCredential(
+      accessToken: googleSignInAuthentication.accessToken,
+      idToken: googleSignInAuthentication.idToken,
+    );
+
+    final AuthResult authResult = await auth.signInWithCredential(credential);
+    final FirebaseUser user = authResult.user;
+
+
+    userRef.document(user.uid).setData({
+      "id": user.uid,
+      "email": user.email,
+      "username": user.email.substring(0, 5),
+      "displayname": user.displayName,
+      "photoUrl": user.photoUrl,
+      "timeStamp": DateTime.now()
+    }).catchError((e) => print(e));
+
+    DocumentSnapshot doc = await userRef.document(user.uid).get();
+
+    return User.fromDocument(doc);
+
   }
 
   static Future<bool> isFirebaseUserLoggedIn() async{

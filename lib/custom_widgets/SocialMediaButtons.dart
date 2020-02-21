@@ -22,7 +22,7 @@ class SocialMediaButtons extends StatelessWidget {
         splashColor: Colors.white.withAlpha(30),
         onTap: onTap,
         child: Container(
-          width: 150,
+          width: 290,
           height: 50,
           child: Icon(
             icon,

@@ -8,9 +8,7 @@ import 'dart:async';
 
 class ServiceSyncListPage extends StatefulWidget {
 
-  final currentUser;
 
-  ServiceSyncListPage(this.currentUser);
 
   @override
   _ServiceSyncListPageState createState() => _ServiceSyncListPageState();
@@ -18,7 +16,7 @@ class ServiceSyncListPage extends StatefulWidget {
 
 class _ServiceSyncListPageState extends State<ServiceSyncListPage> {
 
-  Future<int> _getNoOfHighlights() async {
+  /*Future<int> _getNoOfHighlights() async {
 
     DocumentSnapshot doc = await Firestore.instance
         .collection('highlightsNo').document(widget.currentUser).get();
@@ -26,15 +24,15 @@ class _ServiceSyncListPageState extends State<ServiceSyncListPage> {
     print(doc.data['number']);
     return doc.data['number'];
 
-  }
+  }*/
 
 
   @override
   Widget build(BuildContext context) {
 
-    final noOfHighlights = _getNoOfHighlights().then((val){
+    /*final noOfHighlights = _getNoOfHighlights().then((val){
       return val;
-    });
+    });*/
     return SafeArea(
         child: SingleChildScrollView(
           child: Container(

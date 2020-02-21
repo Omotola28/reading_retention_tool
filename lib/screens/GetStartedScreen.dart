@@ -2,16 +2,17 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:reading_retention_tool/module/User.dart';
+import 'package:reading_retention_tool/constants/route_constants.dart';
 import 'package:reading_retention_tool/screens/HomeScreen.dart';
 import 'package:reading_retention_tool/service/auth_service.dart';
+import 'package:reading_retention_tool/module/user.dart';
 import 'SignUpScreen.dart';
 import 'package:reading_retention_tool/custom_widgets/ActionUserButton.dart';
 import 'package:reading_retention_tool/constants/constants.dart';
 import 'package:reading_retention_tool/custom_widgets/SocialMediaButtons.dart';
 import 'package:reading_retention_tool/screens/SignInScreen.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:provider/provider.dart';
+import 'dart:async';
 import 'package:reading_retention_tool/module/app_data.dart';
 
 
@@ -33,18 +34,34 @@ class _GetStartedScreenState extends State<GetStartedScreen> {
 
     print( 'GOOGLE ${UserAuth.googleSignIn.currentUser}');
 
-    UserAuth.googleSignIn.onCurrentUserChanged.listen((account){
+
+
+   /* UserAuth.googleSignIn.onCurrentUserChanged.listen((account){
        handleSignInWithGoogle(account);
     }, onError: (err){
       print('This is an $err');
-    });
+    });*/
 
   }
 
 
+  _handleSignInWithGoogle(Future<User> account){
 
-  handleSignInWithGoogle(GoogleSignInAccount account){
+    account.then((userData){
+      if(userData !=null){
+        Provider.of<AppData>(context, listen: false).setUserData(userData);
+        Navigator.popAndPushNamed(context, HomeScreenRoute);
+      }
+    });
+
+
+
+
+  }
+
+ /* _handleSignInWithGoogle(User account){
     if(account != null){
+
      var user = UserAuth.createUserWithGoogle();
 
 
@@ -59,115 +76,122 @@ class _GetStartedScreenState extends State<GetStartedScreen> {
         ),
       );
     }
-  }
+  }*/
+
+  /*Future<bool> _onBackPressed() {
+
+    Navigator.of(context).pop(true);
+    return Future.value(false);
+  }*/
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Container(
-          color: Colors.white,
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              Container(
-                padding: EdgeInsets.only(top: 35.0),
-                alignment: Alignment.topCenter,
-                child: Column(
-                  children: <Widget>[
-                    Text(
-                      'Welcome',
-                      style: kHeadingTextStyleDecoration,
-                    ),
-                    Text(
-                      'Please login or signup to continue',
-                      style: kTrailingTextStyleDecoration,
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(
-                height: 40.0,
-              ),
-              SizedBox(
-                child: Container(
-                  child: Image.asset(
-                    'Images/joyride.png',
-                    width: 200.0,
-                    height: 200.0,
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: 20.0,
-              ),
-              Expanded(
-                child: Container(
+    return WillPopScope(
+      onWillPop: () => Future.value(false),
+      child: Scaffold(
+        body: SafeArea(
+          child: Container(
+            color: Colors.white,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                Container(
+                  padding: EdgeInsets.only(top: 35.0),
+                  alignment: Alignment.topCenter,
                   child: Column(
                     children: <Widget>[
                       Text(
-                        'Sign In with',
-                        style: kTrailingTextStyleDecoration,
-                      ),
-                      SizedBox(
-                        height: 20.0,
-                      ),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          SocialMediaButtons(icon: FontAwesomeIcons.facebookF, onTap: (){
-
-                          },
-                          ),
-                          SocialMediaButtons(icon: FontAwesomeIcons.google, onTap: (){
-                            UserAuth.googleLogIn();
-                          },
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 40.0,
+                        'Welcome',
+                        style: kHeadingTextStyleDecoration,
                       ),
                       Text(
-                        'Or continue with',
+                        'Please login or signup to continue',
                         style: kTrailingTextStyleDecoration,
-                      ),
-                      SizedBox(
-                        height: 50.0,
-                      ),
-                      ActionUserButton(color: Colors.white, title: "Sign Up", onPressed: () {
-                        Navigator.pushNamed(context, SignUpScreen.id);
-                      },
-                      ),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Text(
-                            'Dont have an account? ',
-                            style: kTrailingTextStyleDecoration,
-                          ),
-                          GestureDetector(
-                            onTap: () {
-                              Navigator.popAndPushNamed(context, SignInScreen.id);
-                            },
-                            child: Text(
-                              'Login',
-                              style: kTrailingTextStyleDecoration.copyWith(color: kSecondaryColor),
-                            ),
-                          ),
-                        ],
                       ),
                     ],
                   ),
                 ),
-              ),
-            ],
-          ),
-        ),
+                SizedBox(
+                  height: 40.0,
+                ),
+                SizedBox(
+                  child: Container(
+                    child: Image.asset(
+                      'Images/joyride.png',
+                      width: 200.0,
+                      height: 200.0,
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 20.0,
+                ),
+                Expanded(
+                  child: Container(
+                    child: Column(
+                      children: <Widget>[
+                        Text(
+                          'Sign In with',
+                          style: kTrailingTextStyleDecoration,
+                        ),
+                        SizedBox(
+                          height: 20.0,
+                        ),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
 
+                            SocialMediaButtons(icon: FontAwesomeIcons.google, onTap: (){
+                              var user = UserAuth.googleLogIn();
+                              _handleSignInWithGoogle(user);
+                            },
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 40.0,
+                        ),
+                        Text(
+                          'Or continue with',
+                          style: kTrailingTextStyleDecoration,
+                        ),
+                        SizedBox(
+                          height: 50.0,
+                        ),
+                        ActionUserButton(color: Colors.white, title: "Sign Up", onPressed: () {
+                          Navigator.pushNamed(context, SignUpScreen.id);
+                        },
+                        ),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Text(
+                              'Dont have an account? ',
+                              style: kTrailingTextStyleDecoration,
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                Navigator.popAndPushNamed(context, SignInScreen.id);
+                              },
+                              child: Text(
+                                'Login',
+                                style: kTrailingTextStyleDecoration.copyWith(color: kSecondaryColor),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+        ),
       ),
     );
   }

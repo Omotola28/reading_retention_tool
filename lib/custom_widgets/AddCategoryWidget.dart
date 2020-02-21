@@ -111,7 +111,7 @@ class AddCategoryWidgetState extends State<AddCategoryWidget> {
                           ),
                           onPressed: () {
                               Firestore.instance.collection("category")
-                                  .document(Provider.of<AppData>(context).userData.id)
+                                  .document(Provider.of<AppData>(context, listen: false).userData.id)
                                   .collection('userCategories')
                                   .document(newCategory+colCat)
                                   .setData({});

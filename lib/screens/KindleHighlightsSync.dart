@@ -202,7 +202,7 @@ class _KindleHighlightsSync extends State<KindleHighlightsSync> {
 
   Widget _uploadStatus(File file) {
     setState(() {
-      firebaseStorageRef = FirebaseStorage.instance.ref().child("${Provider.of<AppData>(context).userData.id}_${_fileName}");
+      firebaseStorageRef = FirebaseStorage.instance.ref().child("${Provider.of<AppData>(context, listen: false).userData.id}_${_fileName}");
       task = firebaseStorageRef.putFile(file);
     });
 

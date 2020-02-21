@@ -4,16 +4,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:reading_retention_tool/constants/route_constants.dart';
 import 'package:reading_retention_tool/module/user.dart';
 import 'package:reading_retention_tool/screens/GetStartedScreen.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:reading_retention_tool/constants/constants.dart';
 import 'package:reading_retention_tool/screens/HomeScreen.dart';
-import 'package:reading_retention_tool/screens/WaitingToLoginScreen.dart';
 import 'package:reading_retention_tool/service/auth_service.dart';
 import 'package:provider/provider.dart';
 import 'package:reading_retention_tool/module/app_data.dart';
-import 'ProgressIndicators.dart';
 
 
 class WelcomePage extends StatefulWidget {
@@ -30,41 +29,46 @@ class _WelcomePage extends State<WelcomePage> {
   void initState(){
     super.initState();
     //This function loadGetStartedScreen should be called when this screen shows after 3 secs
+    FirebaseAuth.instance.currentUser().then((val){
+      print('FIREBASEUSER $val');
+    });
+
+    print( 'GOOGLE ${UserAuth.googleSignIn.currentUser}');
     SchedulerBinding.instance.addPostFrameCallback((_) => loadGetStartedScreen());
   }
 
+
   void loadGetStartedScreen(){
-    Future.delayed(Duration(seconds: 3), () {
+    Future.delayed(Duration(seconds: 2), () {
 
 
       ///Siliently login if the user is a google sign in user
-      if(UserAuth.googleSignIn.currentUser != null ){
+     /* if(UserAuth.googleSignIn.currentUser != null ){
         UserAuth.googleSignIn.signInSilently(suppressErrors: false)
             .then((account){
           handleSignInWithGoogle(account);
         }).catchError((err){
           print('Sign in failed $err');
         });
-      }
+      }*/
 
       ///Silently login if the user is a firebase user
-      if(FirebaseAuth.instance.currentUser() != null ){
-        Provider.of<AppData>(context).setCustomSignIn(true);
-        handleSilentFirebaseLogin();
-      }
+      FirebaseAuth.instance.currentUser().then((currentUser){
+          if(currentUser != null){
+            //Provider.of<AppData>(context).setCustomSignIn(true);
+            handleSilentFirebaseLogin();
+          }
+          else{
+            Navigator.popAndPushNamed(context, GetStartedScreenRoute);
+          }
+      });
 
-      Navigator.pop(context);
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context)
-        => GetStartedScreen()
-        ),
-      );
+
 
     });
   }
 
-  handleSignInWithGoogle(GoogleSignInAccount account){
+/*  handleSignInWithGoogle(GoogleSignInAccount account){
     if(account != null){
       var user = UserAuth.createUserWithGoogle();
 
@@ -72,15 +76,10 @@ class _WelcomePage extends State<WelcomePage> {
         Provider.of<AppData>(context).setUserData(userData);
       });
 
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context)
-        => HomeScreen()
-        ),
-      );
+      Navigator.popAndPushNamed(context, HomeScreenRoute);
     }
 
-  }
+  }*/
 
   handleSilentFirebaseLogin() async {
     var hasUserLoggedIn = await UserAuth.isFirebaseUserLoggedIn();
@@ -90,23 +89,11 @@ class _WelcomePage extends State<WelcomePage> {
       var user = await FirebaseAuth.instance.currentUser();
       DocumentSnapshot doc = await Firestore.instance.collection('users').document(user.uid).get();
 
-      Provider.of<AppData>(context).setUserData(User.fromDocument(doc));
+      Provider.of<AppData>(context, listen: false).setUserData(User.fromDocument(doc));
 
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context)
-        => HomeScreen()
-        ),
-      );
+      Navigator.popAndPushNamed(context, HomeScreenRoute);
     }
-    /*else{
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context)
-        => WaitingToLoginScreen()
-        ),
-      );
-    }*/
+
   }
 
   Widget build(BuildContext context) {

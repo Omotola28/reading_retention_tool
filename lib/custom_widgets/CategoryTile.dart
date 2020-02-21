@@ -52,16 +52,16 @@ class _CategoryTileState extends State<CategoryTile> {
 
       //Saving the whole obj back to firebase datastore after adding category.
        _store.collection("kindle")
-           .document(Provider.of<AppData>(context).userData.id)
+           .document(Provider.of<AppData>(context, listen: false).userData.id)
            .collection("books")
-           .document(Provider.of<AppData>(context).bookName)
+           .document(Provider.of<AppData>(context, listen: false).bookName)
            .updateData({"highlights": highlightObj});
 
        Navigator.pop(context);
        Navigator.push(
          context,
          MaterialPageRoute(builder: (context)
-         => BookSpecificHighlightScreen(Provider.of<AppData>(context).bookName)
+         => BookSpecificHighlightScreen(Provider.of<AppData>(context, listen: false).bookName)
          ),
        );
 

@@ -134,11 +134,11 @@ void handlePopUpMenuAction(String value, BuildContext context, int index, List h
 
   //Saving the data here so it can be easily manipulated and saved back in
   //Firebase database store -----DONT KNOW ANY BETTER WAY TO DO THIS YET
-  Provider.of<AppData>(context).setBookSpecificHighlightObj(highlyObj);
-  Provider.of<AppData>(context).setBookName(bookName);
-  Provider.of<AppData>(context).setCategoryIndex(index);
+  Provider.of<AppData>(context, listen: false).setBookSpecificHighlightObj(highlyObj);
+  Provider.of<AppData>(context, listen: false).setBookName(bookName);
+  Provider.of<AppData>(context, listen: false).setCategoryIndex(index);
 
-  var intIndex =   Provider.of<AppData>(context).categoryIndex;
+  var intIndex =   Provider.of<AppData>(context, listen: false).categoryIndex;
 
   print(index);
   //Had to create a list of type List<dynamic inorder to enable it get deleted from firebase>

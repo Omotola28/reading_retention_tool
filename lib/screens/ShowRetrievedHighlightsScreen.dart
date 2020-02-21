@@ -51,7 +51,7 @@ class _ShowRetrievedHightlightsScreenState
                                           .document(Provider.of<AppData>(context).userData.id).get();
 
     if(!doc.exists){
-      Firestore.instance.collection('highlightsNo').document(Provider.of<AppData>(context).userData.id).setData({
+      Firestore.instance.collection('highlightsNo').document(Provider.of<AppData>(context, listen: false).userData.id).setData({
         "number": no,
       }).catchError((e) => print(e));
     }

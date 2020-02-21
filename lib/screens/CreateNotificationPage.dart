@@ -72,7 +72,7 @@ class _CreateNotificationPageState extends State<CreateNotificationPage> with Si
 
           StreamBuilder<List<NotificationData>>(
 
-              stream: Provider.of<AppData>(context).outNotifications,
+              stream: Provider.of<AppData>(context, listen: false).outNotifications,
               builder: (context, snapshot) {
                 if (snapshot.hasData) {
                   final notifications = snapshot.data;
@@ -202,7 +202,7 @@ class _CreateNotificationPageState extends State<CreateNotificationPage> with Si
      });
 
 
-      Provider.of<AppData>(context).addNotification(notificationData);
+      Provider.of<AppData>(context, listen: false).addNotification(notificationData);
 
 
      //TODO: Show snackbar indicating that notifications have been set for category daily
@@ -285,7 +285,7 @@ class NotificationTile extends StatelessWidget {
               ),
             ),
             IconButton(
-              onPressed: () => Provider.of<AppData>(context).removeNotification(notification),
+              onPressed: () => Provider.of<AppData>(context, listen: false).removeNotification(notification),
               icon: Icon(Icons.delete, size: 25),
             ),
           ],

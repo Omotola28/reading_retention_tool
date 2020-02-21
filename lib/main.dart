@@ -44,8 +44,7 @@ void main() {
    */
   SystemChrome.setSystemUIOverlayStyle(copyWith());
 
-  runZoned(() {
-    runApp(
+  runApp(
       ChangeNotifierProvider<AppData>(
         create: (context) => AppData(),
         child: MaterialApp(
@@ -61,7 +60,6 @@ void main() {
         ),
       ),
     );
-  }, onError: Crashlytics.instance.recordError);
 
 
 

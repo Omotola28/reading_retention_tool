@@ -54,7 +54,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
 
     Future.delayed(Duration.zero, () async {
-      final appData = Provider.of<AppData>(context);
+      final appData = Provider.of<AppData>(context, listen: false);
       await appData.init();
     });
 
@@ -84,281 +84,270 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
 
     //print( Provider.of<AppData>(context).userData);
-    return Scaffold(
-        appBar: AppBar(
-          brightness: Brightness.light,
-          iconTheme: IconThemeData(color: kDarkColorBlack),
-          elevation: 0.0,
-          actions: <Widget>[
-            new IconButton(
-              onPressed: () {
-                //do something
-              },
-              padding: EdgeInsets.all(0.0),
-              iconSize: 100.0,
-              icon: Image.asset(
-                'Images/quotd.png',
-              ),
-              // tooltip: 'Closes application',
-              //    onPressed: () => exit(0),
-            ),
-          ],
-        ),
-        drawer: Drawer(
-          child: Column(
-            children: <Widget>[
-              Expanded(
-                child: ListView(
-                  children: <Widget>[
-                   /* Align(
-                      alignment: Alignment.topRight,
-                      child: FlatButton(
-                          onPressed: null,
-                          child: Image.asset(
-                            "Images/settings.png",
-                            width: 24.0,
-                            height: 24.0,
-                          )
-                      ),
-                    ),*/
-                    Padding(
-                      padding: const EdgeInsets.only(left: 5.0),
-                      child: UserAccountsDrawerHeader(
-                        accountName: Text(
-                          "Hi! :)",
-                          style: kTrailingTextStyleDecoration.copyWith(color: kDarkColorBlack),
-                        ),
-                        accountEmail: Text(
-                          Provider.of<AppData>(context).userData != null ? Provider.of<AppData>(context).userData.displayName : '',
-
-                          style: kHeadingTextStyleDecoration,
-                        ),
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                              image: NetworkImage(
-                                 kNoPhotoUrl
-                              ),
-                              fit: BoxFit.fill
-                          )
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text("Browse",
-                        style: kHeadingTextStyleDecoration,
-                      ),
-                    ),
-                    Divider(
-                      color: kHighlightColorGrey,
-                      thickness: 2.0,
-                    ),
-                    ListTile(
-                      title: Text('Books'),
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context)
-                          => UserBooksListScreen(),
-                          ),
-                        );
-                      },
-                      trailing: Icon(CustomIcons.book),
-                    ),
-                    Divider(
-                      color: kHighlightColorGrey,
-                    ),
-                    ListTile(
-                      title: Text('Categories'),
-                      onTap: () {
-                        setState(() {
-                          expandFlag = !expandFlag;
-                        });
-
-                      },
-                      trailing: expandFlag ? Icon(CustomIcons.tag , color: kPrimaryColor) : Icon(CustomIcons.tag),
-                    ),
-                    ExpandableContainer(
-                      expanded: expandFlag,
-                      child: Column(
-                        children: <Widget>[
-                          Provider.of<AppData>(context).userData != null ?
-                          Flexible(
-                              flex: 2,
-                              child: StreamBuilder<QuerySnapshot>(
-                                  stream: Firestore.instance.collection('category')
-                                      .document(Provider.of<AppData>(context).userData.id)
-                                      .collection('userCategories').snapshots(),
-                                  builder: (context, snapshot){
-                                    if(snapshot.hasData){
-                                      categoryLength = snapshot.data.documents.length;
-                                      return ListView.builder(
-                                        itemBuilder: (context, index) {
-
-                                          return Container(
-                                              decoration: BoxDecoration(border: new Border.all(
-                                                  width:0.5, color: Colors.grey),
-                                                  color: kLightYellowBG),
-                                              child: ListTile(
-                                                contentPadding: EdgeInsets.fromLTRB(30.0, 0, 0, 0),
-                                                title: Text(
-                                                  snapshot.data.documents[index].documentID.split('#')[0],
-                                                  style: TextStyle(
-                                                      fontWeight: FontWeight.bold,
-                                                      color: kDarkColorBlack),
-                                                ),
-                                                onTap: (){
-                                                  Navigator.of(context).pop();
-                                                  Navigator.pushNamed(context, CategoryHighlightsRoute, arguments: snapshot.data.documents[index].documentID.split('#')[0]);
-                                                 /* Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(builder: (context)
-                                                            => CategoryHighlightsScreen(snapshot.data.documents[index].documentID.split('#')[0])
-                                                    ),
-                                                  );*/
-                                                },
-                                              )
-                                          );
-                                        },
-                                        itemCount: snapshot.data.documents.length,
-                                      );
-
-                                    }
-
-                                    return Text('No categories yet', style: TextStyle(color: Colors.black));
-
-                                  }
-
-                              )
-                          ) : CircularProgressIndicator(),
-                          categoryLength != 0 ?
-                          Expanded(
-                            child: Align(
-                              alignment: Alignment.centerLeft,
-                              child: FlatButton.icon(
-                                padding: EdgeInsets.fromLTRB(30.0, 0.0, 0.0, 0.0),
-                                color: kLightYellowBG,
-                                icon: Icon(Icons.border_color, size: 15.0,), //`Icon` to display
-                                label: Text('Manage Category' ), //`Text` to display
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(builder: (context)
-                                    => ManageCategory()
-                                    ),
-                                  );
-                                },
-                              ),
-                            ),
-                          ): Container(),
-                        ],
-                      )
-
-
-                    ),
-
-                    ListTile(
-                      title: Text('Medium Articles'),
-                      onTap: () {
-                        // Update the state of the app
-                        // ...
-                        // Then close the drawer
-                        Navigator.pop(context);
-                      },
-                      trailing: Icon(CustomIcons.doc),
-                    ),
-                    Divider(
-                      color: kHighlightColorGrey,
-                    ),
-                    ListTile(
-                      title: Text('Instapaper Articles'),
-                      onTap: () async {
-
-                       print(Provider.of<AppData>(context).uid);
-                        dynamic resp = await callable.call(<String, dynamic>{
-                          'username': 'omotolashogunle@gmail.com',
-                          'password': '@Matilda28',
-                          'uid' : Provider.of<AppData>(context).uid
-                        });
-
-
-                        print(resp.data);
-
-                      },
-                      trailing: Icon(CustomIcons.doc),
-                    ),
-                    Divider(
-                      color: kHighlightColorGrey,
-                    ),
-                    ListTile(
-                      title: Text('Favourites'),
-                      onTap: () {
-                        // Update the state of the app
-                        // ...
-                        // Then close the drawer
-                        Navigator.pop(context);
-                      },
-                      trailing: Icon(CustomIcons.favorite),
-                    ),
-                    Divider(
-                      color: kHighlightColorGrey,
-                    ),
-                  ],
-                ),
-              ),
-              ListTile(
-                title: Text(
-                  "Logout",
-                  style: kHeadingTextStyleDecoration.copyWith(color: kPrimaryColor),
-
-                ),
-                onTap: () {
-                  //UserAuth.auth.signOut();
-                  if(Provider.of<AppData>(context).isCustomSignIn){
-                    UserAuth.auth.signOut();
-                    Provider.of<AppData>(context).setCustomSignIn(false);
-
-                  }
-                  else{
-                    UserAuth.googleSignIn.signOut();
-                  }
-                  UserAuth.googleSignIn.signOut();
-                  Navigator.pop(context);
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context)
-                    => GetStartedScreen()
-                    ),
-                  );
-
+    return WillPopScope(
+      onWillPop: () => Future.value(false),
+      child: Scaffold(
+          appBar: AppBar(
+            brightness: Brightness.light,
+            iconTheme: IconThemeData(color: kDarkColorBlack),
+            elevation: 0.0,
+            actions: <Widget>[
+              new IconButton(
+                onPressed: () {
+                  //do something
                 },
+                padding: EdgeInsets.all(0.0),
+                iconSize: 100.0,
+                icon: Image.asset(
+                  'Images/quotd.png',
+                ),
+                // tooltip: 'Closes application',
+                //    onPressed: () => exit(0),
               ),
             ],
           ),
-        ),
-        body: PageView(
-          children: <Widget>[
-            ServiceSyncListPage(Provider.of<AppData>(context).userData.id),
-            NearbyLibraryPage(),
-            ActivityFeedPage(),
-          ],
+          drawer: Drawer(
+            child: Column(
+              children: <Widget>[
+                Expanded(
+                  child: ListView(
+                    children: <Widget>[
+                     /* Align(
+                        alignment: Alignment.topRight,
+                        child: FlatButton(
+                            onPressed: null,
+                            child: Image.asset(
+                              "Images/settings.png",
+                              width: 24.0,
+                              height: 24.0,
+                            )
+                        ),
+                      ),*/
+                      Padding(
+                        padding: const EdgeInsets.only(left: 5.0),
+                        child: UserAccountsDrawerHeader(
+                          accountName: Text(
+                            "Hi! :)",
+                            style: kTrailingTextStyleDecoration.copyWith(color: kDarkColorBlack),
+                          ),
+                          accountEmail: Text(
+                            Provider.of<AppData>(context).userData != null ? Provider.of<AppData>(context).userData.displayName : '',
 
-          controller: pageController,
-          onPageChanged: onPageChanged,
-          physics: NeverScrollableScrollPhysics(),
-        ),
+                            style: kHeadingTextStyleDecoration,
+                          ),
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                                image: NetworkImage(
+                                   kNoPhotoUrl
+                                ),
+                                fit: BoxFit.fill
+                            )
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text("Browse",
+                          style: kHeadingTextStyleDecoration,
+                        ),
+                      ),
+                      Divider(
+                        color: kHighlightColorGrey,
+                        thickness: 2.0,
+                      ),
+                      ListTile(
+                        title: Text('Books'),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context)
+                            => UserBooksListScreen(),
+                            ),
+                          );
+                        },
+                        trailing: Icon(CustomIcons.book),
+                      ),
+                      Divider(
+                        color: kHighlightColorGrey,
+                      ),
+                      ListTile(
+                        title: Text('Categories'),
+                        onTap: () {
+                          setState(() {
+                            expandFlag = !expandFlag;
+                          });
 
-      bottomNavigationBar: CupertinoTabBar(
-          currentIndex: pageIndex,
-          onTap: onTap,
-          activeColor: kPrimaryColor,
-          backgroundColor: Colors.white,
-          items: [
-            BottomNavigationBarItem(icon: Icon(Icons.home)),
-            BottomNavigationBarItem(icon: Icon(Icons.library_books)),
-            BottomNavigationBarItem(icon: Icon(Icons.notifications_active))
-          ],
+                        },
+                        trailing: expandFlag ? Icon(CustomIcons.tag , color: kPrimaryColor) : Icon(CustomIcons.tag),
+                      ),
+                      ExpandableContainer(
+                        expanded: expandFlag,
+                        child: Column(
+                          children: <Widget>[
+                            Provider.of<AppData>(context).userData != null ?
+                            Flexible(
+                                flex: 2,
+                                child: StreamBuilder<QuerySnapshot>(
+                                    stream: Firestore.instance.collection('category')
+                                        .document(Provider.of<AppData>(context).userData.id)
+                                        .collection('userCategories').snapshots(),
+                                    builder: (context, snapshot){
+                                      if(snapshot.hasData){
+                                        categoryLength = snapshot.data.documents.length;
+                                        return ListView.builder(
+                                          itemBuilder: (context, index) {
+
+                                            return Container(
+                                                decoration: BoxDecoration(border: new Border.all(
+                                                    width:0.5, color: Colors.grey),
+                                                    color: kLightYellowBG),
+                                                child: ListTile(
+                                                  contentPadding: EdgeInsets.fromLTRB(30.0, 0, 0, 0),
+                                                  title: Text(
+                                                    snapshot.data.documents[index].documentID.split('#')[0],
+                                                    style: TextStyle(
+                                                        fontWeight: FontWeight.bold,
+                                                        color: kDarkColorBlack),
+                                                  ),
+                                                  onTap: (){
+                                                    Navigator.of(context).pop();
+                                                    Navigator.pushNamed(context, CategoryHighlightsRoute, arguments: snapshot.data.documents[index].documentID.split('#')[0]);
+                                                   /* Navigator.push(
+                                                      context,
+                                                      MaterialPageRoute(builder: (context)
+                                                              => CategoryHighlightsScreen(snapshot.data.documents[index].documentID.split('#')[0])
+                                                      ),
+                                                    );*/
+                                                  },
+                                                )
+                                            );
+                                          },
+                                          itemCount: snapshot.data.documents.length,
+                                        );
+
+                                      }
+
+                                      return Text('No categories yet', style: TextStyle(color: Colors.black));
+
+                                    }
+
+                                )
+                            ) : CircularProgressIndicator(),
+                            categoryLength != 0 ?
+                            Expanded(
+                              child: Align(
+                                alignment: Alignment.centerLeft,
+                                child: FlatButton.icon(
+                                  padding: EdgeInsets.fromLTRB(30.0, 0.0, 0.0, 0.0),
+                                  color: kLightYellowBG,
+                                  icon: Icon(Icons.border_color, size: 15.0,), //`Icon` to display
+                                  label: Text('Manage Category' ), //`Text` to display
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(builder: (context)
+                                      => ManageCategory()
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ),
+                            ): Container(),
+                          ],
+                        )
+
+
+                      ),
+
+                      ListTile(
+                        title: Text('Medium Articles'),
+                        onTap: () {
+                          // Update the state of the app
+                          // ...
+                          // Then close the drawer
+                          Navigator.pop(context);
+                        },
+                        trailing: Icon(CustomIcons.doc),
+                      ),
+                      Divider(
+                        color: kHighlightColorGrey,
+                      ),
+                      ListTile(
+                        title: Text('Instapaper Articles'),
+                        onTap: () async {
+
+                          dynamic resp = await callable.call(<String, dynamic>{
+                            'username': 'omotolashogunle@gmail.com',
+                            'password': '@Matilda28',
+                            'uid' : Provider.of<AppData>(context).uid
+                          });
+
+
+                          print(resp.data);
+
+                        },
+                        trailing: Icon(CustomIcons.doc),
+                      ),
+                      Divider(
+                        color: kHighlightColorGrey,
+                      ),
+                      ListTile(
+                        title: Text('Favourites'),
+                        onTap: () {
+                          // Update the state of the app
+                          // ...
+                          // Then close the drawer
+                          Navigator.pop(context);
+                        },
+                        trailing: Icon(CustomIcons.favorite),
+                      ),
+                      Divider(
+                        color: kHighlightColorGrey,
+                      ),
+                    ],
+                  ),
+                ),
+                ListTile(
+                  title: Text(
+                    "Logout",
+                    style: kHeadingTextStyleDecoration.copyWith(color: kPrimaryColor),
+
+                  ),
+                  onTap: () {
+                    UserAuth.auth.signOut();
+                    UserAuth.googleSignIn.signOut();
+
+                    Navigator.popAndPushNamed(context, GetStartedScreenRoute);
+
+                  },
+                ),
+              ],
+            ),
+          ),
+          body: PageView(
+            children: <Widget>[
+              ServiceSyncListPage(),
+              NearbyLibraryPage(),
+              ActivityFeedPage(),
+            ],
+
+            controller: pageController,
+            onPageChanged: onPageChanged,
+            physics: NeverScrollableScrollPhysics(),
+          ),
+
+        bottomNavigationBar: CupertinoTabBar(
+            currentIndex: pageIndex,
+            onTap: onTap,
+            activeColor: kPrimaryColor,
+            backgroundColor: Colors.white,
+            items: [
+              BottomNavigationBarItem(icon: Icon(Icons.home)),
+              BottomNavigationBarItem(icon: Icon(Icons.library_books)),
+              BottomNavigationBarItem(icon: Icon(Icons.notifications_active))
+            ],
+        ),
       ),
     );
   }

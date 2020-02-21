@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:reading_retention_tool/constants/route_constants.dart';
 import 'package:reading_retention_tool/custom_widgets/ResetPasswordForm.dart';
 import 'package:provider/provider.dart';
 import 'package:reading_retention_tool/module/user.dart';
@@ -90,22 +91,7 @@ class _SignInFormState extends State<SignInForm> {
                                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: <Widget>[
-                                    Row(
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: <Widget>[
-                                        Checkbox(value: false, onChanged: (val){
-                                          setState(() {
 
-                                          });
-                                        }, activeColor: kPrimaryColor,
-                                        ),
-                                        Text(
-                                          "Remember me",
-                                          style: kTrailingTextStyleDecoration,
-                                        ),
-                                      ],
-                                    ),
                                     FlatButton(
                                       child: Text("Forgot Password",
                                         style: kTrailingTextStyleDecoration,
@@ -139,15 +125,9 @@ class _SignInFormState extends State<SignInForm> {
 
 
                             if(result != null ){
-                              Provider.of<AppData>(context).setUserData(result);
-                              Provider.of<AppData>(context).setCustomSignIn(true);
-                              Navigator.pop(context);
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context)
-                                => HomeScreen()
-                                ),
-                              );
+                              Provider.of<AppData>(context, listen: false).setUserData(result);
+                              //Provider.of<AppData>(context).setCustomSignIn(true);
+                              Navigator.popAndPushNamed(context, HomeScreenRoute);
                             }
                             else{
                               print(result);

@@ -160,14 +160,14 @@ void handlePopUpMenuAction(String value, BuildContext context, int index, List h
         editHighlightDialog(
             context, highlyObj[index]['highlight'].replaceAll(new RegExp(r' - '), ''), index)
             .then((val){
-          switch (Provider.of<AppData>(context).whatActionButton) {
+          switch (Provider.of<AppData>(context, listen: false).whatActionButton) {
             case 'Save':
               {
-                highlyObj[index]['highlight'] = Provider.of<AppData>(context).savedString;
+                highlyObj[index]['highlight'] = Provider.of<AppData>(context, listen: false).savedString;
                 Firestore.instance.collection("kindle")
-                    .document(Provider.of<AppData>(context).userData.id)
+                    .document(Provider.of<AppData>(context, listen: false).userData.id)
                     .collection("books")
-                    .document(Provider.of<AppData>(context).bookName)
+                    .document(Provider.of<AppData>(context, listen: false).bookName)
                     .updateData({"highlights": highlyObj});
               }
               break;
@@ -189,11 +189,11 @@ void handlePopUpMenuAction(String value, BuildContext context, int index, List h
     case 'Delete':
       {
 
-      Provider.of<AppData>(context).reduceNoOfHighlights(1);
+      Provider.of<AppData>(context, listen: false).reduceNoOfHighlights(1);
       Firestore.instance.collection("kindle")
-            .document(Provider.of<AppData>(context).userData.id)
+            .document(Provider.of<AppData>(context, listen: false).userData.id)
             .collection("books")
-            .document(Provider.of<AppData>(context).bookName)
+            .document(Provider.of<AppData>(context, listen: false).bookName)
             .updateData({'highlights' : FieldValue.arrayRemove(highlight)});
 
       }
@@ -244,8 +244,8 @@ Future<bool> editHighlightDialog(BuildContext context, String highlight, int ind
                 color: kHighlightColorDarkGrey,
               ),
               onPressed: () {
-                Provider.of<AppData>(context).setWhatActionButton('Save');
-                Provider.of<AppData>(context).setSavedHighlight(_highlightController.text);
+                Provider.of<AppData>(context, listen: false).setWhatActionButton('Save');
+                Provider.of<AppData>(context, listen: false).setSavedHighlight(_highlightController.text);
 
                 Navigator.of(context).pop(true);
                 //print(_highlightController.text);

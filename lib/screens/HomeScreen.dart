@@ -80,6 +80,8 @@ class _HomeScreenState extends State<HomeScreen> {
   );
 
 
+
+
   @override
   Widget build(BuildContext context) {
 
@@ -276,12 +278,13 @@ class _HomeScreenState extends State<HomeScreen> {
                       ListTile(
                         title: Text('Instapaper Articles'),
                         onTap: () async {
-
+                          print('You tapped me');
                           dynamic resp = await callable.call(<String, dynamic>{
                             'username': 'omotolashogunle@gmail.com',
                             'password': '@Matilda28',
-                            'uid' : Provider.of<AppData>(context).uid
+                            'uid' : Provider.of<AppData>(context, listen: false).userData.id
                           });
+
 
 
                           print(resp.data);

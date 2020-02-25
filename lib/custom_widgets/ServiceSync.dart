@@ -182,13 +182,13 @@ Future<bool> showMediumDialog(BuildContext context){
                 ),
                onPressed: () async {
                     if(_mediumUsername.text == '@username')
-                        Provider.of<AppData>(context).setMeduimUserName(null);
+                        Provider.of<AppData>(context, listen: false).setMeduimUserName(null);
                     else
-                        Provider.of<AppData>(context).setMeduimUserName(_mediumUsername.text);
+                        Provider.of<AppData>(context, listen: false).setMeduimUserName(_mediumUsername.text);
 
                     dynamic resp = await callable.call(<String, dynamic>{
                       'name': _mediumUsername.text,
-                      'uid': Provider.of<AppData>(context).uid
+                      'uid': Provider.of<AppData>(context, listen: false).userData.id
                     });
 
                     print(resp);

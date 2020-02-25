@@ -15,6 +15,30 @@
       },
       "oauth_client": [
         {
+          "client_id": "209852250192-hlt464065te3bauh9hvc4t3p0f7mcl94.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.oshogunle.reading_retention_tool",
+            "certificate_hash": "d5b3be787f55ef1e79a3d2ec76d6e6d5f60321f3"
+          }
+        },
+        {
+          "client_id": "209852250192-7njq66g505idueennj3623dd5qkebuaj.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.oshogunle.reading_retention_tool",
+            "certificate_hash": "b1a7832e3bad1d1a5cd8f90f957dbed530a40486"
+          }
+        },
+        {
+          "client_id": "209852250192-gnjgdh4k3g0o9td15h9dt11rtbdo0jio.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.oshogunle.reading_retention_tool",
+            "certificate_hash": "4a2649a0adee59b6b169dfe682b9ba6ddd4ee14e"
+          }
+        },
+        {
           "client_id": "209852250192-4teq79a4bmcg9hcvuimm8fg0e6pcp8rh.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
@@ -38,6 +62,13 @@
             {
               "client_id": "209852250192-65fh49d11bda8rr6511rohlln0b4odpo.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "209852250192-kk6i5hs8tqbjdp3sa47kuu5sllrm92g4.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.oshogunle.readingRetentionTool"
+              }
             }
           ]
         }

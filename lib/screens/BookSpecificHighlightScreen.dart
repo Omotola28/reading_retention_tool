@@ -189,7 +189,7 @@ void handlePopUpMenuAction(String value, BuildContext context, int index, List h
     case 'Delete':
       {
 
-      Provider.of<AppData>(context, listen: false).reduceNoOfHighlights(1);
+      //Provider.of<AppData>(context, listen: false).reduceNoOfHighlights(1);
       Firestore.instance.collection("kindle")
             .document(Provider.of<AppData>(context, listen: false).userData.id)
             .collection("books")

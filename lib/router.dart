@@ -6,6 +6,7 @@ import 'package:reading_retention_tool/screens/HighlightOfTheDayScreen.dart';
 import 'package:reading_retention_tool/screens/HomeScreen.dart';
 import 'package:reading_retention_tool/screens/KindleHighlightsSync.dart';
 import 'package:reading_retention_tool/screens/ManageCategory.dart';
+import 'package:reading_retention_tool/screens/MediumHighlightsSyncScreen.dart';
 import 'package:reading_retention_tool/screens/ShowRetrievedHighlightsScreen.dart';
 import 'package:reading_retention_tool/screens/SignInScreen.dart';
 import 'package:reading_retention_tool/screens/SignUpScreen.dart';
@@ -52,6 +53,10 @@ Route<dynamic> generateRoute(RouteSettings settings){
       case CategoryHighlightsRoute :
         var categoryId = settings.arguments;
         return MaterialPageRoute(builder: (context) => CategoryHighlightsScreen(categoryId));
+
+      case MediumHighlightsSyncRoute :
+        var payload = settings.arguments;
+        return MaterialPageRoute(builder: (context) => MediumHighlightsSyncScreen(payload));
 
       case SignInRoute :
         return MaterialPageRoute(builder: (context) => SignInScreen());

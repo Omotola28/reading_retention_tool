@@ -2,7 +2,6 @@ const String WelcomeScreenRoute = 'welcome_screen';
 const String HomeScreenRoute = 'home_screen';
 const String GetStartedScreenRoute = 'getstarted_screen';
 const String KindleHighlightsSyncRoute = 'kindle_highlights_sync_screen';
-const String MediumHighlightsRoute = 'medium_highlights_screen';
 const String ShowRetrievedHightlightsRoute = 'show_retrieved_highlights_screen';
 const String UserBooksListRoute = 'user_booklist_screen';
 const String CategoryRoute = 'category_screen';
@@ -14,6 +13,7 @@ const String ResetPasswordRoute = 'resetPassword_screen';
 const String WaitingToLoginRoute = 'waiting_screen';
 const String CategoryHighlightsRoute = 'category_hightlights_screen';
 const String CreateNotificationRoute = 'create_notification_screen';
+const String MediumHighlightsSyncRoute = 'medium_highlights_screen';
 
 
 

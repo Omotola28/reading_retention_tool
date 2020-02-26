@@ -1,4 +1,3 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -131,16 +130,6 @@ class _KindleHighlightsSync extends State<KindleHighlightsSync> {
                                                   fontSize: 20.0
                                               ),
                                             ),
-                                            //const Padding(padding: EdgeInsets.only(bottom: 2.0)),
-                                            /* Text(
-                                                path,
-                                                maxLines: 2,
-                                                overflow: TextOverflow.ellipsis,
-                                                style: const TextStyle(
-                                                  fontSize: 10.0,
-                                                  color: kHighlightColorGrey,
-                                                ),
-                                              ),*/
                                           ],
                                         ),
                                       ),

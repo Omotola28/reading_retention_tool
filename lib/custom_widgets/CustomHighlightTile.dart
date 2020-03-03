@@ -32,7 +32,7 @@ class CustomHighlightTile extends StatelessWidget {
                 child: Text(
                   text,
                   style: TextStyle(color: kDarkColorBlack),
-                  maxLines: 200,
+                  maxLines: 300,
                   softWrap: true,
                 ),
                 alignment: Alignment.center,

@@ -1,78 +1,65 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:reading_retention_tool/constants/constants.dart';
-import 'package:reading_retention_tool/constants/route_constants.dart';
 import 'package:reading_retention_tool/custom_widgets/AppBar.dart';
-import 'package:reading_retention_tool/screens/HomeScreen.dart';
-import 'package:reading_retention_tool/screens/ProgressIndicators.dart';
-import 'package:provider/provider.dart';
-import 'package:reading_retention_tool/module/app_data.dart';
 import 'package:reading_retention_tool/custom_widgets/CustomHighlightTile.dart';
+import 'package:reading_retention_tool/screens/InstapaperBookmarkScreen.dart';
+import 'package:reading_retention_tool/utils/manageHighlightsController.dart';
 import 'package:reading_retention_tool/customIcons/my_flutter_app_icons.dart';
 import 'package:reading_retention_tool/utils/color_utility.dart';
-import 'package:reading_retention_tool/utils/manageHighlightsController.dart';
 
 
-class MediumHighlightsSyncScreen extends StatefulWidget {
+class BookmarkHighlightScreen extends StatefulWidget {
 
-  final String payload; //Variable that hold success message
+  final String bookmarkId;
 
-  MediumHighlightsSyncScreen(this.payload);
+  BookmarkHighlightScreen(this.bookmarkId);
 
   @override
-  _MediumHighlightsSyncScreenState createState() => _MediumHighlightsSyncScreenState();
+  _BookmarkHighlightScreenState createState() => _BookmarkHighlightScreenState();
 }
 
-class _MediumHighlightsSyncScreenState extends State<MediumHighlightsSyncScreen> {
+class _BookmarkHighlightScreenState extends State<BookmarkHighlightScreen> {
 
-  var message;
+  final _store = Firestore.instance;
   var highlights = [];
-  bool mediumData = false;
+  var highlightData = false;
   final manageHighlight = new ManageHighlightsController();
 
-  @override
-  void initState() {
-    super.initState();
-
-    setState(() {
-      message = widget.payload;
-    });
-  }
-
-  Future<DocumentSnapshot> _getMediumHighlights() async {
-
-    var data = await Firestore.instance
-        .collection('medium')
-        .document(Provider.of<AppData>(context, listen: false).userData.id)
+  Future<DocumentSnapshot> _getInstapaperHighlights() async {
+    var data =  await _store
+        .collection('instapaperhighlights')
+        .document(widget.bookmarkId)
         .get();
 
     if(data.exists){
       setState(() {
-        mediumData = true;
+        highlightData = true;
       });
     }
     else{
       setState(() {
-        mediumData = false;
+        highlightData = false;
       });
     }
 
     return data;
   }
 
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar:  header(headerText: 'Medium Highlights', context: context , screen: HomeScreen() ),
+      appBar: header(headerText: 'Bookmark Highlight', screen: InstapaperBookmarkScreen(), context: context),
       body: SafeArea(
         child: FutureBuilder (
-            future:  _getMediumHighlights(),
+            future:  _getInstapaperHighlights(),
             builder: (context, snapshot) {
               List<Widget> widgetHighlights = [];
 
-              if(mediumData)  {
+              if(highlightData)  {
 
-                List highlights = snapshot.data['mediumHighlights'];
+                List highlights = snapshot.data['instaHighlights'];
 
                 if(highlights.isEmpty){
                   return Container(
@@ -84,7 +71,7 @@ class _MediumHighlightsSyncScreenState extends State<MediumHighlightsSyncScreen>
                             Image.asset(
                               'Images/notfound.png',
                             ),
-                            Text('No Highlights Extracted',
+                            Text('No Highlights For this Bookmark',
                               style: TextStyle(
                                   color: kDarkColorBlack),
                             ),
@@ -107,7 +94,7 @@ class _MediumHighlightsSyncScreenState extends State<MediumHighlightsSyncScreen>
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
-                            CustomHighlightTile(
+                              CustomHighlightTile(
                               icon: Icon(CustomIcons.circle, size: 8.0, color: HexColor(highlights[index]['color'])),
                               text: highlights[index]['highlight'],
 
@@ -118,8 +105,8 @@ class _MediumHighlightsSyncScreenState extends State<MediumHighlightsSyncScreen>
                                           context,
                                           index,
                                           highlights,
-                                          highlights[index]['id'],
-                                          'medium'
+                                          highlights[index]['bookmarkId'].toString(),
+                                          'instapaper'
                                       ),
                                   itemBuilder: (BuildContext context) => manageHighlight.popMenu
                               ),
@@ -140,15 +127,16 @@ class _MediumHighlightsSyncScreenState extends State<MediumHighlightsSyncScreen>
                 );
               }
               return ListView.builder(
-                itemCount: snapshot.data['mediumHighlights'].length == null ? 0 : snapshot.data['mediumHighlights'].length,
+                itemCount: snapshot.data['instaHighlights'].length == null ? 0 : snapshot.data['instaHighlights'].length,
                 itemBuilder: (context, index) {
                   return widgetHighlights[index];
                 },
               );
             }
         ),
-      )
+      ),
     );
   }
 }
+
 

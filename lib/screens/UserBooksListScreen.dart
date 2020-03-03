@@ -37,20 +37,29 @@ class _UserBooksListScreenState extends State<UserBooksListScreen> {
                           return ListView.builder(
                               itemCount: snapshot.data.documents.length,
                               itemBuilder: (context, index) {
-                                return Card(
-                                  elevation: 3.0,
-                                  child: ListTile(
-                                    title: Text(snapshot.data.documents[index].documentID.split('.')[0]),
-                                    onTap: (){
+                                return Padding(
+                                  padding: const EdgeInsets.all(10.0),
+                                  child: Card(
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: <Widget>[
+                                        Card(
+                                          elevation: 3.0,
+                                          child: ListTile(
+                                            title: Text(snapshot.data.documents[index].documentID.split('.')[0]),
+                                            onTap: (){
 
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(builder: (context)
-                                        => BookSpecificHighlightScreen(snapshot.data.documents[index].documentID)),
-                                      );
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(builder: (context)
+                                                => BookSpecificHighlightScreen(snapshot.data.documents[index].documentID)),
+                                              );
 
-                                    },
-                                    trailing: Icon(Icons.keyboard_arrow_right),
+                                            },
+                                          ),
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 );
                               }

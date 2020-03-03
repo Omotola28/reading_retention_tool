@@ -36,7 +36,8 @@ dependencies:
   flutter_svg: ^0.17.1
   flutter_image: ^3.0.0
   firebase_crashlytics: ^0.1.2+5
-  puppeteer: ^1.16.0
+  encrypt: ^4.0.0
+
 
 
 

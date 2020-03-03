@@ -63,27 +63,28 @@ class _ServiceSyncListPageState extends State<ServiceSyncListPage> {
                         padding: const EdgeInsets.all(20.0),
                         children: <Widget>[
                           ServiceSync(
-                            thumbnail: Image.asset("Images/Instapaper.png"),
-                            title: "Instatpaper",
-                            subtitle: "Sync all your highlights from articles you have read online",
-                            screen: 'instapaper',
+                            Image.asset("Images/Instapaper.png"),
+                            "Instatpaper",
+                            "Sync all your highlights from articles you have read online",
+                            'instapaper',
                           ),
                           ServiceSync(
-                            thumbnail: Image.asset("Images/medium.png"),
-                            title: "Medium",
-                            subtitle: "Sync highlights from medium",
-                            screen: 'medium',
+                            Image.asset("Images/medium.png"),
+                            "Medium",
+                            "Sync highlights from medium",
+                            'medium',
                           ),
                           ServiceSync(
-                            thumbnail: Image.asset("Images/kindle.png"),
-                            title: "Kindle",
-                            subtitle: "Sync highlights from your kindle ebooks/app",
-                            screen: "kindle",
+                            Image.asset("Images/kindle.png"),
+                            "Kindle",
+                            "Sync highlights from your kindle ebooks/app",
+                            "kindle",
                           ),
                           ServiceSync(
-                              thumbnail: Image.asset("Images/hmq.png"),
-                              title: "Highlight My Quotes",
-                              subtitle: "Add highlights manually from print books you have read"
+                              Image.asset("Images/hmq.png"),
+                              "Highlight My Quotes",
+                              "Add highlights manually from print books you have read",
+                              "hmq"
                           ),
                         ],
                       )

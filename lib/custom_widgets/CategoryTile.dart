@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:reading_retention_tool/constants/route_constants.dart';
 import 'package:reading_retention_tool/module/app_data.dart';
 import 'package:reading_retention_tool/customIcons/my_flutter_app_icons.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -11,9 +12,10 @@ import 'dart:convert';
 class CategoryTile extends StatefulWidget {
   final String categoryTitle;
   final Color categoryColor;
+  final String whichService;
 
 
-  CategoryTile({this.categoryTitle, this.categoryColor});
+  CategoryTile({this.categoryTitle, this.categoryColor, this.whichService});
 
   @override
   _CategoryTileState createState() => _CategoryTileState();
@@ -27,7 +29,7 @@ class _CategoryTileState extends State<CategoryTile> {
   Widget build(BuildContext context) {
     var highlightObj = Provider.of<AppData>(context).bookSpecificHighlights;
     var index = Provider.of<AppData>(context).categoryIndex;
-    List categorised = [];
+
 
     return ListTile(
        leading:  Padding(
@@ -50,21 +52,39 @@ class _CategoryTileState extends State<CategoryTile> {
        highlightObj[index]['color'] = '#'+colorHex;
 
 
-      //Saving the whole obj back to firebase datastore after adding category.
-       _store.collection("kindle")
-           .document(Provider.of<AppData>(context, listen: false).userData.id)
-           .collection("books")
-           .document(Provider.of<AppData>(context, listen: false).bookName)
-           .updateData({"highlights": highlightObj});
+       if(widget.whichService == 'kindle'){
+         //Saving the whole obj back to firebase datastore after adding category.
+         _store.collection("kindle")
+             .document(Provider.of<AppData>(context, listen: false).userData.id)
+             .collection("books")
+             .document(Provider.of<AppData>(context, listen: false).bookName)
+             .updateData({"highlights": highlightObj});
 
-       Navigator.pop(context);
-       Navigator.push(
-         context,
-         MaterialPageRoute(builder: (context)
-         => BookSpecificHighlightScreen(Provider.of<AppData>(context, listen: false).bookName)
-         ),
-       );
+         Navigator.pop(context);
+         Navigator.push(
+           context,
+           MaterialPageRoute(builder: (context)
+           => BookSpecificHighlightScreen(Provider.of<AppData>(context, listen: false).bookName)
+           ),
+         );
+       }
+       else if(widget.whichService == 'medium'){
+         Firestore.instance.collection("medium")
+             .document(Provider.of<AppData>(context, listen: false).userData.id)
+             .updateData({"mediumHighlights": highlightObj});
+         
+         Navigator.popAndPushNamed(context, MediumHighlightsSyncRoute, arguments: 'success');
 
+       }
+       else if(widget.whichService == 'instapaper'){
+
+
+         Firestore.instance.collection("instapaperhighlights")
+             .document(Provider.of<AppData>(context, listen: false).bookmarkID)
+             .updateData({"instaHighlights": highlightObj});
+
+         Navigator.popAndPushNamed(context, BookmarkHighlightRoute, arguments: Provider.of<AppData>(context, listen: false).bookmarkID);
+       }
       },
     );
   }

@@ -24,9 +24,7 @@ class _ShowMediumDialogState extends State<ShowMediumDialog> {
 
   final _mediumUsername = TextEditingController(text: '@username');
 
-  final HttpsCallable callable = CloudFunctions.instance.getHttpsCallable(
-    functionName: 'syncMedium',
-  );
+  final HttpsCallable callable = CloudFunctions(region: 'europe-west2').getHttpsCallable(functionName: 'syncMedium',);
 
   Future<String> _callSyncMedium() async {
     var message;
@@ -41,12 +39,6 @@ class _ShowMediumDialogState extends State<ShowMediumDialog> {
         payload = 'processing';
       });
     }
-
-    if (_mediumUsername.text == '@username')
-      Provider.of<AppData>(context, listen: false).setMeduimUserName(null);
-    else
-      Provider.of<AppData>(context, listen: false).setMeduimUserName(
-          _mediumUsername.text);
 
     try {
       dynamic resp = await callable.call(<String, dynamic>{
@@ -111,100 +103,111 @@ class _ShowMediumDialogState extends State<ShowMediumDialog> {
       if (_focusNode.hasFocus) _mediumUsername.clear();
     });
 
-    return Dialog(
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.0)),
-        child: Container(
-            height: MediaQuery.of(context).size.height / 2.4,
-            width: 200.0,
-            decoration:
-            BoxDecoration(borderRadius: BorderRadius.circular(20.0)),
-            child: Column(
-              children: <Widget>[
-                Stack(
-                  children: <Widget>[
-                    Container(height: 150.0),
-                    Container(
-                      height: 100.0,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(10.0),
-                            topRight: Radius.circular(10.0),
-                          ),
-                          color: kPrimaryColor),
-                    ),
-                    Positioned(
-                        top: 50.0,
-                        left: 94.0,
-                        child: Container(
-                          height: 90.0,
-                          width: 90.0,
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(45.0),
-                              border: Border.all(
-                                  color: Colors.white,
-                                  style: BorderStyle.solid,
-                                  width: 2.0),
-                              image: DecorationImage(
-                                  image:
-                                  NetworkImage(mediumLogo),
-                                  fit: BoxFit.cover)),
-                        ))
-                  ],
-                ),
-                SizedBox(height: 20.0),
-                Padding(
-                    padding: EdgeInsets.all(10.0),
-                    child: TextFormField(
-                       cursorColor: kDarkColorBlack,
-                        decoration: InputDecoration(
-                          labelText: 'Enter medium username',
-                          labelStyle: TextStyle(fontSize: 19, color: kDarkColorBlack, fontWeight: FontWeight.bold, letterSpacing: 1),
-                          enabledBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: kPrimaryColor, width: 2.0)),
-                          focusedBorder: UnderlineInputBorder(
-                              borderSide: BorderSide(
-                                  color: kPrimaryColor, width: 3.0)),
+    return Flex(
+      direction: Axis.vertical,
+      children: <Widget>[
+        Expanded(
+          flex: 1,
+          child: SingleChildScrollView(
+            child: Dialog(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0)),
+                child: Container(
+                    height: MediaQuery.of(context).size.height / 2,
+                    width: 200.0,
+                    decoration:
+                    BoxDecoration(borderRadius: BorderRadius.circular(20.0)),
+                    child: Column(
+                      children: <Widget>[
+                        Stack(
+                          children: <Widget>[
+                            Container(height: 150.0),
+                            Container(
+                              height: 100.0,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.only(
+                                    topLeft: Radius.circular(10.0),
+                                    topRight: Radius.circular(10.0),
+                                  ),
+                                  color: kPrimaryColor),
+                            ),
+                            Positioned(
+                                top: 50.0,
+                                left: 94.0,
+                                child: Container(
+                                  height: 90.0,
+                                  width: 90.0,
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(45.0),
+                                      border: Border.all(
+                                          color: Colors.white,
+                                          style: BorderStyle.solid,
+                                          width: 2.0),
+                                      image: DecorationImage(
+                                          image:
+                                          NetworkImage(mediumLogo),
+                                          fit: BoxFit.cover)),
+                                ))
+                          ],
                         ),
-                        controller: _mediumUsername,
-                        focusNode: _focusNode,
-                        style: TextStyle(color: Colors.grey))),
-                SizedBox(height: 15.0),
-                Text(errorMessage == null ? '' : errorMessage,
-                  style: TextStyle(color: Colors.deepOrange),),
-                payload == '' ?
-                Container(
-                  width: 200,
-                  child: OutlineButton(
-                    disabledBorderColor: kPrimaryColor,
+                        SizedBox(height: 20.0),
+                        Padding(
+                            padding: EdgeInsets.all(10.0),
+                            child: TextFormField(
+                                cursorColor: kDarkColorBlack,
+                                decoration: InputDecoration(
+                                  labelText: 'Enter medium username',
+                                  labelStyle: TextStyle(fontSize: 19, color: kDarkColorBlack, fontWeight: FontWeight.bold, letterSpacing: 1),
+                                  enabledBorder: UnderlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color: kPrimaryColor, width: 2.0)),
+                                  focusedBorder: UnderlineInputBorder(
+                                      borderSide: BorderSide(
+                                          color: kPrimaryColor, width: 3.0)),
+                                ),
+                                controller: _mediumUsername,
+                                focusNode: _focusNode,
+                                style: TextStyle(color: Colors.grey))),
+                        SizedBox(height: 15.0),
+                        Text(errorMessage == null ? '' : errorMessage,
+                          style: TextStyle(color: Colors.deepOrange),),
+                        payload == '' ?
+                        Container(
+                          width: 200,
+                          child: OutlineButton(
+                            disabledBorderColor: kPrimaryColor,
 
-                    child: Center(
-                      child: Text(
-                        'Sync Highlights',
-                        style: kHeadingTextStyleDecoration.copyWith(
-                            color: kDarkColorBlack,
-                            letterSpacing: 1
-                        ),
-                      ),
-                    ),
-                    onPressed: () async {
-                      print('VAL ${_mediumUsername.text}');
-                      if (!isUserNameEmpty(_mediumUsername.text)) {
-                        _callSyncMedium().then((val) {
-                          if(mounted){
-                            setState(() {
-                              errorMessage = val;
-                            });
-                          }
-                        });
-                      }
-                    },
-                  ),
-                )
-                    : Center(
-                  child: Container(child: circularProgressIndicator(),),)
-              ],
-            )));
+                            child: Center(
+                              child: Text(
+                                'Sync Highlights',
+                                style: kHeadingTextStyleDecoration.copyWith(
+                                    color: kDarkColorBlack,
+                                    letterSpacing: 1
+                                ),
+                              ),
+                            ),
+                            onPressed: () async {
+
+                              if (!isUserNameEmpty(_mediumUsername.text)) {
+                                await _callSyncMedium().then((val) {
+                                  if(mounted){
+                                    setState(() {
+                                      errorMessage = val;
+                                    });
+                                  }
+                                });
+                              }
+                            },
+                          ),
+                        )
+                            : Center(
+                          child: Container(child: circularProgressIndicator(),),)
+                      ],
+                    ))),
+          ),
+        )
+      ],
+
+    );
   }
 }

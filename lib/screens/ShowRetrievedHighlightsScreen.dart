@@ -76,73 +76,75 @@ class _ShowRetrievedHightlightsScreenState
 
     return Scaffold(
       appBar:  header(headerText: 'Kindle Highlights', context: context , screen: UserBooksListScreen() ),
-     body: FutureBuilder (
-       future:  _getKindleHighlights(),
-       builder: (context, snapshot) {
-         List<Widget> widgetHighlights = [];
+     body: SafeArea(
+       child: FutureBuilder (
+         future:  _getKindleHighlights(),
+         builder: (context, snapshot) {
+           List<Widget> widgetHighlights = [];
 
-         if(userHasData)  {
+           if(userHasData)  {
 
-           List highlights = snapshot.data['highlights'];
+             List highlights = snapshot.data['highlights'];
 
-           _saveNoOfHighlights(highlights.length);
-           if(highlights.isEmpty){
-             return Container(
-               child: Center(
-                 child: Column(
-                   mainAxisAlignment: MainAxisAlignment.center,
-                   crossAxisAlignment: CrossAxisAlignment.center,
-                   children: <Widget>[
-                     Image.asset(
-                       'Images/notfound.png',
-                     ),
-                     Text('No Highlights Extracted',
-                       style: TextStyle(
-                           color: kDarkColorBlack),
-                     ),
-                   ],
-                 )
-
-
-               ),
-             );
-           }
-           else{
-             for (var index = 0; index < highlights.length; index++) {
-
-               var cleanseText = highlights[index]['highlight'].replaceAll(new RegExp(r' - '), '');
-               final highlightWidget =
-               Padding(
-                 padding: const EdgeInsets.all(10.0),
-                 child: Card(
+             _saveNoOfHighlights(highlights.length);
+             if(highlights.isEmpty){
+               return Container(
+                 child: Center(
                    child: Column(
-                     mainAxisSize: MainAxisSize.min,
+                     mainAxisAlignment: MainAxisAlignment.center,
+                     crossAxisAlignment: CrossAxisAlignment.center,
                      children: <Widget>[
-                       ListTile(
-                         contentPadding: EdgeInsets.all(20.0),
-                         subtitle: Text(cleanseText),
+                       Image.asset(
+                         'Images/notfound.png',
+                       ),
+                       Text('No Highlights Extracted',
+                         style: TextStyle(
+                             color: kDarkColorBlack),
                        ),
                      ],
-                   ),
+                   )
+
+
                  ),
                );
-
-               widgetHighlights.add(highlightWidget);
              }
-           }
+             else{
+               for (var index = 0; index < highlights.length; index++) {
 
-         } else {
-           return Center(
-             child: CircularProgressIndicator(),
+                 var cleanseText = highlights[index]['highlight'].replaceAll(new RegExp(r' - '), '');
+                 final highlightWidget =
+                 Padding(
+                   padding: const EdgeInsets.all(10.0),
+                   child: Card(
+                     child: Column(
+                       mainAxisSize: MainAxisSize.min,
+                       children: <Widget>[
+                         ListTile(
+                           contentPadding: EdgeInsets.all(20.0),
+                           subtitle: Text(cleanseText),
+                         ),
+                       ],
+                     ),
+                   ),
+                 );
+
+                 widgetHighlights.add(highlightWidget);
+               }
+             }
+
+           } else {
+             return Center(
+               child: CircularProgressIndicator(),
+             );
+           }
+           return ListView.builder(
+             itemCount: snapshot.data['highlights'].length == null ? 0 : snapshot.data['highlights'].length,
+             itemBuilder: (context, index) {
+               return widgetHighlights[index];
+             },
            );
          }
-         return ListView.builder(
-           itemCount: snapshot.data['highlights'].length == null ? 0 : snapshot.data['highlights'].length,
-           itemBuilder: (context, index) {
-             return widgetHighlights[index];
-           },
-         );
-       }
+       ),
      ),
     );
   }

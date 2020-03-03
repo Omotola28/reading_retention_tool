@@ -6,21 +6,40 @@ import 'package:reading_retention_tool/custom_widgets/AddCategoryWidget.dart';
 import 'package:provider/provider.dart';
 import 'package:reading_retention_tool/module/app_data.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:reading_retention_tool/screens/BookmarkHighlightScreen.dart';
+import 'package:reading_retention_tool/screens/MediumHighlightsSyncScreen.dart';
 import 'package:reading_retention_tool/screens/UserBooksListScreen.dart';
 import 'package:reading_retention_tool/utils/color_utility.dart';
 
 class CategoriseHighlightScreen extends StatefulWidget {
+
+  final String whichService;
+
+  CategoriseHighlightScreen(this.whichService);
+
 
   @override
   _CategoriseHighlightScreenState createState() => _CategoriseHighlightScreenState();
 }
 
 class _CategoriseHighlightScreenState extends State<CategoriseHighlightScreen> {
+  dynamic backScreen;
+
   @override
   Widget build(BuildContext context) {
 
+    if(widget.whichService == 'kindle'){
+      backScreen = UserBooksListScreen();
+    }
+    else if(widget.whichService == 'medium'){
+      backScreen = MediumHighlightsSyncScreen('success');
+    }
+    else{
+      backScreen = BookmarkHighlightScreen(Provider.of<AppData>(context, listen: false).bookmarkID);//Add bookmark id
+    }
+
     return Scaffold(
-      appBar: header(headerText: 'Categorise Highlight', context: context, screen: UserBooksListScreen()),
+      appBar: header(headerText: 'Categorise Highlight', context: context, screen: backScreen ),
       body: SafeArea(
         child: Container(
           padding: EdgeInsets.symmetric(horizontal: 20.0),
@@ -44,7 +63,9 @@ class _CategoriseHighlightScreenState extends State<CategoriseHighlightScreen> {
                             ///Tap tile to add category to highlight
                             return CategoryTile(
                                 categoryTitle: snapshot.data.documents[index].documentID.split('#')[0],
-                                categoryColor: HexColor(snapshot.data.documents[index].documentID.split('#')[1]));
+                                categoryColor: HexColor(snapshot.data.documents[index].documentID.split('#')[1]),
+                                whichService:  widget.whichService,
+                            );
                           },
                           itemCount: snapshot.data.documents.length,
                         );

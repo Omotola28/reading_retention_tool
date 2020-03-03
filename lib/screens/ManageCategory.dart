@@ -17,7 +17,7 @@ class _ManageCategoryState extends State<ManageCategory> {
 
     Firestore.instance
         .collection("users")
-        .document(Provider.of<AppData>(context).uid)
+        .document(Provider.of<AppData>(context, listen: false).userData.id)
         .collection("categories")
         .document(categoryId)
         .delete();
@@ -66,7 +66,7 @@ class _ManageCategoryState extends State<ManageCategory> {
                   flex: 4,
                   child: StreamBuilder<QuerySnapshot>(
                       stream: Firestore.instance.collection('users')
-                          .document(Provider.of<AppData>(context).uid)
+                          .document(Provider.of<AppData>(context, listen: false).userData.id)
                           .collection('categories').snapshots(),
                       builder: (context, snapshot){
                         if(snapshot.hasData){

@@ -9,6 +9,7 @@ import 'package:reading_retention_tool/constants/route_constants.dart';
 import 'package:reading_retention_tool/screens/UserBooksListScreen.dart';
 import 'package:reading_retention_tool/customIcons/my_flutter_app_icons.dart';
 import 'package:reading_retention_tool/utils/color_utility.dart';
+import 'package:reading_retention_tool/utils/manageHighlightsController.dart';
 import 'package:reading_retention_tool/utils/share.dart';
 
 
@@ -27,27 +28,10 @@ class BookSpecificHighlightScreen extends StatefulWidget {
       _BookSpecificHighlightScreenState();
 }
 
-class _BookSpecificHighlightScreenState
-    extends State<BookSpecificHighlightScreen> {
+class _BookSpecificHighlightScreenState extends State<BookSpecificHighlightScreen> {
   final _store = Firestore.instance;
   var highlights = [];
-
-
-  static const _menuItems = <String>[
-    'Share',
-    'Edit',
-    'Categorise',
-    'Delete',
-  ];
-
-  //Shows the popup menu for each tile
-  static List<PopupMenuItem<String>> _pop = _menuItems.map((String val) =>
-        PopupMenuItem<String>(
-            value: val,
-            child: Text(val),
-        )
-
-  ).toList();
+  final manageHighlight = new ManageHighlightsController();
 
 
   @override
@@ -93,14 +77,15 @@ class _BookSpecificHighlightScreenState
 
                                     popMenu: PopupMenuButton(
                                         onSelected: (selectedDropDownItem) =>
-                                            handlePopUpMenuAction(
+                                            manageHighlight.handlePopUpMenuAction(
                                                 selectedDropDownItem,
                                                 context,
                                                 index,
                                                 highlights,
-                                                widget.bookId
+                                                widget.bookId,
+                                                'kindle'
                                             ),
-                                        itemBuilder: (BuildContext context) => _pop
+                                        itemBuilder: (BuildContext context) => manageHighlight.popMenu
                                     ),
                                     )
                                 ],
@@ -110,7 +95,6 @@ class _BookSpecificHighlightScreenState
 
                       widgetHighlights.add(highlightWidget);
                     }
-
 
                   }
                   return ListView.builder(
@@ -129,143 +113,5 @@ class _BookSpecificHighlightScreenState
   }
 }
 
-/// When a [PopUpMenuItem] is selected, we perform the action here
-void handlePopUpMenuAction(String value, BuildContext context, int index, List highlyObj, String bookName) {
 
-  //Saving the data here so it can be easily manipulated and saved back in
-  //Firebase database store -----DONT KNOW ANY BETTER WAY TO DO THIS YET
-  Provider.of<AppData>(context, listen: false).setBookSpecificHighlightObj(highlyObj);
-  Provider.of<AppData>(context, listen: false).setBookName(bookName);
-  Provider.of<AppData>(context, listen: false).setCategoryIndex(index);
-
-  var intIndex =   Provider.of<AppData>(context, listen: false).categoryIndex;
-
-  print(index);
-  //Had to create a list of type List<dynamic inorder to enable it get deleted from firebase>
-  var highlight = [];
-  highlight.add(highlyObj[intIndex]);
-
-
-  //TODO: Work on only saving data that is edited and not the whole array again.
-
-  switch (value) {
-    case 'Share':
-      {
-        ShareHighlight().share(context, highlyObj[intIndex]['highlight'].replaceAll(RegExp(r'-\s[A-Za-z]+\s\d+'), ''));
-      }
-      break;
-
-    case 'Edit':
-      {
-        editHighlightDialog(
-            context, highlyObj[index]['highlight'].replaceAll(new RegExp(r' - '), ''), index)
-            .then((val){
-          switch (Provider.of<AppData>(context, listen: false).whatActionButton) {
-            case 'Save':
-              {
-                highlyObj[index]['highlight'] = Provider.of<AppData>(context, listen: false).savedString;
-                Firestore.instance.collection("kindle")
-                    .document(Provider.of<AppData>(context, listen: false).userData.id)
-                    .collection("books")
-                    .document(Provider.of<AppData>(context, listen: false).bookName)
-                    .updateData({"highlights": highlyObj});
-              }
-              break;
-
-            case 'Favourite':
-              {
-
-              }
-              break;
-
-            default:
-              break;
-          }
-
-        });
-      }
-      break;
-
-    case 'Delete':
-      {
-
-      //Provider.of<AppData>(context, listen: false).reduceNoOfHighlights(1);
-      Firestore.instance.collection("kindle")
-            .document(Provider.of<AppData>(context, listen: false).userData.id)
-            .collection("books")
-            .document(Provider.of<AppData>(context, listen: false).bookName)
-            .updateData({'highlights' : FieldValue.arrayRemove(highlight)});
-
-      }
-      break;
-
-    case 'Categorise':
-      {
-
-
-        Navigator.popAndPushNamed(context, CategoryRoute );
-
-      }
-      break;
-
-    default:
-      {
-        //statements;
-      }
-      break;
-  }
-
-  print(value);
-}
-
-
-Future<bool> editHighlightDialog(BuildContext context, String highlight, int index){
-
-  final _highlightController = TextEditingController(text: highlight);
-  //TODO: Inorder to update the list for the index when a tile is deleted we have to use set state
-  return showDialog(context: context,
-      builder: (BuildContext context){
-        return AlertDialog(
-          content: TextFormField(
-
-              decoration: InputDecoration(
-                border: InputBorder.none,
-              ),
-              maxLines: null,
-              controller: _highlightController,
-              //showing save button for all the tiles
-              onTap: () {
-                //something(obj[index].replaceAll(new RegExp(r' - '), ''));
-              }),
-          actions: <Widget>[
-            FlatButton(
-              child: Icon(
-                CustomIcons.check,
-                color: kHighlightColorDarkGrey,
-              ),
-              onPressed: () {
-                Provider.of<AppData>(context, listen: false).setWhatActionButton('Save');
-                Provider.of<AppData>(context, listen: false).setSavedHighlight(_highlightController.text);
-
-                Navigator.of(context).pop(true);
-                //print(_highlightController.text);
-              },
-            ),
-            FlatButton(
-              child: Icon(
-                CustomIcons.heart,
-                color: kHighlightColorDarkGrey,
-              ),
-              onPressed: () {
-                Provider.of<AppData>(context).setWhatActionButton('Favourite');
-                Navigator.of(context).pop(true);
-                /* ... */
-              },
-            ),
-          ],
-        );
-      }
-  );
-
-}
 

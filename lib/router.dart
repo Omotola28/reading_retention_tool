@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:reading_retention_tool/screens/BookmarkHighlightScreen.dart';
 import 'package:reading_retention_tool/screens/CategoriseHighlightScreen.dart';
 import 'package:reading_retention_tool/screens/CategoryHighlightsScreen.dart';
 import 'package:reading_retention_tool/screens/GetStartedScreen.dart';
 import 'package:reading_retention_tool/screens/HighlightOfTheDayScreen.dart';
 import 'package:reading_retention_tool/screens/HomeScreen.dart';
+import 'package:reading_retention_tool/screens/InstapaperBookmarkScreen.dart';
 import 'package:reading_retention_tool/screens/KindleHighlightsSync.dart';
 import 'package:reading_retention_tool/screens/ManageCategory.dart';
 import 'package:reading_retention_tool/screens/MediumHighlightsSyncScreen.dart';
@@ -44,7 +46,8 @@ Route<dynamic> generateRoute(RouteSettings settings){
         return MaterialPageRoute(builder: (context) => UserBooksListScreen());
 
       case CategoryRoute :
-        return MaterialPageRoute(builder: (context) => CategoriseHighlightScreen());
+        var whichService = settings.arguments;
+        return MaterialPageRoute(builder: (context) => CategoriseHighlightScreen(whichService));
 
       case HighlightOfTheDayRoute :
         var payload = settings.arguments;
@@ -72,6 +75,13 @@ Route<dynamic> generateRoute(RouteSettings settings){
 
       case ResetPasswordRoute :
         return MaterialPageRoute(builder: (context) => ResetPasswordScreen());
+
+      case InstapaperBookmarksRoute :
+        return MaterialPageRoute(builder: (context) => InstapaperBookmarkScreen());
+
+      case BookmarkHighlightRoute :
+        var bookmarkId = settings.arguments;
+        return MaterialPageRoute(builder: (context) => BookmarkHighlightScreen(bookmarkId));
 
       case WaitingToLoginRoute :
         return MaterialPageRoute(builder: (context) => WaitingToLoginScreen());

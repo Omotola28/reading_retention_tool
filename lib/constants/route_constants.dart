@@ -14,6 +14,8 @@ const String WaitingToLoginRoute = 'waiting_screen';
 const String CategoryHighlightsRoute = 'category_hightlights_screen';
 const String CreateNotificationRoute = 'create_notification_screen';
 const String MediumHighlightsSyncRoute = 'medium_highlights_screen';
+const String InstapaperBookmarksRoute = 'instapaper_bookmark_screen';
+const String BookmarkHighlightRoute = 'bookmark_highlight_screen';
 
 
 

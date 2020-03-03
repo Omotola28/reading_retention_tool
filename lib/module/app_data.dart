@@ -14,7 +14,7 @@ class AppData extends ChangeNotifier{
 
   DocumentSnapshot highlights;
   String email;
-  String uid;
+  String bookmarkID;
   String savedString;
   String whatActionButton;
   List highlightObject = [];
@@ -51,8 +51,8 @@ class AppData extends ChangeNotifier{
       notifyListeners();
   }
 
-  void setCurrentUid (String currentUID){
-    uid = currentUID;
+  void setBookMarkIdentifier(String bookmarkIdentifier){
+    bookmarkID = bookmarkIdentifier;
     notifyListeners();
   }
 
@@ -136,7 +136,7 @@ class AppData extends ChangeNotifier{
 
   ///The function would help store list object that can be manipulated and saved in database
 
-void setBookSpecificHighlightObj(List obj){
+void setSpecificHighlightObj(List obj){
     bookSpecificHighlights = obj;
     notifyListeners();
 
@@ -228,5 +228,6 @@ void reduceNoOfHighlights(int number){
     isCustomSignIn = value;
     notifyListeners();
   }
+
 
 }

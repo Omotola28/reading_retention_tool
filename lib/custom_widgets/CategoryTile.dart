@@ -182,7 +182,9 @@ class _CategoryTileState extends State<CategoryTile> {
 
 
          Firestore.instance.collection("instapaperhighlights")
-             .document(Provider.of<AppData>(context, listen: false).bookmarkID)
+             .document(Provider.of<AppData>(context, listen: false).userData.id)
+             .collection('highlights')
+             .document(highlightObj[index]['bookmarkId'].toString())
              .updateData({"instaHighlights": highlightObj});
 
          _addtoCategory(widget.categoryTitle+'#'+colorHex,
@@ -190,7 +192,7 @@ class _CategoryTileState extends State<CategoryTile> {
                         highlightObj[index]['id']).then((isadded){
            if(isadded){
 
-             Navigator.popAndPushNamed(context, BookmarkHighlightRoute, arguments: Provider.of<AppData>(context, listen: false).bookmarkID);
+             Navigator.popAndPushNamed(context, BookmarkHighlightRoute, arguments:highlightObj[index]['bookmarkId'].toString());
            }
          });
 

@@ -62,7 +62,7 @@ class _CreateNotificationPageState extends State<CreateNotificationPage> with Si
     print(context);
 
     return Scaffold(
-      appBar: header(headerText: 'Create Notification', context: context, screen: CategoryHighlightsScreen(widget.categoryId)),
+      appBar: header(headerText: 'Create Notification', context: context, screen: HomeScreen()),
       body: SafeArea(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -198,7 +198,7 @@ class _CreateNotificationPageState extends State<CreateNotificationPage> with Si
 
 
      objData.forEach((val){
-       notificationData.add(NotificationData(widget.categoryId, val['id'], val['notification'], selectedTime.hour, selectedTime.minute));
+       notificationData.add(NotificationData(widget.categoryId, val['id'].toString(), val['notification'], selectedTime.hour, selectedTime.minute));
      });
 
 

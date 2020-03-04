@@ -29,6 +29,7 @@ class AppData extends ChangeNotifier{
   String payloadHighlight;
   User userData;
   bool isCustomSignIn = false;
+  bool bookmarkIsSynced = false;
 
   List<NotificationData> _notifications = List();
   HighlightNotificationPlugin _notificationPlugin = HighlightNotificationPlugin();
@@ -159,6 +160,12 @@ void reduceNoOfHighlights(int number){
     noOfHighlights -= number;
     notifyListeners();
 }
+
+void setBookmarkIsSynced(bool isSynced) {
+  bookmarkIsSynced = isSynced;
+  notifyListeners();
+}
+
 
 ///Set the add list of highlights to firestore service
   Future<void> addNotification(List<NotificationData> notifications) async {

@@ -195,6 +195,10 @@ class _ShowMediumDialogState extends State<ShowMediumDialog> {
                                       errorMessage = val;
                                     });
                                   }
+                                }).catchError((err){
+                                  setState(() {
+                                    errorMessage = 'request taking longer than expected';
+                                  });
                                 });
                               }
                             },

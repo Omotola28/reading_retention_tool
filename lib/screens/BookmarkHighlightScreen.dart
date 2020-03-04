@@ -3,10 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:reading_retention_tool/constants/constants.dart';
 import 'package:reading_retention_tool/custom_widgets/AppBar.dart';
 import 'package:reading_retention_tool/custom_widgets/CustomHighlightTile.dart';
+import 'package:reading_retention_tool/module/app_data.dart';
 import 'package:reading_retention_tool/screens/InstapaperBookmarkScreen.dart';
 import 'package:reading_retention_tool/utils/manageHighlightsController.dart';
 import 'package:reading_retention_tool/customIcons/my_flutter_app_icons.dart';
 import 'package:reading_retention_tool/utils/color_utility.dart';
+import 'package:provider/provider.dart';
+import 'dart:async';
 
 
 class BookmarkHighlightScreen extends StatefulWidget {
@@ -24,15 +27,20 @@ class _BookmarkHighlightScreenState extends State<BookmarkHighlightScreen> {
   final _store = Firestore.instance;
   var highlights = [];
   var highlightData = false;
+  var isBookMarkSynced;
+
   final manageHighlight = new ManageHighlightsController();
 
   Future<DocumentSnapshot> _getInstapaperHighlights() async {
     var data =  await _store
         .collection('instapaperhighlights')
+        .document(Provider.of<AppData>(context, listen: false).userData.id)
+        .collection('highlights')
         .document(widget.bookmarkId)
         .get();
 
     if(data.exists){
+
       setState(() {
         highlightData = true;
       });
@@ -123,7 +131,15 @@ class _BookmarkHighlightScreenState extends State<BookmarkHighlightScreen> {
 
               } else {
                 return Center(
-                  child: CircularProgressIndicator(),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      CircularProgressIndicator(),
+                      SizedBox(height: 10.0,),
+                      Text('This might take some time!',)
+                    ],
+                  ),
                 );
               }
               return ListView.builder(

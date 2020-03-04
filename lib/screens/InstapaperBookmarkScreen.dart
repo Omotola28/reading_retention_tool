@@ -37,26 +37,6 @@ class _InstapaperBookmarkScreenState extends State<InstapaperBookmarkScreen> {
     return instapaperCredentials;
   }
 
-
-  Future<bool> _isBookmarksHighlightSynced(bookmarkId) async {
-    var data =  await Firestore.instance
-        .collection('instapaperhighlights')
-        .document(bookmarkId)
-        .get();
-
-    if(data.exists){
-      setState(() {
-        isHighlightSynced = true;
-      });
-    }
-    else{
-      setState(() {
-        isHighlightSynced = false;
-      });
-    }
-
-    return isHighlightSynced;
-  }
   
 
   Future<DocumentSnapshot> _getInstapaperBookmarks() async {
@@ -79,6 +59,28 @@ class _InstapaperBookmarkScreenState extends State<InstapaperBookmarkScreen> {
     return data;
   }
 
+  Future<bool> _isBookmarksHighlightSynced(bookmarkId) async {
+    var data =  await _store
+        .collection('instapaperhighlights')
+        .document(Provider.of<AppData>(context, listen: false).userData.id)
+        .collection('highlights')
+        .document(bookmarkId)
+        .get();
+
+    if(data.exists){
+
+      setState(() {
+        isHighlightSynced = true;
+      });
+    }
+    else{
+      setState(() {
+        isHighlightSynced = false;
+      });
+    }
+
+    return isHighlightSynced;
+  }
 
   final HttpsCallable callable = CloudFunctions(region: 'europe-west2').getHttpsCallable(functionName: 'syncBookmarkHighlights',);
 
@@ -121,7 +123,7 @@ class _InstapaperBookmarkScreenState extends State<InstapaperBookmarkScreen> {
   
   @override
   Widget build(BuildContext context) {
-
+   // final bookmarkIsSynced = Provider.of<AppData>(context, listen: false).bookmarkIsSynced;
     
     return Scaffold(
       appBar: header(headerText: 'Bookmark List', screen: HomeScreen(), context: context),
@@ -163,6 +165,7 @@ class _InstapaperBookmarkScreenState extends State<InstapaperBookmarkScreen> {
                     Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: Card(
+                        //color: bookmarkIsSynced ? kPrimaryColor : Colors.white,
                         child: Column(
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
@@ -172,6 +175,10 @@ class _InstapaperBookmarkScreenState extends State<InstapaperBookmarkScreen> {
                               child: ListTile(
                                 contentPadding: EdgeInsets.all(20.0),
                                 title: Text(bookmarks[index]['title']),
+                               /* subtitle: bookmarkIsSynced ?
+                                          Text('bookmark is sycned',
+                                                style: TextStyle(color: kSecondaryColor,
+                                                                 fontStyle: FontStyle.italic),) : Text(''),*/
                                 onTap: (){
 
                                   _isBookmarksHighlightSynced(bookmarks[index]['id'].toString()).then((val){
@@ -194,7 +201,6 @@ class _InstapaperBookmarkScreenState extends State<InstapaperBookmarkScreen> {
                                                      );
                                                      Scaffold.of(context).showSnackBar(snackBar);
                                                    }
-                                                  print('VAL' +val);
                                               });
                                             }
 
@@ -222,8 +228,17 @@ class _InstapaperBookmarkScreenState extends State<InstapaperBookmarkScreen> {
 
               } else {
                 return Center(
-                  child: CircularProgressIndicator(),
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        CircularProgressIndicator(),
+                        SizedBox(height: 10.0,),
+                        Text('This might take some time!',)
+                      ],
+                    ),
                 );
+
               }
               return ListView.builder(
                 itemCount: snapshot.data['instabookmarks'].length == null ? 0 : snapshot.data['instabookmarks'].length,

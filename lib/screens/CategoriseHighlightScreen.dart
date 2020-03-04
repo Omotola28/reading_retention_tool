@@ -6,6 +6,7 @@ import 'package:reading_retention_tool/custom_widgets/AddCategoryWidget.dart';
 import 'package:provider/provider.dart';
 import 'package:reading_retention_tool/module/app_data.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:reading_retention_tool/screens/BookSpecificHighlightScreen.dart';
 import 'package:reading_retention_tool/screens/BookmarkHighlightScreen.dart';
 import 'package:reading_retention_tool/screens/MediumHighlightsSyncScreen.dart';
 import 'package:reading_retention_tool/screens/UserBooksListScreen.dart';
@@ -29,7 +30,7 @@ class _CategoriseHighlightScreenState extends State<CategoriseHighlightScreen> {
   Widget build(BuildContext context) {
 
     if(widget.whichService == 'kindle'){
-      backScreen = UserBooksListScreen();
+      backScreen = BookSpecificHighlightScreen(Provider.of<AppData>(context, listen: false).bookName);
     }
     else if(widget.whichService == 'medium'){
       backScreen = MediumHighlightsSyncScreen('success');

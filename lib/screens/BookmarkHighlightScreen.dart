@@ -105,7 +105,7 @@ class _BookmarkHighlightScreenState extends State<BookmarkHighlightScreen> {
                                           context,
                                           index,
                                           highlights,
-                                          highlights[index]['bookmarkId'].toString(),
+                                          highlights[index]['id'].toString(),
                                           'instapaper'
                                       ),
                                   itemBuilder: (BuildContext context) => manageHighlight.popMenu

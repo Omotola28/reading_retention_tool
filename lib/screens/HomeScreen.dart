@@ -212,7 +212,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                                   ),
                                                   onTap: (){
                                                     Navigator.of(context).pop();
-                                                    Navigator.pushNamed(context, CategoryHighlightsRoute, arguments: snapshot.data.documents[index].documentID.split('#')[0]);
+                                                    Navigator.pushNamed(context, CategoryHighlightsRoute, arguments:
+                                                                snapshot.data.documents[index].documentID);
                                                    /* Navigator.push(
                                                       context,
                                                       MaterialPageRoute(builder: (context)
@@ -261,7 +262,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                       ),
 
-                      ListTile(
+                     /* ListTile(
                         title: Text('Medium Articles'),
                         onTap: () {
                           // Update the state of the app
@@ -273,8 +274,8 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                       Divider(
                         color: kHighlightColorGrey,
-                      ),
-                      ListTile(
+                      ),*/
+                      /*ListTile(
                         title: Text('Instapaper Articles'),
                         onTap: () async {
                           print('You tapped me');
@@ -290,10 +291,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
                         },
                         trailing: Icon(CustomIcons.doc),
-                      ),
-                      Divider(
-                        color: kHighlightColorGrey,
-                      ),
+                      ),*/
                       ListTile(
                         title: Text('Favourites'),
                         onTap: () {

@@ -5,12 +5,10 @@ import 'package:provider/provider.dart';
 import 'package:reading_retention_tool/custom_widgets/AppBar.dart';
 import 'package:reading_retention_tool/custom_widgets/CustomHighlightTile.dart';
 import 'package:reading_retention_tool/module/app_data.dart';
-import 'package:reading_retention_tool/constants/route_constants.dart';
 import 'package:reading_retention_tool/screens/UserBooksListScreen.dart';
 import 'package:reading_retention_tool/customIcons/my_flutter_app_icons.dart';
 import 'package:reading_retention_tool/utils/color_utility.dart';
 import 'package:reading_retention_tool/utils/manageHighlightsController.dart';
-import 'package:reading_retention_tool/utils/share.dart';
 
 
 
@@ -20,8 +18,6 @@ class BookSpecificHighlightScreen extends StatefulWidget {
 
   BookSpecificHighlightScreen(this.bookId);
 
-
-  //static String id = 'book_specific_highlight';
 
   @override
   _BookSpecificHighlightScreenState createState() =>

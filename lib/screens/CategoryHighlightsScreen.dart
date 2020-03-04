@@ -14,10 +14,10 @@ import 'package:reading_retention_tool/custom_widgets/CustomHighlightTile.dart';
 class CategoryHighlightsScreen extends StatefulWidget {
 
 
-  final String categoryId;
+  final String categoryDocId;
 
 
-  CategoryHighlightsScreen(this.categoryId);
+  CategoryHighlightsScreen(this.categoryDocId);
 
   @override
   _CategoryHighlightsScreenState createState() => _CategoryHighlightsScreenState();
@@ -30,7 +30,7 @@ class _CategoryHighlightsScreenState extends State<CategoryHighlightsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: header(headerText: '${widget.categoryId} highlights', context: context, screen: HomeScreen()),
+      appBar: header(headerText: '${widget.categoryDocId.split('#')[0]} highlights', context: context, screen: HomeScreen()),
       body: SafeArea(child: Container(
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -44,7 +44,7 @@ class _CategoryHighlightsScreenState extends State<CategoryHighlightsScreen> {
                        Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context)
-                                 => CreateNotificationPage(notifications, widget.categoryId)
+                                 => CreateNotificationPage(notifications, widget.categoryDocId.split('#')[0])
                           ),
                         );
 
@@ -58,43 +58,40 @@ class _CategoryHighlightsScreenState extends State<CategoryHighlightsScreen> {
                   ),
                 ),
                 Expanded(
-                  child: StreamBuilder(
-                      stream: Firestore.instance.collection('kindle')
+                  child: FutureBuilder(
+                      future: Firestore.instance.collection('category')
                                                 .document(Provider.of<AppData>(context).userData.id)
-                                                .collection('books').snapshots(),
+                                                .collection('userCategories').document(widget.categoryDocId).get(),
                       builder: (context, snapshot){
                           if(snapshot.hasData){
                             List<Widget> widgetHighlights = [];
-                            final snaps = snapshot.data.documents;
+                            final snap = snapshot.data;
+                            for( var i = 0; i < snap.data['categoryHighlights'].length; i++){
 
-                            for(var snap in snaps ){
-                              for( var i = 0; i < snap.data['highlights'].length; i++){
-                                if(snap.data['highlights'][i]['category'] == '${widget.categoryId}'){
-                                   final catHighlight = Padding(
-                                     padding: EdgeInsets.all(10.0),
-                                     child: Card(
-                                       color: Color.fromRGBO(250, 249, 242, 1),
+                                final catHighlight = Padding(
+                                  padding: EdgeInsets.all(10.0),
+                                  child: Card(
+                                    color: Color.fromRGBO(250, 249, 242, 1),
 
-                                       child: Column(
-                                         mainAxisSize: MainAxisSize.min,
-                                         children: <Widget>[
-                                           CustomHighlightTile(
-                                               icon:Icon(CustomIcons.circle, size: 10.0, color: HexColor(snap.data['highlights'][i]['color']),) ,
-                                                text : snap.data['highlights'][i]['highlight'].replaceAll(new RegExp(r' - '), '')),
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: <Widget>[
+                                        CustomHighlightTile(
+                                            icon:Icon(CustomIcons.circle, size: 10.0, color: HexColor(widget.categoryDocId.split('#')[1]),) ,
+                                            text : snap.data['categoryHighlights'][i]['highlight']),
 
-                                         ],
-                                       ),
-                                     ),
-                                   );
+                                      ],
+                                    ),
+                                  ),
+                                );
 
-                                   widgetHighlights.add(catHighlight);
-                                   notifications.add(
-                                       {  'id' : snap.data['highlights'][i]['id'] ,
-                                         'notification' : snap.data['highlights'][i]['highlight'].replaceAll(new RegExp(r' - '), '')
-                                       }
-                                   );
-                                }
-                              }
+                                widgetHighlights.add(catHighlight);
+                                notifications.add(
+                                    {  'id' : snap.data['categoryHighlights'][i]['id'] ,
+                                      'notification' : snap.data['categoryHighlights'][i]['highlight']
+                                    }
+                                );
+
                             }
 
                             return ListView.builder(

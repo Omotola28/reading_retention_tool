@@ -22,10 +22,6 @@ class _ShowInstapaperDialogState extends State<ShowInstapaperDialog> {
   String payload = '';
 
 
- /* final HttpsCallable callable = CloudFunctions.instance.getHttpsCallable(
-    functionName: 'syncInstapaper',
-  );*/
-
 
   final HttpsCallable callable = CloudFunctions(region: 'europe-west2').getHttpsCallable(functionName: 'syncInstapaper',);
 

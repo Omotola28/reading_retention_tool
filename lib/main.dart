@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:reading_retention_tool/constants/constants.dart';
 import 'package:reading_retention_tool/constants/route_constants.dart';
 import 'package:reading_retention_tool/module/app_data.dart';
 import 'package:reading_retention_tool/service/navigation_service.dart';
 import 'package:reading_retention_tool/utils/locator.dart';
 import 'router.dart' as router;
-import 'dart:async';
+
 
 void main() {
 
@@ -16,11 +15,6 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   //SetupLocator
   setUpLocator();
-
-  Crashlytics.instance.enableInDevMode = true;
-
-  // Pass all uncaught errors to Crashlytics.
-  FlutterError.onError = Crashlytics.instance.recordFlutterError;
 
 
   SystemUiOverlayStyle copyWith({

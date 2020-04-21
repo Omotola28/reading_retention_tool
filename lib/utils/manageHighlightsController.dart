@@ -2,7 +2,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:reading_retention_tool/module/app_data.dart';
-import 'package:reading_retention_tool/utils/color_utility.dart';
 import 'package:reading_retention_tool/utils/share.dart';
 import 'package:reading_retention_tool/constants/route_constants.dart';
 import 'package:reading_retention_tool/customIcons/my_flutter_app_icons.dart';

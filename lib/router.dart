@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:reading_retention_tool/screens/AddBookScreen.dart';
 import 'package:reading_retention_tool/screens/BookmarkHighlightScreen.dart';
 import 'package:reading_retention_tool/screens/CategoriseHighlightScreen.dart';
 import 'package:reading_retention_tool/screens/CategoryHighlightsScreen.dart';
@@ -6,8 +7,9 @@ import 'package:reading_retention_tool/screens/GetStartedScreen.dart';
 import 'package:reading_retention_tool/screens/HighlightOfTheDayScreen.dart';
 import 'package:reading_retention_tool/screens/HomeScreen.dart';
 import 'package:reading_retention_tool/screens/InstapaperBookmarkScreen.dart';
-import 'package:reading_retention_tool/screens/KindleHighlightsSync.dart';
+import 'package:reading_retention_tool/screens/KindleHighlightsSyncScreen.dart';
 import 'package:reading_retention_tool/screens/ManageCategory.dart';
+import 'package:reading_retention_tool/screens/ManualEditHighlightScreen.dart';
 import 'package:reading_retention_tool/screens/MediumHighlightsSyncScreen.dart';
 import 'package:reading_retention_tool/screens/ShowRetrievedHighlightsScreen.dart';
 import 'package:reading_retention_tool/screens/SignInScreen.dart';
@@ -18,6 +20,7 @@ import 'package:reading_retention_tool/screens/WaitingToLoginScreen.dart';
 import 'package:reading_retention_tool/screens/WelcomePage.dart';
 import 'package:reading_retention_tool/screens/ResetPasswordScreen.dart';
 import 'package:reading_retention_tool/constants/route_constants.dart';
+import 'package:reading_retention_tool/screens/ManualHighlightScreen.dart';
 
 
 Route<dynamic> generateRoute(RouteSettings settings){
@@ -82,6 +85,17 @@ Route<dynamic> generateRoute(RouteSettings settings){
       case BookmarkHighlightRoute :
         var bookmarkId = settings.arguments;
         return MaterialPageRoute(builder: (context) => BookmarkHighlightScreen(bookmarkId));
+
+      case ManualHighlightRoute :
+        return MaterialPageRoute(builder: (context) => ManualHighlightScreen());
+
+      case ManualEditHighlightRoute :
+        var formData = settings.arguments;
+        return MaterialPageRoute(builder: (context) => ManualEditHighlightScreen(formData));
+
+      case AddBookRoute :
+        var formData = settings.arguments;
+        return MaterialPageRoute(builder: (context) => AddBookScreen(formData));
 
       case WaitingToLoginRoute :
         return MaterialPageRoute(builder: (context) => WaitingToLoginScreen());

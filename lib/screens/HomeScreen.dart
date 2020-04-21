@@ -35,17 +35,11 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
 
-  final _store = Firestore.instance;
-  Future<FirebaseUser> loggedUser;
-  var userEmail;
-  var uid;
+
   bool expandFlag = false;
-  List<dynamic> cat = [];
   int categoryLength = 0;
   PageController pageController;
   int pageIndex = 0;
-  var currentUser;
-
 
 
   @override
@@ -84,7 +78,6 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
 
-    //print( Provider.of<AppData>(context).userData);
     return WillPopScope(
       onWillPop: () => Future.value(false),
       child: Scaffold(
@@ -214,12 +207,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     Navigator.of(context).pop();
                                                     Navigator.pushNamed(context, CategoryHighlightsRoute, arguments:
                                                                 snapshot.data.documents[index].documentID);
-                                                   /* Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(builder: (context)
-                                                              => CategoryHighlightsScreen(snapshot.data.documents[index].documentID.split('#')[0])
-                                                      ),
-                                                    );*/
                                                   },
                                                 )
                                             );
@@ -262,36 +249,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
                       ),
 
-                     /* ListTile(
-                        title: Text('Medium Articles'),
-                        onTap: () {
-                          // Update the state of the app
-                          // ...
-                          // Then close the drawer
-                          Navigator.pop(context);
-                        },
-                        trailing: Icon(CustomIcons.doc),
-                      ),
-                      Divider(
-                        color: kHighlightColorGrey,
-                      ),*/
-                      /*ListTile(
-                        title: Text('Instapaper Articles'),
-                        onTap: () async {
-                          print('You tapped me');
-                          dynamic resp = await callable.call(<String, dynamic>{
-                            'username': 'omotolashogunle@gmail.com',
-                            'password': '@Matilda28',
-                            'uid' : Provider.of<AppData>(context, listen: false).userData.id
-                          });
-
-
-
-                          print(resp.data);
-
-                        },
-                        trailing: Icon(CustomIcons.doc),
-                      ),*/
                       ListTile(
                         title: Text('Favourites'),
                         onTap: () {

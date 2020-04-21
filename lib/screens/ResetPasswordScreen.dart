@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:reading_retention_tool/constants/constants.dart';
+import 'package:reading_retention_tool/constants/route_constants.dart';
 import 'package:reading_retention_tool/screens/SignInScreen.dart';
 import 'package:reading_retention_tool/screens/SignUpScreen.dart';
 import 'package:reading_retention_tool/custom_widgets/ResetPasswordForm.dart';
@@ -40,15 +41,10 @@ class ResetPasswordScreen extends StatelessWidget {
                     ),
                   GestureDetector(
                     onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context)
-                        => SignUpScreen()
-                        ),
-                      );
+                      Navigator.pushNamed(context, SignInRoute);
                     },
                     child: Text(
-                      "Sign Up",
+                      "Sign In",
                       style: TextStyle(
                         fontFamily: 'NotoSans',
                         fontSize: 12.0,

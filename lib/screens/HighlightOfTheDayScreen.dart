@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:reading_retention_tool/constants/constants.dart';
-import 'package:reading_retention_tool/constants/route_constants.dart';
 import 'package:reading_retention_tool/utils/share.dart';
-import 'package:reading_retention_tool/service/navigation_service.dart';
-import 'package:reading_retention_tool/utils/locator.dart';
+
 
 
 
@@ -20,14 +18,10 @@ class HighlightOfTheDayScreen extends StatefulWidget {
 
 class _HighlightOfTheDayScreenState extends State<HighlightOfTheDayScreen> {
 
-  @override
-  void dispose() {
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
-    print('I AM THE ONE BEING ANNOYING ${widget.payload}');
+
     return Scaffold(
       appBar: AppBar(
         brightness: Brightness.light,

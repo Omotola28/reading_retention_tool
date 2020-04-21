@@ -2,15 +2,11 @@ import 'package:reading_retention_tool/constants/constants.dart';
 import 'package:reading_retention_tool/custom_widgets/AppBar.dart';
 import 'package:reading_retention_tool/module/app_data.dart';
 import 'package:reading_retention_tool/module/notification_data.dart';
-import 'package:reading_retention_tool/plugins/highlightNotificationPlugin.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:reading_retention_tool/screens/CategoryHighlightsScreen.dart';
 import 'package:reading_retention_tool/screens/HomeScreen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
-import 'dart:collection';
 import 'dart:async';
 
 class CreateNotificationPage extends StatefulWidget {

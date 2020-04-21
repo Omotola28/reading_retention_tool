@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:reading_retention_tool/constants/constants.dart';
+import 'package:reading_retention_tool/constants/route_constants.dart';
 import 'package:reading_retention_tool/custom_widgets/ActionUserButton.dart';
 import 'package:reading_retention_tool/custom_widgets/UserTextInputField.dart';
 import 'package:reading_retention_tool/module/user.dart';
@@ -151,7 +152,7 @@ class _SignUpFormState extends State<SignUpForm> {
                               try{
                                 final result = await UserAuth.registerUser(_user.email, _user.password, _user.displayName);
 
-                                 result  != null ? Navigator.popAndPushNamed(context, SignInScreen.id) : print(result);
+                                 result  != null ? Navigator.popAndPushNamed(context, SignInRoute) : print(result);
                               } on PlatformException catch (e) {
                                 //e.code
                                 switch(e.code)

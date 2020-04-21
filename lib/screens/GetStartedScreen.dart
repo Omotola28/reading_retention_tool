@@ -33,15 +33,6 @@ class _GetStartedScreenState extends State<GetStartedScreen> {
     });
 
     print( 'GOOGLE ${UserAuth.googleSignIn.currentUser}');
-
-
-
-   /* UserAuth.googleSignIn.onCurrentUserChanged.listen((account){
-       handleSignInWithGoogle(account);
-    }, onError: (err){
-      print('This is an $err');
-    });*/
-
   }
 
 
@@ -53,36 +44,8 @@ class _GetStartedScreenState extends State<GetStartedScreen> {
         Navigator.popAndPushNamed(context, HomeScreenRoute);
       }
     });
-
-
-
-
   }
 
- /* _handleSignInWithGoogle(User account){
-    if(account != null){
-
-     var user = UserAuth.createUserWithGoogle();
-
-
-     user.then((userData){
-       Provider.of<AppData>(context).setUserData(userData);
-     });
-
-     Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context)
-           => HomeScreen()
-        ),
-      );
-    }
-  }*/
-
-  /*Future<bool> _onBackPressed() {
-
-    Navigator.of(context).pop(true);
-    return Future.value(false);
-  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -161,7 +124,7 @@ class _GetStartedScreenState extends State<GetStartedScreen> {
                           height: 50.0,
                         ),
                         ActionUserButton(color: Colors.white, title: "Sign Up", onPressed: () {
-                          Navigator.pushNamed(context, SignUpScreen.id);
+                          Navigator.pushNamed(context, SignUpRoute);
                         },
                         ),
                         Row(
@@ -174,7 +137,7 @@ class _GetStartedScreenState extends State<GetStartedScreen> {
                             ),
                             GestureDetector(
                               onTap: () {
-                                Navigator.popAndPushNamed(context, SignInScreen.id);
+                                Navigator.popAndPushNamed(context, SignInRoute);
                               },
                               child: Text(
                                 'Login',

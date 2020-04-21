@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:reading_retention_tool/constants/route_constants.dart';
 import 'package:reading_retention_tool/custom_widgets/SignUpForm.dart';
 import 'package:reading_retention_tool/constants/constants.dart';
 import 'package:reading_retention_tool/screens/SignInScreen.dart';
 
 class SignUpScreen extends StatelessWidget {
 
-
-  static String id = 'signUp_screen';
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +35,7 @@ class SignUpScreen extends StatelessWidget {
                   ),
                   GestureDetector(
                     onTap: () {
-                      Navigator.pushNamed(context, SignInScreen.id);
+                      Navigator.pushNamed(context, SignInRoute);
                     },
                     child: Text(
                       "Sign In",

@@ -3,13 +3,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:reading_retention_tool/constants/route_constants.dart';
 import 'package:reading_retention_tool/module/user.dart';
-import 'package:reading_retention_tool/screens/GetStartedScreen.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:reading_retention_tool/constants/constants.dart';
-import 'package:reading_retention_tool/screens/HomeScreen.dart';
 import 'package:reading_retention_tool/service/auth_service.dart';
 import 'package:provider/provider.dart';
 import 'package:reading_retention_tool/module/app_data.dart';
@@ -68,18 +65,6 @@ class _WelcomePage extends State<WelcomePage> {
     });
   }
 
-/*  handleSignInWithGoogle(GoogleSignInAccount account){
-    if(account != null){
-      var user = UserAuth.createUserWithGoogle();
-
-      user.then((userData){
-        Provider.of<AppData>(context).setUserData(userData);
-      });
-
-      Navigator.popAndPushNamed(context, HomeScreenRoute);
-    }
-
-  }*/
 
   handleSilentFirebaseLogin() async {
     var hasUserLoggedIn = await UserAuth.isFirebaseUserLoggedIn();

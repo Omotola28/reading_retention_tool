@@ -11,6 +11,7 @@ const kLightYellowBG = Color.fromRGBO(250, 249, 242, 1);
 const kNoPhotoUrl = 'https://images.unsplash.com/photo-1468779036391-52341f60b55d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=3021&q=80';
 const pattern = r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
 const kMediumLogo = 'https://firebasestorage.googleapis.com/v0/b/readingtool-479e1.appspot.com/o/medium.png?alt=media&token=f711d1d3-5609-4261-803e-0cc1d2340a63';
+const kBookPlaceHolder = 'https://firebasestorage.googleapis.com/v0/b/readingtool-479e1.appspot.com/o/default-book.png?alt=media&token=c17ab50c-f3dd-4d36-b4f9-6e4da13170e4';
 
 const kTrailingTextStyleDecoration = TextStyle(
   fontFamily: 'NotoSans',

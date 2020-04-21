@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:reading_retention_tool/module/category.dart';
 import 'package:flutter/material.dart';
-import 'package:reading_retention_tool/utils/color_utility.dart';
+import 'package:reading_retention_tool/module/formdata.dart';
 import 'package:reading_retention_tool/module/notification_data.dart';
 import 'package:reading_retention_tool/service/firestore_notification_service.dart';
 import 'package:reading_retention_tool/plugins/highlightNotificationPlugin.dart';
@@ -12,16 +12,10 @@ import 'package:rxdart/rxdart.dart';
 
 class AppData extends ChangeNotifier{
 
-  DocumentSnapshot highlights;
-  String email;
   String bookmarkID;
   String savedString;
   String whatActionButton;
-  List highlightObject = [];
   String bookName;
-  String mediumUsername;
-  String selectedCat;
-  Color selectedCol;
   int categoryIndex;
   List bookSpecificHighlights = [];
   int noOfHighlights = 0;
@@ -29,7 +23,7 @@ class AppData extends ChangeNotifier{
   String payloadHighlight;
   User userData;
   bool isCustomSignIn = false;
-  bool bookmarkIsSynced = false;
+  FormData editFormData;
 
   List<NotificationData> _notifications = List();
   HighlightNotificationPlugin _notificationPlugin = HighlightNotificationPlugin();
@@ -39,18 +33,11 @@ class AppData extends ChangeNotifier{
   Stream<List<NotificationData>> get outNotifications => _notificationsController.stream;
 
 
-  List<Category> categories = [];
-
   setUserData(User data){
     userData = data;
     notifyListeners();
   }
 
-
-  void setCurrentUserEmail (String currentEmail){
-      email = currentEmail;
-      notifyListeners();
-  }
 
   void setBookMarkIdentifier(String bookmarkIdentifier){
     bookmarkID = bookmarkIdentifier;
@@ -62,17 +49,6 @@ class AppData extends ChangeNotifier{
     notifyListeners();
   }
 
-  void setUploadedHighlights(DocumentSnapshot currentHighlights)
-  {
-    highlights = currentHighlights;
-    notifyListeners();
-  }
-
-  void setHighlightListObject(List obj)
-  {
-    highlightObject = obj;
-    notifyListeners();
-  }
 
   void setSavedHighlight( String savedHighlight)
   {
@@ -87,26 +63,6 @@ class AppData extends ChangeNotifier{
     notifyListeners();
   }
 
-  void setMeduimUserName(String username){
-    mediumUsername = username;
-    notifyListeners();
-  }
-
-  void addCategory(String categoryName, String color){
-
-    var col = HexColor(color == null ? '#000000' : color);
-
-    final category = Category(categoryName: categoryName, defaultColor: col);
-    categories.add(category);
-    notifyListeners();
-  }
-
-  void setCategory(String cat, Color color)
-  {
-    selectedCat = cat;
-    selectedCol = color;
-    notifyListeners();
-  }
 
   void setCategoryIndex(int index){
      categoryIndex = index;
@@ -134,21 +90,14 @@ class AppData extends ChangeNotifier{
   }
 
 
-
   ///The function would help store list object that can be manipulated and saved in database
 
-void setSpecificHighlightObj(List obj){
+  void setSpecificHighlightObj(List obj){
     bookSpecificHighlights = obj;
     notifyListeners();
 
-}
+  }
 
-///Delete category screen off the book specific category screen
-void deleteBookSpecificHighlight(Object value){
-    bookSpecificHighlights.remove(value);
-
-    notifyListeners();
-}
 
 ///Number of highlights for each user
 void setNoOfHighlightsPerUser(int number){
@@ -159,11 +108,6 @@ void setNoOfHighlightsPerUser(int number){
 void reduceNoOfHighlights(int number){
     noOfHighlights -= number;
     notifyListeners();
-}
-
-void setBookmarkIsSynced(bool isSynced) {
-  bookmarkIsSynced = isSynced;
-  notifyListeners();
 }
 
 
@@ -231,10 +175,15 @@ void setBookmarkIsSynced(bool isSynced) {
   }
 
   ///set custom sign in
-  setCustomSignIn(bool value){
+  void setCustomSignIn(bool value){
     isCustomSignIn = value;
     notifyListeners();
   }
 
+
+  void setFormData(FormData formData){
+    editFormData = formData;
+    notifyListeners();
+  }
 
 }

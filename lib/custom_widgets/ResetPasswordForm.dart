@@ -75,7 +75,7 @@ class _ResetPasswordFormState extends State<ResetPasswordForm> {
                             final result = await _auth.sendPasswordResetEmail(email: email);
                             _warning = "A Password reset link has been sent to $email";
                             setState(() {
-                              Navigator.pushNamed(context, SignInScreen.id);
+                              Navigator.pushNamed(context, SignInRoute);
                             });
                           } on PlatformException catch (e) {
                                   print(e);

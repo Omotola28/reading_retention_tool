@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:reading_retention_tool/constants/constants.dart';
 import 'package:reading_retention_tool/constants/route_constants.dart';
-import 'package:reading_retention_tool/screens/KindleHighlightsSync.dart';
+import 'package:reading_retention_tool/screens/KindleHighlightsSyncScreen.dart';
 import 'package:reading_retention_tool/custom_widgets/ShowMediumDialog.dart';
 import 'package:reading_retention_tool/custom_widgets/ShowInstapaperDialog.dart';
 import 'package:provider/provider.dart';
@@ -74,12 +74,7 @@ class _ServiceSyncState extends State<ServiceSync> {
         switch (widget.screen) {
           case 'kindle':
             {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context)
-                => KindleHighlightsSync()
-                ),
-              );
+              Navigator.pushNamed(context, KindleHighlightsSyncRoute);
             }
             break;
 
@@ -122,9 +117,9 @@ class _ServiceSyncState extends State<ServiceSync> {
             }
             break;
 
-          case 'Delete':
+          case 'hmq':
             {
-
+              Navigator.pushNamed(context, ManualHighlightRoute);
             }
             break;
 
@@ -203,73 +198,3 @@ class _ServiceSyncState extends State<ServiceSync> {
     );
   }
 }
-
-
-
-
-/*
-Future<bool> showMediumDialog(BuildContext context){
-
-
-
-
-  return showDialog(context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Image.asset(
-            "Images/medium.png",
-            height: 50,
-            width: 50,
-          ),
-          content: TextFormField(
-              validator: (value) => value.isEmpty ? 'Please enter your username' : null,
-              decoration: InputDecoration(
-                labelText: 'Enter medium username',
-                enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: kPrimaryColor,width: 2.0)),
-                focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: kPrimaryColor,width: 3.0)),
-              ),
-              controller: _mediumUsername,
-              focusNode: _focusNode,
-              style: TextStyle(color: Colors.grey),
-
-              onTap: () {
-
-              }),
-          actions: <Widget>[
-               FlatButton(
-                    color: kPrimaryColor,
-                    child: Text(
-                      'Sync Highlights',
-                      style: kHeadingTextStyleDecoration.copyWith(color: Colors.white),
-                ),
-               onPressed: () async {
-                    if(_mediumUsername.text == '@username')
-                        Provider.of<AppData>(context, listen: false).setMeduimUserName(null);
-                    else
-                        Provider.of<AppData>(context, listen: false).setMeduimUserName(_mediumUsername.text);
-
-                    try {
-
-                     dynamic resp = await callable.call(<String, dynamic>{
-                        'name': _mediumUsername.text,
-                        'uid': Provider.of<AppData>(context, listen: false).userData.id
-                      });
-
-
-
-                      print(resp.data);
-                      Navigator.pushNamed(context, MediumHighlightsSyncRoute, arguments: resp.data);
-
-                    } catch (e, s) {
-                      print(e);
-                      print(s);
-                    }
-
-
-               },
-          ),
-        ]
-        );
-      }
-  );
-}*/

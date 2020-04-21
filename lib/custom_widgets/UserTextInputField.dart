@@ -3,13 +3,22 @@ import 'package:reading_retention_tool/constants/constants.dart';
 
 
 class UserTextInputField extends StatelessWidget {
-  UserTextInputField({@required this.labelText, @required this.validate, @required this.value, @required this.savedValue, this.inputType});
+  UserTextInputField({@required this.labelText,
+                      @required this.validate,
+                      @required this.value,
+                      @required this.savedValue,
+                      this.inputType,
+                      this.onchanged,
+                      this.initialVal
+  });
 
   final String labelText;
   final Function validate;
   final bool value;
   final TextInputType inputType;
   final Function savedValue;
+  final Function onchanged;
+  final String initialVal;
 
   @override
   Widget build(BuildContext context) {
@@ -25,6 +34,8 @@ class UserTextInputField extends StatelessWidget {
         obscureText: value,
         validator: validate,
         onSaved: savedValue,
+        onChanged: onchanged,
+        initialValue: initialVal,
       ),
     );
   }

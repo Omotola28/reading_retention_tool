@@ -17,7 +17,6 @@ import 'dart:io';
 
 class KindleHighlightsSync extends StatefulWidget {
 
-  static String id = 'kindle_highlights_sync_screen';
 
   @override
   _KindleHighlightsSync createState() => new _KindleHighlightsSync();
@@ -28,9 +27,6 @@ class _KindleHighlightsSync extends State<KindleHighlightsSync> {
   String _path;
   String _extension;
   bool _loadingPath = false;
-  FileType _pickingType;
-  final _firestore = Firestore.instance;
-  var _highlightObject;
   DocumentSnapshot highlightData;
   bool docExsist = false;
   List obj = [];

@@ -16,6 +16,9 @@ const String CreateNotificationRoute = 'create_notification_screen';
 const String MediumHighlightsSyncRoute = 'medium_highlights_screen';
 const String InstapaperBookmarksRoute = 'instapaper_bookmark_screen';
 const String BookmarkHighlightRoute = 'bookmark_highlight_screen';
+const String ManualHighlightRoute = 'manual_highlight_screen';
+const String ManualEditHighlightRoute = 'manual_edithighlight_screen';
+const String AddBookRoute = 'add_book_screen';
 
 
 

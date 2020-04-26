@@ -156,8 +156,9 @@ class _ManualEditHighlightScreenState extends State<ManualEditHighlightScreen> {
 
                          if (snapshot == null || !snapshot.exists) {
                            textList.add({'chapter' : widget.formData.chapter,
+                             'color': '#808080',
                              'page': widget.formData.page,
-                             'text' : widget.formData.extractedText,
+                             'highlight' : widget.formData.extractedText,
                              'thoughts' : widget.formData.thoughts
                            });
                            widget.formData.textList = textList;
@@ -171,8 +172,9 @@ class _ManualEditHighlightScreenState extends State<ManualEditHighlightScreen> {
 
                            textList.add(
                                {'chapter' : widget.formData.chapter,
+                                 'color': '#808080',
                                  'page': widget.formData.page,
-                                 'text' : widget.formData.extractedText, 'thoughts' : widget.formData.thoughts
+                                 'highlight' : widget.formData.extractedText, 'thoughts' : widget.formData.thoughts
                                }
                            );
 

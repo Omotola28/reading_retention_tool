@@ -16,6 +16,7 @@ class ManualHighlightBookShelfScreen extends StatefulWidget {
 class _ManualHighlightBookShelfScreenState extends State<ManualHighlightBookShelfScreen> {
 
   final _store = Firestore.instance;
+  Map<String, dynamic> bookData;
 
   @override
   Widget build(BuildContext context) {
@@ -49,9 +50,12 @@ class _ManualHighlightBookShelfScreenState extends State<ManualHighlightBookShel
                                             child: Image.network(snapshot.data.documents[index]['url'] ?? kBookPlaceHolder),
                                           ),
                                           onTap: (){
+                                            bookData = { 'bookname' : snapshot.data.documents[index]['bookname'],
+                                              'url' : snapshot.data.documents[index]['url'] };
+
+                                            Provider.of<AppData>(context, listen: false).setBookData(bookData);
                                             Navigator.popAndPushNamed(context, SpecificManualBookRoute,
-                                                arguments:{ 'bookname' : snapshot.data.documents[index]['bookname'],
-                                                            'url' : snapshot.data.documents[index]['url'] });
+                                                arguments: bookData);
                                           },
                                         ),
                                         Expanded(

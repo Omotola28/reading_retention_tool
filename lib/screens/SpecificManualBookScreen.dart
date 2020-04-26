@@ -6,15 +6,17 @@ import 'package:reading_retention_tool/constants/route_constants.dart';
 import 'package:reading_retention_tool/customIcons/my_flutter_app_icons.dart';
 import 'package:reading_retention_tool/custom_widgets/CustomHighlightTile.dart';
 import 'package:reading_retention_tool/module/app_data.dart';
-import 'package:reading_retention_tool/custom_widgets/AppBar.dart';
-import 'package:reading_retention_tool/screens/ManualHighlightBookShelfScreen.dart';
+import 'package:reading_retention_tool/utils/color_utility.dart';
 import 'package:reading_retention_tool/utils/manageHighlightsController.dart';
+import 'package:provider/provider.dart';
+import 'package:reading_retention_tool/module/app_data.dart';
 
 class SpecificManualBookScreen extends StatefulWidget {
 
   Map<String, dynamic> bookData;
 
   SpecificManualBookScreen(this.bookData);
+
 
 
   @override
@@ -26,6 +28,9 @@ class _SpecificManualBookScreenState extends State<SpecificManualBookScreen> {
   final _store = Firestore.instance;
   var notes = [];
   final manageHighlight = new ManageHighlightsController();
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -111,8 +116,8 @@ class _SpecificManualBookScreenState extends State<SpecificManualBookScreen> {
                                     mainAxisSize: MainAxisSize.min,
                                     children: <Widget>[
                                       CustomHighlightTile(
-                                        //icon: Icon(CustomIcons.circle, size: 8.0, color: HexColor(highlights[index]['color'])),
-                                        text: notes[index]['text'],
+                                        icon: Icon(CustomIcons.circle, size: 8.0, color: HexColor(notes[index]['color'])),
+                                        text: notes[index]['highlight'],
 
                                         popMenu: PopupMenuButton(
                                             onSelected: (selectedDropDownItem) =>
@@ -125,6 +130,14 @@ class _SpecificManualBookScreenState extends State<SpecificManualBookScreen> {
                                                     'hmq'
                                                 ),
                                             itemBuilder: (BuildContext context) => manageHighlight.popMenu
+                                        ),
+                                      ),
+                                      Divider(),
+                                      Align(
+                                        alignment: Alignment.topLeft,
+                                        child: Padding(
+                                          padding: const EdgeInsets.only(left: 5, top: 2, bottom: 4),
+                                          child: Text('Page ${notes[index]['page'] ?? 'not added'}', style: TextStyle(color: kHighlightColorGrey),),
                                         ),
                                       )
                                     ],
@@ -147,7 +160,72 @@ class _SpecificManualBookScreenState extends State<SpecificManualBookScreen> {
                               });
                         }),
                   ),
-                  Icon(Icons.directions_transit),
+                  Container(
+                    color: kLightYellowBG,
+                    child: StreamBuilder<DocumentSnapshot>(
+                        stream: _store.collection('hmq')
+                            .document(Provider.of<AppData>(context).userData.id)
+                            .collection('books')
+                            .document(widget.bookData['bookname'])
+                            .snapshots(),
+                        builder: (context, snapshot){
+                          List<Widget> widgetHighlights = [];
+                          if (!snapshot.hasData) {
+                            return Center(
+                              child: CircularProgressIndicator(),
+                            );
+                          } else {
+                            notes = snapshot.data['textList'];
+
+
+                            for (var index = 0; index < notes.length; index++) {
+
+                              if(notes[index]['thoughts'] == null){
+                                continue;
+                              }
+                              else{
+                                final highlightWidget =
+                                Padding(
+                                  padding: EdgeInsets.all(10.0),
+                                  child: Card(
+                                    color: Color.fromRGBO(250, 249, 242, 1),
+
+                                    child: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: <Widget>[
+                                        CustomHighlightTile(
+                                          icon: Icon(CustomIcons.circle, size: 8.0, color: HexColor(notes[index]['color'])),
+                                          text: notes[index]['thoughts'] ?? '',
+                                        ),
+                                        Divider(),
+                                        Align(
+                                          alignment: Alignment.topLeft,
+                                          child: Padding(
+                                            padding: const EdgeInsets.only(left: 5, top: 2, bottom: 4),
+                                            child: Text('Page ${notes[index]['page'] ?? 'not added'}', style: TextStyle(color: kHighlightColorGrey),),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  ),
+                                );
+                                widgetHighlights.add(highlightWidget);
+                              }
+                            }
+                          }
+                          print(widgetHighlights.length);
+
+                          return ListView.builder(
+                              itemCount: widgetHighlights.length == 0 ? 0 : widgetHighlights.length,
+                              itemBuilder: (context, index) {
+                                return Padding(
+                                  padding: const EdgeInsets.all(5.0),
+                                  child: widgetHighlights.length  == 0 ? Center(child: Text('Thoughts?')) : widgetHighlights[index],
+                                );
+                              });
+                        }),
+                  ),
+
                 ],
               ),
           )
@@ -171,7 +249,8 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   @override
   Widget build(
       BuildContext context, double shrinkOffset, bool overlapsContent) {
-    return new Container(
+    return Container(
+      color: kLightYellowBG,
       child: _tabBar,
     );
   }

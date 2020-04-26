@@ -26,6 +26,7 @@ class _CategoryTileState extends State<CategoryTile> {
   final _store = Firestore.instance;
   var highlight = [];
 
+
   var catHighlightObj = []; //Get a list og highlights that are in the category list
 
   var snackBar;
@@ -148,7 +149,6 @@ class _CategoryTileState extends State<CategoryTile> {
                         highlightObj[index]['highlight'],
                         highlightObj[index]['id']).then((isadded){
            if(isadded){
-             //Navigator.popAndPushNamed(context, BookS)
              Navigator.pop(context);
              Navigator.push(
                context,
@@ -193,6 +193,27 @@ class _CategoryTileState extends State<CategoryTile> {
            if(isadded){
 
              Navigator.popAndPushNamed(context, BookmarkHighlightRoute, arguments:highlightObj[index]['bookmarkId'].toString());
+           }
+         });
+
+
+       }
+       else if(widget.whichService == 'hmq'){
+         //Saving the whole obj back to firebase datastore after adding category.
+         _store.collection("hmq")
+             .document(Provider.of<AppData>(context, listen: false).userData.id)
+             .collection("books")
+             .document(Provider.of<AppData>(context, listen: false).bookName)
+             .updateData({"textList": highlightObj});
+
+         _addtoCategory(widget.categoryTitle+'#'+colorHex,
+             highlightObj[index]['highlight'],
+             highlightObj[index]['id']).then((isadded){
+           if(isadded){
+
+             Navigator.popAndPushNamed(context, SpecificManualBookRoute,
+                                       arguments: Provider.of<AppData>(context, listen: false).bookData);
+
            }
          });
 

@@ -23,7 +23,7 @@ class AppData extends ChangeNotifier{
   String payloadHighlight;
   User userData;
   bool isCustomSignIn = false;
-  FormData editFormData;
+  Map<String, dynamic> bookData;
 
   List<NotificationData> _notifications = List();
   HighlightNotificationPlugin _notificationPlugin = HighlightNotificationPlugin();
@@ -181,8 +181,8 @@ void reduceNoOfHighlights(int number){
   }
 
 
-  void setFormData(FormData formData){
-    editFormData = formData;
+  void setBookData(Map<String, dynamic> data){
+    bookData = data;
     notifyListeners();
   }
 

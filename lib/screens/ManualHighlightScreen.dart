@@ -32,6 +32,7 @@ class _ManualHighlightScreenState extends State<ManualHighlightScreen> {
   }
 
   void _clear(){
+    print('juiuuujhjjjhjj');
     setState(() {
       _imageFile = null;
       isDisabled = true;
@@ -102,73 +103,102 @@ class _ManualHighlightScreenState extends State<ManualHighlightScreen> {
     print(text);
   }
 
+  Future<bool> _onBackPressed() {
+    _clear();
+    return showDialog(
+      context: context,
+      builder: (context) => new AlertDialog(
+        title: new Text('Are you sure?'),
+        content: new Text('Do you want to exit an App'),
+        actions: <Widget>[
+          new GestureDetector(
+            onTap: () => Navigator.of(context).pop(false),
+            child: Text("NO"),
+          ),
+          SizedBox(height: 16),
+          new GestureDetector(
+            onTap: () => Navigator.of(context).pop(true),
+            child: Text("YES"),
+          ),
+        ],
+      ),
+    ) ??
+        false;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _clear();
+  }
+
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: header(headerText: 'Manual Highlight', screen: HomeScreen(), context: context),
-      body: SafeArea(
-        child: Container(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                   Padding(
-                     padding: const EdgeInsets.only(bottom: 5.0),
-                     child: Text('Capture/Add Image', style: TextStyle(fontSize: 15.0, color: kDarkColorBlack, letterSpacing: 0.5)),
-                   ),
-                   isDisabled == false ?
-                    Center(
-                      child: Container(
-                        alignment: AlignmentDirectional(0.0, 0.0),
-                        constraints: BoxConstraints(
-                            maxHeight: 300.0,
-                            maxWidth: 300.0,
-                            minWidth: 150.0,
-                            minHeight: 150.0
-                        ),
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                              image: FileImage(_imageFile) == null
-                                  ? null
-                                  : FileImage(_imageFile),
-                              fit: BoxFit.contain
-                          )
-                        ),
-                      ),
-                    )
-                   : Center(
-                     child: Container(
-                       color: Colors.black12,
-                       child: _imageFile == null ? Icon(FontAwesomeIcons.plus, color: kHighlightColorGrey) : null,
-                       alignment: AlignmentDirectional(0.0, 0.0),
-                       constraints: BoxConstraints(
-                           maxHeight: 300.0,
-                           maxWidth: 300.0,
-                           minWidth: 150.0,
-                           minHeight: 150.0
-                       ),
+        appBar: header(headerText: 'Manual Highlight', screen: HomeScreen(), context: context),
+        body: SafeArea(
+          child: Container(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                     Padding(
+                       padding: const EdgeInsets.only(bottom: 5.0),
+                       child: Text('Capture/Add Image', style: TextStyle(fontSize: 15.0, color: kDarkColorBlack, letterSpacing: 0.5)),
                      ),
-                   )
-                    ],
+                     isDisabled == false && _imageFile != null ?
+                      Center(
+                        child: Container(
+                          alignment: AlignmentDirectional(0.0, 0.0),
+                          constraints: BoxConstraints(
+                              maxHeight: 300.0,
+                              maxWidth: 300.0,
+                              minWidth: 150.0,
+                              minHeight: 150.0
+                          ),
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                                image: FileImage(_imageFile) == null
+                                    ? null
+                                    : FileImage(_imageFile),
+                                fit: BoxFit.contain
+                            )
+                          ),
+                        ),
+                      )
+                     : Center(
+                       child: Container(
+                         color: Colors.black12,
+                         child: _imageFile == null ? Icon(FontAwesomeIcons.plus, color: kHighlightColorGrey) : null,
+                         alignment: AlignmentDirectional(0.0, 0.0),
+                         constraints: BoxConstraints(
+                             maxHeight: 300.0,
+                             maxWidth: 300.0,
+                             minWidth: 150.0,
+                             minHeight: 150.0
+                         ),
+                       ),
+                     )
+                      ],
+              ),
+          ),
+        ),
+        bottomNavigationBar: BottomAppBar(
+            child: Row(
+              //direction: Axis.horizontal,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                ImageProcessIcons(() => {Navigator.pushNamed(context, ManualHighlightBookShelfRoute)}, Icons.library_books),
+                ImageProcessIcons(() => {_pickImage(ImageSource.camera)}, Icons.camera_alt),
+                ImageProcessIcons(() => {_pickImage(ImageSource.gallery)}, Icons.image),
+                AdditionalImageProcessIcons(_cropImage, Icons.crop, isDisabled),
+                AdditionalImageProcessIcons(_recognizeText, Icons.play_arrow, isDisabled),
+
+              ],
             ),
         ),
-      ),
-      bottomNavigationBar: BottomAppBar(
-          child: Row(
-            //direction: Axis.horizontal,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              ImageProcessIcons(() => {Navigator.pushNamed(context, ManualHighlightBookShelfRoute)}, Icons.library_books),
-              ImageProcessIcons(() => {_pickImage(ImageSource.camera)}, Icons.camera_alt),
-              ImageProcessIcons(() => {_pickImage(ImageSource.gallery)}, Icons.image),
-              AdditionalImageProcessIcons(_cropImage, Icons.crop, isDisabled),
-              AdditionalImageProcessIcons(_recognizeText, Icons.play_arrow, isDisabled),
-
-            ],
-          ),
-      ),
-    );
+      );
   }
 }
 

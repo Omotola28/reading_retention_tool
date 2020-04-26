@@ -8,8 +8,9 @@ import 'package:reading_retention_tool/module/app_data.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:reading_retention_tool/screens/BookSpecificHighlightScreen.dart';
 import 'package:reading_retention_tool/screens/BookmarkHighlightScreen.dart';
+import 'package:reading_retention_tool/screens/HomeScreen.dart';
 import 'package:reading_retention_tool/screens/MediumHighlightsSyncScreen.dart';
-import 'package:reading_retention_tool/screens/UserBooksListScreen.dart';
+import 'package:reading_retention_tool/screens/SpecificManualBookScreen.dart';
 import 'package:reading_retention_tool/utils/color_utility.dart';
 
 class CategoriseHighlightScreen extends StatefulWidget {
@@ -35,8 +36,14 @@ class _CategoriseHighlightScreenState extends State<CategoriseHighlightScreen> {
     else if(widget.whichService == 'medium'){
       backScreen = MediumHighlightsSyncScreen('success');
     }
-    else{
+    else if(widget.whichService == 'instapaper'){
       backScreen = BookmarkHighlightScreen(Provider.of<AppData>(context, listen: false).bookmarkID);//Add bookmark id
+    }
+    else if(widget.whichService == 'hmq'){
+      backScreen = SpecificManualBookScreen(Provider.of<AppData>(context, listen: false).bookData);
+    }
+    else{
+      backScreen = HomeScreen();
     }
 
     return Scaffold(

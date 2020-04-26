@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:reading_retention_tool/module/app_data.dart';
@@ -27,7 +28,7 @@ class ManageHighlightsController{
   ).toList();
 
   /// When a [PopUpMenuItem] is selected, we perform the action here
-  void handlePopUpMenuAction(String value, BuildContext context, int index, List highlyObj, String identifier, String whichServiceHighlight) {
+  void handlePopUpMenuAction(String value, BuildContext context, int index, List highlyObj, String identifier, String whichServiceHighlight) async{
 
     //Saving the data here so it can be easily manipulated and saved back in
     //Firebase database store -----DONT KNOW ANY BETTER WAY TO DO THIS YET
@@ -41,6 +42,7 @@ class ManageHighlightsController{
     //Had to create a list of type List<dynamic inorder to enable it get deleted from firebase>
     var highlight = [];
     highlight.add(highlyObj[intIndex]);
+    final firebaseUser = await FirebaseAuth.instance.currentUser();
 
 
     //TODO: Work on only saving data that is edited and not the whole array again.
@@ -67,14 +69,14 @@ class ManageHighlightsController{
                   if(whichServiceHighlight == 'kindle'){
 
                        Firestore.instance.collection("kindle")
-                          .document(Provider.of<AppData>(context, listen: false).userData.id)
+                          .document(firebaseUser.uid)
                           .collection("books")
                           .document(Provider.of<AppData>(context, listen: false).bookName)
                           .updateData({"highlights": highlyObj});
                   }
                   else if(whichServiceHighlight == 'medium'){
                     Firestore.instance.collection("medium")
-                        .document(Provider.of<AppData>(context, listen: false).userData.id)
+                        .document(firebaseUser.uid)
                         .updateData({"mediumHighlights": highlyObj});
 
                   }
@@ -83,6 +85,13 @@ class ManageHighlightsController{
                     Firestore.instance.collection("instapaperhighlights")
                         .document(identifier)
                         .updateData({"instaHighlights": highlyObj});
+                  }
+                  else if(whichServiceHighlight == 'hmq'){
+                     Firestore.instance.collection('hmq')
+                        .document(firebaseUser.uid)
+                        .collection('books')
+                        .document(Provider.of<AppData>(context, listen: false).bookName)
+                        .updateData({"textList": highlyObj});
                   }
 
                 }
@@ -107,20 +116,27 @@ class ManageHighlightsController{
 
           if(whichServiceHighlight == 'kindle'){
             Firestore.instance.collection("kindle")
-                .document(Provider.of<AppData>(context, listen: false).userData.id)
+                .document(firebaseUser.uid)
                 .collection("books")
                 .document(Provider.of<AppData>(context, listen: false).bookName)
                 .updateData({'highlights' : FieldValue.arrayRemove(highlight)});
           }
           else if(whichServiceHighlight == 'medium'){
             Firestore.instance.collection("medium")
-                .document(Provider.of<AppData>(context, listen: false).userData.id)
+                .document(firebaseUser.uid)
                 .updateData({"mediumHighlights":FieldValue.arrayRemove(highlight)});
           }
-          else{
+          else if(whichServiceHighlight == 'instapaper'){
             Firestore.instance.collection("instapaperhighlights")
                 .document(identifier)
                 .updateData({"instaHighlights": FieldValue.arrayRemove(highlight)});
+          }
+          else if(whichServiceHighlight == 'hmq'){
+            Firestore.instance.collection("hmq")
+                .document(firebaseUser.uid)
+                .collection("books")
+                .document(Provider.of<AppData>(context, listen: false).bookName)
+                .updateData({'textList' : FieldValue.arrayRemove(highlight)});
           }
 
 
@@ -132,8 +148,11 @@ class ManageHighlightsController{
 
           //Set identifier mostly for bookmarkID
           Provider.of<AppData>(context, listen: false).setBookMarkIdentifier(identifier);
+          //set the bookdata so we can navigate back to SpecificManualBook
+
 
           Navigator.popAndPushNamed(context, CategoryRoute, arguments: whichServiceHighlight );
+
 
         }
         break;

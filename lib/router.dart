@@ -10,10 +10,12 @@ import 'package:reading_retention_tool/screens/InstapaperBookmarkScreen.dart';
 import 'package:reading_retention_tool/screens/KindleHighlightsSyncScreen.dart';
 import 'package:reading_retention_tool/screens/ManageCategory.dart';
 import 'package:reading_retention_tool/screens/ManualEditHighlightScreen.dart';
+import 'package:reading_retention_tool/screens/ManualHighlightBookShelfScreen.dart';
 import 'package:reading_retention_tool/screens/MediumHighlightsSyncScreen.dart';
 import 'package:reading_retention_tool/screens/ShowRetrievedHighlightsScreen.dart';
 import 'package:reading_retention_tool/screens/SignInScreen.dart';
 import 'package:reading_retention_tool/screens/SignUpScreen.dart';
+import 'package:reading_retention_tool/screens/SpecificManualBookScreen.dart';
 import 'package:reading_retention_tool/screens/UndefinedScreen.dart';
 import 'package:reading_retention_tool/screens/UserBooksListScreen.dart';
 import 'package:reading_retention_tool/screens/WaitingToLoginScreen.dart';
@@ -96,6 +98,13 @@ Route<dynamic> generateRoute(RouteSettings settings){
       case AddBookRoute :
         var formData = settings.arguments;
         return MaterialPageRoute(builder: (context) => AddBookScreen(formData));
+
+      case ManualHighlightBookShelfRoute :
+        return MaterialPageRoute(builder: (context) => ManualHighlightBookShelfScreen());
+
+      case SpecificManualBookRoute :
+        var bookData = settings.arguments;
+        return MaterialPageRoute(builder: (context) => SpecificManualBookScreen(bookData));
 
       case WaitingToLoginRoute :
         return MaterialPageRoute(builder: (context) => WaitingToLoginScreen());

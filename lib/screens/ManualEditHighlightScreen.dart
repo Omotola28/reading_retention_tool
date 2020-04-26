@@ -1,12 +1,15 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:reading_retention_tool/constants/route_constants.dart';
 import 'package:reading_retention_tool/custom_widgets/AppBar.dart';
 import 'package:reading_retention_tool/custom_widgets/UserTextInputField.dart';
 import 'package:reading_retention_tool/module/formdata.dart';
 import 'package:reading_retention_tool/screens/ManualHighlightScreen.dart';
 import 'package:reading_retention_tool/constants/constants.dart';
-import 'package:provider/provider.dart';
-import 'package:reading_retention_tool/module/app_data.dart';
+import 'package:flutter/services.dart';
+
 
 class ManualEditHighlightScreen extends StatefulWidget {
 
@@ -21,8 +24,9 @@ class ManualEditHighlightScreen extends StatefulWidget {
 
 class _ManualEditHighlightScreenState extends State<ManualEditHighlightScreen> {
 
-  String extractedText, _color, page, title, thoughts;
-  List<String> _colors = <String>['', 'red', 'green', 'blue', 'orange'];
+  String extractedText, page, title, thoughts;
+  List<dynamic> textList = [];
+
 
 
   final GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
@@ -67,43 +71,11 @@ class _ManualEditHighlightScreenState extends State<ManualEditHighlightScreen> {
                       ),
                       validator: (value) => value.isEmpty ? 'No text extracted' : null,
                       onChanged: (text){
-                        widget.formData.extractedText = text;
+                        //widget.formData.extractedText = text;
                       },
                     ),
                   ),
-                  /*FormField(
-                    builder: (FormFieldState state) {
-                      return InputDecorator(
-                        decoration: InputDecoration(
-                          labelText: 'Choose Book',
-                          enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: kPrimaryColor,width: 2.0)),
-                          focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: kPrimaryColor,width: 3.0)),
-                        ),
-                        isEmpty: _color == '',
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
-                          child: DropdownButtonHideUnderline(
-                            child:  DropdownButton(
-                              value: _color,
-                              isDense: true,
-                              onChanged: (String newValue) {
-                                setState(() {
-                                  _color = newValue;
-                                  state.didChange(newValue);
-                                });
-                              },
-                              items: _colors.map((String value) {
-                                return DropdownMenuItem(
-                                  value: value,
-                                  child: new Text(value),
-                                );
-                              }).toList(),
-                            ),
-                          ),
-                        ),
-                      );
-                    },
-                  )*/
+
                   UserTextInputField(
                       labelText: 'Page',
                       initialVal: widget.formData.page == null ? '' : widget.formData.page,
@@ -121,7 +93,6 @@ class _ManualEditHighlightScreenState extends State<ManualEditHighlightScreen> {
                       value: false,
                       savedValue: (value) => title =  value,
                       onchanged: (text){
-                        print(text);
                         widget.formData.chapter = text;
 
                       },
@@ -163,25 +134,66 @@ class _ManualEditHighlightScreenState extends State<ManualEditHighlightScreen> {
              mainAxisAlignment: MainAxisAlignment.end,
 
              children: <Widget>[
-               /*OutlineButton(
-                 disabledBorderColor: kPrimaryColor,
-                 onPressed: () {
-                   // Provider.of<AppData>(context, listen: false).setFormData(formData);
-                   // print(Provider.of<AppData>(context, listen: false).editFormData.extractedText);
-                    Navigator.pushNamed(context, AddBookRoute, arguments: widget.formData);
-                 },
-                 child: Text('Add Book',
-                   style: TextStyle(
-                       color: kPrimaryColor,
-                       letterSpacing: 1
-                   ),
-                 ),
-               ),*/
                Padding(
                  padding: const EdgeInsets.fromLTRB(10, 0, 10 , 0),
                  child: OutlineButton(
                    disabledBorderColor: kPrimaryColor,
-                   onPressed: () {
+                   onPressed: () async {
+
+                     final form = _formKey.currentState;
+                     final firebaseUser = await FirebaseAuth.instance.currentUser();
+                     if(form.validate())
+                     {
+                       form.save();
+                       try{
+
+                         final snapshot = await Firestore.instance
+                             .collection('hmq')
+                             .document(firebaseUser.uid)
+                             .collection('books')
+                             .document(widget.formData.bookname)
+                             .get();
+
+                         if (snapshot == null || !snapshot.exists) {
+                           textList.add({'chapter' : widget.formData.chapter,
+                             'page': widget.formData.page,
+                             'text' : widget.formData.extractedText,
+                             'thoughts' : widget.formData.thoughts
+                           });
+                           widget.formData.textList = textList;
+
+                           final result = await addBookToDatabase(widget.formData);
+
+                           result  != false ? Navigator.popAndPushNamed(context, ManualHighlightBookShelfRoute) : print(result);
+                         }
+                         else{
+
+
+                           textList.add(
+                               {'chapter' : widget.formData.chapter,
+                                 'page': widget.formData.page,
+                                 'text' : widget.formData.extractedText, 'thoughts' : widget.formData.thoughts
+                               }
+                           );
+
+                           final result = await updateTextField(
+                               widget.formData.bookname, textList);
+
+                           result  != false ? Navigator.popAndPushNamed(context, ManualHighlightBookShelfRoute) : print(result);
+
+                         }
+
+
+                       } on PlatformException catch (e) {
+                         //e.code
+                         switch(e.code)
+                         {
+                           case "ERROR_INVALID_EMAIL":
+                             print(e.code);
+                         }
+                         _formKey.currentState.reset();
+                       }
+                     }
                    },
                    child: Text('Submit',
                      style: TextStyle(
@@ -195,6 +207,34 @@ class _ManualEditHighlightScreenState extends State<ManualEditHighlightScreen> {
         ),
       ),
     );
+  }
+
+  static Future<bool> addBookToDatabase(FormData formData) async {
+
+    final firebaseUser = await FirebaseAuth.instance.currentUser();
+
+    Firestore.instance
+        .collection("hmq")
+        .document(firebaseUser.uid)
+        .collection("books")
+        .document(formData.bookname)
+        .setData(formData.toJson());
+
+    return true;
+  }
+
+  static Future<bool> updateTextField(String bookname, List<dynamic> textList) async {
+
+    final firebaseUser = await FirebaseAuth.instance.currentUser();
+
+    Firestore.instance.collection('hmq')
+        .document(firebaseUser.uid)
+        .collection('books')
+        .document(bookname)
+        .updateData({"textList": FieldValue.arrayUnion(textList)});
+
+    return true;
+
   }
 }
 

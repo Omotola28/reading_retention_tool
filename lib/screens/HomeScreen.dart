@@ -1,19 +1,11 @@
-import 'dart:ffi';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:provider/provider.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:reading_retention_tool/constants/constants.dart';
 import 'package:reading_retention_tool/constants/route_constants.dart';
-import 'package:reading_retention_tool/custom_widgets/AppBar.dart';
-import 'package:reading_retention_tool/module/user.dart';
-import 'package:flutter_image/network.dart';
 import 'package:reading_retention_tool/service/auth_service.dart';
 import 'package:reading_retention_tool/screens/ActivityFeedPage.dart';
-import 'package:reading_retention_tool/screens/CategoryHighlightsScreen.dart';
-import 'package:reading_retention_tool/screens/GetStartedScreen.dart';
+import 'package:flutter/services.dart';
 import 'package:reading_retention_tool/module/app_data.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:reading_retention_tool/screens/ManageCategory.dart';
@@ -40,6 +32,8 @@ class _HomeScreenState extends State<HomeScreen> {
   int categoryLength = 0;
   PageController pageController;
   int pageIndex = 0;
+  static const platform = const MethodChannel('app.channel.shared.data');
+  String dataShared = "No data";
 
 
   @override
@@ -54,8 +48,24 @@ class _HomeScreenState extends State<HomeScreen> {
 
     //Navigation page controller
     pageController = PageController(initialPage: 0);
+    //getSharedText();
+
+    //_init();
 
   }
+
+/*  getSharedText() async {
+    var sharedData = await platform.invokeMethod("getSharedText");
+    if (sharedData != null) {
+      setState(() {
+        dataShared = sharedData;
+
+        print(dataShared);
+      });
+    }
+  }*/
+
+
 
   onPageChanged(int pageIndex){
     setState(() {

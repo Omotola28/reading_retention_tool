@@ -33,7 +33,6 @@ class _KindleHighlightsSync extends State<KindleHighlightsSync> {
   StorageUploadTask task;
   StorageReference firebaseStorageRef;
 
-
   TextEditingController _controller = new TextEditingController();
 
   @override
@@ -41,6 +40,7 @@ class _KindleHighlightsSync extends State<KindleHighlightsSync> {
     super.initState();
     _controller.addListener(() => _extension = _controller.text);
   }
+
 
   @override
   void dispose() {
@@ -69,6 +69,8 @@ class _KindleHighlightsSync extends State<KindleHighlightsSync> {
           : '...';
     });
   }
+
+
 
   @override
   Widget build(BuildContext context) {

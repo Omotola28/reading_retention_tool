@@ -14,8 +14,6 @@ class CreateNotificationPage extends StatefulWidget {
   final List objNotifications;
   final String categoryId;
 
-
-
   CreateNotificationPage(this.objNotifications, this.categoryId);
 
   @override

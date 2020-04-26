@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:reading_retention_tool/constants/constants.dart';
@@ -151,21 +150,6 @@ class _ManualHighlightScreenState extends State<ManualHighlightScreen> {
                        ),
                      ),
                    )
-
-                   /* if(_imageFile != null)...[
-
-
-                          Image.file(_imageFile),
-                          Row(
-                            children: <Widget>[
-                              FlatButton(
-                                  color: kPrimaryColor,
-                                  onPressed:_cropImage,
-                                  child: Icon(Icons.crop)
-                              )
-                            ],
-                          )
-                        ]*/
                     ],
             ),
         ),
@@ -175,6 +159,7 @@ class _ManualHighlightScreenState extends State<ManualHighlightScreen> {
             //direction: Axis.horizontal,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
+              ImageProcessIcons(() => {Navigator.pushNamed(context, ManualHighlightBookShelfRoute)}, Icons.library_books),
               ImageProcessIcons(() => {_pickImage(ImageSource.camera)}, Icons.camera_alt),
               ImageProcessIcons(() => {_pickImage(ImageSource.gallery)}, Icons.image),
               AdditionalImageProcessIcons(_cropImage, Icons.crop, isDisabled),
@@ -196,15 +181,17 @@ class ImageProcessIcons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-    child: RawMaterialButton(
-        onPressed: function,
-      child: new Icon(
-        iconButton,
-        color: kPrimaryColor,
-        size: 25.0,
+    return Expanded(
+      child: Container(
+      child: RawMaterialButton(
+          onPressed: function,
+        child: new Icon(
+          iconButton,
+          color: kPrimaryColor,
+          size: 25.0,
+        ),
       ),
-    ),
+      ),
     );
   }
 }
@@ -219,13 +206,15 @@ class AdditionalImageProcessIcons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: RawMaterialButton(
-        onPressed: isDisabled ? null : function,
-        child: new Icon(
-          iconButton,
-          color: isDisabled ? kHighlightColorDarkGrey : kPrimaryColor,
-          size: 25.0,
+    return Expanded(
+      child: Container(
+        child: RawMaterialButton(
+          onPressed: isDisabled ? null : function,
+          child: new Icon(
+            iconButton,
+            color: isDisabled ? kHighlightColorDarkGrey : kPrimaryColor,
+            size: 25.0,
+          ),
         ),
       ),
     );

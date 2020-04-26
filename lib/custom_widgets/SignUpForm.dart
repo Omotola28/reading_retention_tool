@@ -5,8 +5,6 @@ import 'package:reading_retention_tool/custom_widgets/ActionUserButton.dart';
 import 'package:reading_retention_tool/custom_widgets/UserTextInputField.dart';
 import 'package:reading_retention_tool/module/user.dart';
 import 'package:flutter/services.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:reading_retention_tool/screens/SignInScreen.dart';
 import 'package:reading_retention_tool/service/auth_service.dart';
 
 
@@ -18,7 +16,6 @@ class SignUpForm extends StatefulWidget {
 
 class _SignUpFormState extends State<SignUpForm> {
 
-  final _auth = FirebaseAuth.instance;
   User _user = User();
   final _signUpKey = GlobalKey<FormState>();
 
@@ -123,12 +120,6 @@ class _SignUpFormState extends State<SignUpForm> {
                               crossAxisAlignment: CrossAxisAlignment.center,
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
-                               /* Checkbox(value: _user.rememberMe, onChanged: (val){
-                                  setState(() {
-                                   // _user.rememberMe = val;
-                                  });
-                                }, activeColor: kPrimaryColor,
-                                ),*/
                                 Text(
                                   "I agree with your Privacy Policy",
                                   style: kTrailingTextStyleDecoration,

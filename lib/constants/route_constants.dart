@@ -19,7 +19,8 @@ const String BookmarkHighlightRoute = 'bookmark_highlight_screen';
 const String ManualHighlightRoute = 'manual_highlight_screen';
 const String ManualEditHighlightRoute = 'manual_edithighlight_screen';
 const String AddBookRoute = 'add_book_screen';
-
+const String ManualHighlightBookShelfRoute = 'manual_highlight_bookshelf_screen';
+const String SpecificManualBookRoute = 'specific_manual_book_screen';
 
 
 

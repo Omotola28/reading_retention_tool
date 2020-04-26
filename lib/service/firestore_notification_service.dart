@@ -32,7 +32,6 @@ class FirestoreNotificationService {
           .setData(notification.toJson());
     }
 
-
   }
 
   static Future<void> removeNotification(NotificationData notification) async {

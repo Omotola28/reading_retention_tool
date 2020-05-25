@@ -8,6 +8,7 @@ import 'package:reading_retention_tool/module/app_data.dart';
 import 'package:cloud_functions/cloud_functions.dart';
 import 'package:provider/provider.dart';
 import 'dart:async';
+import 'package:async/async.dart';
 
 class InstapaperBookmarkScreen extends StatefulWidget {
   
@@ -28,6 +29,7 @@ class _InstapaperBookmarkScreenState extends State<InstapaperBookmarkScreen> {
   var userSecret;
   var data;
   var isTapped = false;
+  final AsyncMemoizer _memoizer = AsyncMemoizer();
 
   Future<DocumentSnapshot> getInstapaperCredentials() async{
     instapaperCredentials = await _store.collection('instapaperbookmarks')
@@ -39,24 +41,29 @@ class _InstapaperBookmarkScreenState extends State<InstapaperBookmarkScreen> {
 
   
 
-  Future<DocumentSnapshot> _getInstapaperBookmarks() async {
-    var data =  await _store
-        .collection('instapaperbookmarks')
-        .document(Provider.of<AppData>(context, listen: false).userData.id)
-        .get();
+  Future<dynamic> _getInstapaperBookmarks() {
+    return this._memoizer.runOnce(() async {
+      var data = await _store
+          .collection('instapaperbookmarks')
+          .document(Provider
+          .of<AppData>(context, listen: false)
+          .userData
+          .id)
+          .get();
 
-    if(data.exists){
-      setState(() {
-        userHasData = true;
-      });
-    }
-    else{
-      setState(() {
-        userHasData = false;
-      });
-    }
+      if (data.exists) {
+        setState(() {
+          userHasData = true;
+        });
+      }
+      else {
+        setState(() {
+          userHasData = false;
+        });
+      }
 
-    return data;
+      return data;
+    });
   }
 
   Future<bool> _isBookmarksHighlightSynced(bookmarkId) async {
@@ -102,6 +109,8 @@ class _InstapaperBookmarkScreenState extends State<InstapaperBookmarkScreen> {
       });
 
       if (resp.data == 200) {
+        print('HELLO ${bookmarkId.toString()}');
+        Provider.of<AppData>(context, listen: false).setHighlightIdentifier(bookmarkId.toString());
         Navigator.popAndPushNamed(
             context, BookmarkHighlightRoute, arguments: bookmarkId.toString());
       }
@@ -123,7 +132,6 @@ class _InstapaperBookmarkScreenState extends State<InstapaperBookmarkScreen> {
   
   @override
   Widget build(BuildContext context) {
-   // final bookmarkIsSynced = Provider.of<AppData>(context, listen: false).bookmarkIsSynced;
     
     return Scaffold(
       appBar: header(headerText: 'Bookmark List', screen: HomeScreen(), context: context),
@@ -207,6 +215,8 @@ class _InstapaperBookmarkScreenState extends State<InstapaperBookmarkScreen> {
                                           });
                                         }
                                         else{
+
+                                          Provider.of<AppData>(context, listen: false).setBookmarkIdentifier(bookmarks[index]['id'].toString());
                                           Navigator.popAndPushNamed(
                                               context, BookmarkHighlightRoute, arguments: bookmarks[index]['id'].toString());
                                         }
@@ -234,7 +244,7 @@ class _InstapaperBookmarkScreenState extends State<InstapaperBookmarkScreen> {
                       children: <Widget>[
                         CircularProgressIndicator(),
                         SizedBox(height: 10.0,),
-                        Text('This might take some time!',)
+                        Text('This might take some time! Come back later',)
                       ],
                     ),
                 );

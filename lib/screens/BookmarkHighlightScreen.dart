@@ -8,6 +8,7 @@ import 'package:reading_retention_tool/screens/InstapaperBookmarkScreen.dart';
 import 'package:reading_retention_tool/utils/manageHighlightsController.dart';
 import 'package:reading_retention_tool/customIcons/my_flutter_app_icons.dart';
 import 'package:reading_retention_tool/utils/color_utility.dart';
+import 'package:async/async.dart';
 import 'package:provider/provider.dart';
 import 'dart:async';
 
@@ -29,15 +30,19 @@ class _BookmarkHighlightScreenState extends State<BookmarkHighlightScreen> {
   var highlightData = false;
   var isBookMarkSynced;
 
-  final manageHighlight = new ManageHighlightsController();
 
-  Future<DocumentSnapshot> _getInstapaperHighlights() async {
+  final manageHighlight = new ManageHighlightsController();
+  final AsyncMemoizer _memoizer = AsyncMemoizer();
+
+  Future<dynamic> _getInstapaperHighlights() {
+    return this._memoizer.runOnce(() async {
     var data =  await _store
         .collection('instapaperhighlights')
         .document(Provider.of<AppData>(context, listen: false).userData.id)
         .collection('highlights')
         .document(widget.bookmarkId)
         .get();
+
 
     if(data.exists){
 
@@ -52,6 +57,7 @@ class _BookmarkHighlightScreenState extends State<BookmarkHighlightScreen> {
     }
 
     return data;
+    });
   }
 
 

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:reading_retention_tool/constants/constants.dart';
 import 'package:provider/provider.dart';
+import 'package:reading_retention_tool/constants/route_constants.dart';
+import 'package:reading_retention_tool/custom_widgets/AppBar.dart';
 import 'package:reading_retention_tool/module/app_data.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:reading_retention_tool/customIcons/my_flutter_app_icons.dart';
+import 'package:reading_retention_tool/screens/HomeScreen.dart';
 import 'package:reading_retention_tool/utils/color_utility.dart';
 
 class ManageCategory extends StatefulWidget {
@@ -16,9 +19,9 @@ class _ManageCategoryState extends State<ManageCategory> {
   void removeCategory(String categoryId, BuildContext context){
 
     Firestore.instance
-        .collection("users")
+        .collection("category")
         .document(Provider.of<AppData>(context, listen: false).userData.id)
-        .collection("categories")
+        .collection("userCategories")
         .document(categoryId)
         .delete();
   }
@@ -26,53 +29,20 @@ class _ManageCategoryState extends State<ManageCategory> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        leading: FlatButton(
-            child: Icon(
-              Icons.arrow_back_ios,
-              color: kDarkColorBlack,
-            ),
-            onPressed: () {
-               Navigator.pop(context);
-            }),
-        title: Text(
-          'Manage Highlights',
-          style: TextStyle(
-              color: kDarkSocialBtnColor,
-              fontSize: 18.0
-          ),
-        ),
-        brightness: Brightness.light,
-        iconTheme: IconThemeData(color: kDarkColorBlack),
-        elevation: 0.0,
-        actions: <Widget>[
-          new IconButton(
-            onPressed: () {
-              print('jhjkja');
-              //do something
-            },
-            padding: EdgeInsets.all(0.0),
-            iconSize: 100.0,
-            icon: Image.asset(
-              'Images/quotd.png',
-            ),
-          ),
-        ],
-      ),
+      appBar: header(headerText: 'Manage Category', screen: HomeScreen(), context: context),
       body: SafeArea(
           child: Column(
             children: <Widget>[
               Flexible(
                   flex: 4,
                   child: StreamBuilder<QuerySnapshot>(
-                      stream: Firestore.instance.collection('users')
+                      stream: Firestore.instance.collection('category')
                           .document(Provider.of<AppData>(context, listen: false).userData.id)
-                          .collection('categories').snapshots(),
+                          .collection('userCategories').snapshots(),
                       builder: (context, snapshot){
                         if(snapshot.hasData){
                           return ListView.builder(
                             itemBuilder: (context, index) {
-
                               return Container(
                                   decoration: BoxDecoration(border: new Border.all(
                                       width:0.5, color: Colors.grey),
@@ -93,6 +63,8 @@ class _ManageCategoryState extends State<ManageCategory> {
                                           fontWeight: FontWeight.bold,
                                           color: kDarkColorBlack),
                                     ),
+                                    subtitle: snapshot.data.documents[index].data['categoryHighlights'] == null ?
+                                              Text('0') : Text(snapshot.data.documents[index].data['categoryHighlights'].length.toString()),
                                     trailing: Padding(
                                       padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                                       child:  IconButton(
@@ -100,6 +72,9 @@ class _ManageCategoryState extends State<ManageCategory> {
                                         icon: Icon(Icons.delete, size: 20),
                                       ),
                                     ),
+                                    onTap: (){
+                                      Navigator.popAndPushNamed(context, ShowRetrievedHightlightsRoute, arguments: snapshot.data.documents[index].documentID);
+                                    },
 
                                   )
                               );

@@ -20,7 +20,7 @@ class _UserBooksListScreenState extends State<UserBooksListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-       appBar: header(headerText: 'Book List', screen: HomeScreen(), context: context),
+       appBar: header(headerText: 'Kindle BookList', screen: HomeScreen(), context: context),
       body: SafeArea(
           child: Column(
             children: <Widget>[
@@ -32,7 +32,6 @@ class _UserBooksListScreenState extends State<UserBooksListScreen> {
                     builder: (context, snapshot){
 
                       if(snapshot.hasData){
-
                         if(snapshot.data.documents.isNotEmpty){
                           return ListView.builder(
                               itemCount: snapshot.data.documents.length,

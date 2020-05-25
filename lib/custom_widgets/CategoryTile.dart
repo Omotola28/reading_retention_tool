@@ -33,6 +33,10 @@ class _CategoryTileState extends State<CategoryTile> {
 
 
   Future<bool> _removeFromCategoryList(categoryDocId, highlightId) async {
+
+    print(categoryDocId);
+    print(highlightId);
+
     var getCategoryData = await _store.collection('category')
                           .document(Provider.of<AppData>(context, listen: false).userData.id)
                           .collection('userCategories')
@@ -47,15 +51,17 @@ class _CategoryTileState extends State<CategoryTile> {
           }
 
       });
+
+        await Firestore.instance.collection("category")
+            .document(Provider.of<AppData>(context, listen: false).userData.id)
+            .collection("userCategories")
+            .document(categoryDocId)
+            .updateData({'categoryHighlights':FieldValue.arrayRemove(catHighlightObj)});
+
+        return true;
     }
 
-     await Firestore.instance.collection("category")
-        .document(Provider.of<AppData>(context, listen: false).userData.id)
-        .collection("userCategories")
-        .document(categoryDocId)
-        .updateData({'categoryHighlights':FieldValue.arrayRemove(catHighlightObj)});
 
-     return true;
   }
 
   Future<bool> _addtoCategory(category, data, highlightId) async{

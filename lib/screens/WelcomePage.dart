@@ -36,31 +36,18 @@ class _WelcomePage extends State<WelcomePage> {
 
 
   void loadGetStartedScreen(){
-    Future.delayed(Duration(seconds: 2), () {
+    Future.delayed(Duration(seconds: 1), () {
 
-
-      ///Siliently login if the user is a google sign in user
-     /* if(UserAuth.googleSignIn.currentUser != null ){
-        UserAuth.googleSignIn.signInSilently(suppressErrors: false)
-            .then((account){
-          handleSignInWithGoogle(account);
-        }).catchError((err){
-          print('Sign in failed $err');
-        });
-      }*/
 
       ///Silently login if the user is a firebase user
       FirebaseAuth.instance.currentUser().then((currentUser){
           if(currentUser != null){
-            //Provider.of<AppData>(context).setCustomSignIn(true);
             handleSilentFirebaseLogin();
           }
           else{
             Navigator.popAndPushNamed(context, GetStartedScreenRoute);
           }
       });
-
-
 
     });
   }

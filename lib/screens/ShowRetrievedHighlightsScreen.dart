@@ -4,45 +4,51 @@ import 'package:flutter/material.dart';
 import 'package:reading_retention_tool/constants/constants.dart';
 import 'package:reading_retention_tool/custom_widgets/AppBar.dart';
 import 'package:reading_retention_tool/module/app_data.dart';
+import 'package:reading_retention_tool/screens/ManageCategory.dart';
 import 'dart:async';
-import 'package:reading_retention_tool/screens/UserBooksListScreen.dart';
+import 'package:async/async.dart';
 
-class ShowRetrievedHightlightsScreen extends StatefulWidget {
 
-  String _fileName;
-  ShowRetrievedHightlightsScreen(this._fileName);
+class ShowCatHighlightScreen extends StatefulWidget {
+
+  String _categoryID;
+  ShowCatHighlightScreen(this._categoryID);
 
   @override
-  _ShowRetrievedHightlightsScreenState createState() =>
-      _ShowRetrievedHightlightsScreenState();
+  _ShowCatHighlightScreenState createState() =>
+      _ShowCatHighlightScreenState();
 }
 
-class _ShowRetrievedHightlightsScreenState
-    extends State<ShowRetrievedHightlightsScreen> {
+class _ShowCatHighlightScreenState
+    extends State<ShowCatHighlightScreen> {
 
   final _store = Firestore.instance;
   int objLength;
   bool userHasData = false;
+  final AsyncMemoizer _memoizer = AsyncMemoizer(); //Stops future builder from going off like a thousand times
 
-  Future<DocumentSnapshot> _getKindleHighlights() async {
-        var data =  await _store
-        .collection('kindle')
-        .document(Provider.of<AppData>(context).userData.id)
-        .collection('books')
-        .document(widget._fileName).get();
 
-        if(data.exists){
-          setState(() {
-            userHasData = true;
-          });
-        }
-        else{
-          setState(() {
-            userHasData = false;
-          });
-        }
+ Future<dynamic> _getKindleHighlights() {
+    return this._memoizer.runOnce(() async {
+      var data =  await _store
+          .collection('category')
+          .document(Provider.of<AppData>(context).userData.id)
+          .collection('userCategories')
+          .document(widget._categoryID).get();
 
-        return data;
+      if(data.exists){
+        setState(() {
+          userHasData = true;
+        });
+      }
+      else{
+        setState(() {
+          userHasData = false;
+        });
+      }
+
+      return data;
+    });
   }
 
   _saveNoOfHighlights(int no) async {
@@ -64,7 +70,7 @@ class _ShowRetrievedHightlightsScreenState
 
 
     return Scaffold(
-      appBar:  header(headerText: 'Kindle Highlights', context: context , screen: UserBooksListScreen() ),
+      appBar:  header(headerText: 'Kindle Highlights', context: context , screen: ManageCategory() ),
      body: SafeArea(
        child: FutureBuilder (
          future:  _getKindleHighlights(),
@@ -73,10 +79,11 @@ class _ShowRetrievedHightlightsScreenState
 
            if(userHasData)  {
 
-             List highlights = snapshot.data['highlights'];
+             List highlights = snapshot.data['categoryHighlights'];
 
-             _saveNoOfHighlights(highlights.length);
-             if(highlights.isEmpty){
+
+            // _saveNoOfHighlights(highlights.length);
+             if(highlights == null){
                return Container(
                  child: Center(
                    child: Column(
@@ -127,7 +134,7 @@ class _ShowRetrievedHightlightsScreenState
              );
            }
            return ListView.builder(
-             itemCount: snapshot.data['highlights'].length == null ? 0 : snapshot.data['highlights'].length,
+             itemCount: snapshot.data['categoryHighlights'].length == null ? 0 : snapshot.data['categoryHighlights'].length,
              itemBuilder: (context, index) {
                return widgetHighlights[index];
              },

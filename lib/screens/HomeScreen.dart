@@ -1,3 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -8,13 +10,13 @@ import 'package:reading_retention_tool/screens/ActivityFeedPage.dart';
 import 'package:flutter/services.dart';
 import 'package:reading_retention_tool/module/app_data.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:reading_retention_tool/screens/ManageCategory.dart';
 import 'package:reading_retention_tool/screens/NearbyLibraryPage.dart';
 import 'package:reading_retention_tool/screens/ServiceSyncListPage.dart';
 import 'package:reading_retention_tool/screens/UserBooksListScreen.dart';
 import 'package:reading_retention_tool/customIcons/my_flutter_app_icons.dart';
 import 'dart:async';
 import 'package:cloud_functions/cloud_functions.dart';
+import 'dart:io';
 
 
 
@@ -34,6 +36,8 @@ class _HomeScreenState extends State<HomeScreen> {
   int pageIndex = 0;
   static const platform = const MethodChannel('app.channel.shared.data');
   String dataShared = "No data";
+  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+  StreamSubscription<IosNotificationSettings> iosSubscription;
 
 
   @override
@@ -48,24 +52,21 @@ class _HomeScreenState extends State<HomeScreen> {
 
     //Navigation page controller
     pageController = PageController(initialPage: 0);
-    //getSharedText();
 
-    //_init();
+    if(Platform.isIOS){
+       iosSubscription = _firebaseMessaging.onIosSettingsRegistered.listen((data){
+           _saveDeviceToke();
+      });
+       _firebaseMessaging.requestNotificationPermissions(IosNotificationSettings());
+    }
+    else{
+      _saveDeviceToke();
+    }
+
+
+
 
   }
-
-/*  getSharedText() async {
-    var sharedData = await platform.invokeMethod("getSharedText");
-    if (sharedData != null) {
-      setState(() {
-        dataShared = sharedData;
-
-        print(dataShared);
-      });
-    }
-  }*/
-
-
 
   onPageChanged(int pageIndex){
     setState(() {
@@ -78,12 +79,33 @@ class _HomeScreenState extends State<HomeScreen> {
     pageController.animateToPage(pageIndex, duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
   }
 
-  //TODO: DELETE ONCE DONE WITH TESTING
+
   final HttpsCallable callable = CloudFunctions.instance.getHttpsCallable(
     functionName: 'syncInstapaper',
   );
 
 
+  _saveDeviceToke() async{
+
+    FirebaseUser user = await FirebaseAuth.instance.currentUser();
+    String uid = user.uid;
+
+    String fcmToken = await _firebaseMessaging.getToken();
+    if(fcmToken !=null){
+      var tokenRef = Firestore.instance
+                              .collection('users')
+                              .document(uid)
+                              .collection('tokens')
+                              .document(fcmToken);
+      await tokenRef.setData({
+        'token' : fcmToken,
+        'createdAt' : FieldValue.serverTimestamp(),
+        'platform' : Platform.operatingSystem
+      });
+
+    }
+
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -116,17 +138,6 @@ class _HomeScreenState extends State<HomeScreen> {
                 Expanded(
                   child: ListView(
                     children: <Widget>[
-                     /* Align(
-                        alignment: Alignment.topRight,
-                        child: FlatButton(
-                            onPressed: null,
-                            child: Image.asset(
-                              "Images/settings.png",
-                              width: 24.0,
-                              height: 24.0,
-                            )
-                        ),
-                      ),*/
                       Padding(
                         padding: const EdgeInsets.only(left: 5.0),
                         child: UserAccountsDrawerHeader(
@@ -160,7 +171,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         thickness: 2.0,
                       ),
                       ListTile(
-                        title: Text('Books'),
+                        title: Text('Kindle NoteBooks'),
                         onTap: () {
                           Navigator.push(
                             context,
@@ -201,25 +212,29 @@ class _HomeScreenState extends State<HomeScreen> {
                                         return ListView.builder(
                                           itemBuilder: (context, index) {
 
-                                            return Container(
-                                                decoration: BoxDecoration(border: new Border.all(
-                                                    width:0.5, color: Colors.grey),
-                                                    color: kLightYellowBG),
-                                                child: ListTile(
-                                                  contentPadding: EdgeInsets.fromLTRB(30.0, 0, 0, 0),
-                                                  title: Text(
-                                                    snapshot.data.documents[index].documentID.split('#')[0],
-                                                    style: TextStyle(
-                                                        fontWeight: FontWeight.bold,
-                                                        color: kDarkColorBlack),
-                                                  ),
-                                                  onTap: (){
-                                                    Navigator.of(context).pop();
-                                                    Navigator.pushNamed(context, CategoryHighlightsRoute, arguments:
-                                                                snapshot.data.documents[index].documentID);
-                                                  },
-                                                )
-                                            );
+                                            if(snapshot.data.documents[index].data.length == 1){
+                                              return  Container(
+                                                  decoration: BoxDecoration(border: new Border.all(
+                                                      width:0.5, color: Colors.grey),
+                                                      color: kLightYellowBG),
+                                                  child: ListTile(
+                                                    contentPadding: EdgeInsets.fromLTRB(30.0, 0, 0, 0),
+                                                    title: Text(
+                                                      snapshot.data.documents[index].documentID.split('#')[0],
+                                                      style: TextStyle(
+                                                          fontWeight: FontWeight.bold,
+                                                          color: kDarkColorBlack),
+                                                    ),
+                                                    onTap: (){
+                                                      Navigator.of(context).pop();
+                                                      Navigator.pushNamed(context, CategoryHighlightsRoute, arguments:
+                                                      snapshot.data.documents[index].documentID);
+                                                    },
+                                                  )
+                                              );
+                                            }
+
+                                            return SizedBox();// Doesn't do anything or hopefully take up space
                                           },
                                           itemCount: snapshot.data.documents.length,
                                         );
@@ -242,13 +257,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                   icon: Icon(Icons.border_color, size: 15.0,), //`Icon` to display
                                   label: Text('Manage Category' ), //`Text` to display
                                   onPressed: () {
-                                    Navigator.pop(context);
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(builder: (context)
-                                      => ManageCategory()
-                                      ),
-                                    );
+                                    Navigator.popAndPushNamed(context, ManageCategoryRoute);
                                   },
                                 ),
                               ),

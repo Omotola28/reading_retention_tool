@@ -91,9 +91,6 @@ class _AddBookScreenState extends State<AddBookScreen> {
       );
     });
 
-
-
-
   }
 
 
@@ -232,22 +229,24 @@ class _AddBookScreenState extends State<AddBookScreen> {
                                 );
                               }
                               else{
-                                return Container(
-                                    child: Center(
-                                        child: Column(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          crossAxisAlignment: CrossAxisAlignment.center,
-                                          children: <Widget>[
-                                            Image.asset(
-                                              'Images/nobooks.png',
-                                            ),
-                                            Text('No Books Added Yet',
-                                              style: TextStyle(
-                                                  color: kDarkColorBlack),
-                                            ),
-                                          ],
-                                        )
-                                    )
+                                return SingleChildScrollView(
+                                  child: Container(
+                                      child: Center(
+                                          child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            children: <Widget>[
+                                              Image.asset(
+                                                'Images/nobooks.png',
+                                              ),
+                                              Text('No Books Added Yet',
+                                                style: TextStyle(
+                                                    color: kDarkColorBlack),
+                                              ),
+                                            ],
+                                          )
+                                      )
+                                  ),
                                 );
                               }
 

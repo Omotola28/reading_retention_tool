@@ -32,7 +32,6 @@ class _ManualHighlightScreenState extends State<ManualHighlightScreen> {
   }
 
   void _clear(){
-    print('juiuuujhjjjhjj');
     setState(() {
       _imageFile = null;
       isDisabled = true;
@@ -103,28 +102,6 @@ class _ManualHighlightScreenState extends State<ManualHighlightScreen> {
     print(text);
   }
 
-  Future<bool> _onBackPressed() {
-    _clear();
-    return showDialog(
-      context: context,
-      builder: (context) => new AlertDialog(
-        title: new Text('Are you sure?'),
-        content: new Text('Do you want to exit an App'),
-        actions: <Widget>[
-          new GestureDetector(
-            onTap: () => Navigator.of(context).pop(false),
-            child: Text("NO"),
-          ),
-          SizedBox(height: 16),
-          new GestureDetector(
-            onTap: () => Navigator.of(context).pop(true),
-            child: Text("YES"),
-          ),
-        ],
-      ),
-    ) ??
-        false;
-  }
 
   @override
   void initState() {

@@ -1,16 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:reading_retention_tool/constants/route_constants.dart';
-import 'package:reading_retention_tool/screens/HomeScreen.dart';
 import 'package:reading_retention_tool/service/auth_service.dart';
 import 'package:reading_retention_tool/module/user.dart';
-import 'SignUpScreen.dart';
 import 'package:reading_retention_tool/custom_widgets/ActionUserButton.dart';
 import 'package:reading_retention_tool/constants/constants.dart';
 import 'package:reading_retention_tool/custom_widgets/SocialMediaButtons.dart';
-import 'package:reading_retention_tool/screens/SignInScreen.dart';
 import 'package:provider/provider.dart';
 import 'dart:async';
 import 'package:reading_retention_tool/module/app_data.dart';
@@ -39,6 +35,7 @@ class _GetStartedScreenState extends State<GetStartedScreen> {
   _handleSignInWithGoogle(Future<User> account){
 
     account.then((userData){
+      print(userData.toJson());
       if(userData !=null){
         Provider.of<AppData>(context, listen: false).setUserData(userData);
         Navigator.popAndPushNamed(context, HomeScreenRoute);

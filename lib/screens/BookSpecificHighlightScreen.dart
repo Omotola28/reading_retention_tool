@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:reading_retention_tool/constants/constants.dart';
 import 'package:provider/provider.dart';
 import 'package:reading_retention_tool/custom_widgets/AppBar.dart';
 import 'package:reading_retention_tool/custom_widgets/CustomHighlightTile.dart';
@@ -28,6 +27,28 @@ class _BookSpecificHighlightScreenState extends State<BookSpecificHighlightScree
   final _store = Firestore.instance;
   var highlights = [];
   final manageHighlight = new ManageHighlightsController();
+  bool userHasData = false;
+
+  Future<DocumentSnapshot> _getKindleHighlights() async {
+    var data =  await _store
+        .collection('kindle')
+        .document(Provider.of<AppData>(context).userData.id)
+        .collection('books')
+        .document(widget.bookId).get();
+
+    if(data.exists){
+      setState(() {
+        userHasData = true;
+      });
+    }
+    else{
+      setState(() {
+        userHasData = false;
+      });
+    }
+
+    return data;
+  }
 
 
   @override
@@ -38,61 +59,57 @@ class _BookSpecificHighlightScreenState extends State<BookSpecificHighlightScree
           child: Column(
         children: <Widget>[
           Expanded(
-            child: StreamBuilder(
-                stream: _store
-                    .collection('kindle')
-                    .document(Provider.of<AppData>(context).userData.id)
-                    .collection('books')
-                    .document(widget.bookId)
-                    .snapshots(),
+            child: FutureBuilder(
+                future:  _getKindleHighlights(),
                 builder: (context, snapshot) {
                   List<Widget> widgetHighlights = [];
-                  if (!snapshot.hasData) {
-                    return Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  } else {
+                  if(userHasData){
                     highlights = snapshot.data['highlights'];
 
 
 
-                  for (var index = 0; index < highlights.length; index++) {
-                      
+                    for (var index = 0; index < highlights.length; index++) {
+
                       final highlightWidget =
-                        Padding(
-                            padding: EdgeInsets.all(10.0),
-                            child: Card(
-                              color: Color.fromRGBO(250, 249, 242, 1),
+                      Padding(
+                        padding: EdgeInsets.all(10.0),
+                        child: Card(
+                          color: Color.fromRGBO(250, 249, 242, 1),
 
-                              child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                children: <Widget>[
-                                  CustomHighlightTile(
-                                    icon: Icon(CustomIcons.circle, size: 8.0, color: HexColor(highlights[index]['color'])),
-                                    text: highlights[index]['highlight'].replaceAll(new RegExp(r' - '), ''),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              CustomHighlightTile(
+                                icon: Icon(CustomIcons.circle, size: 8.0, color: HexColor(highlights[index]['color'])),
+                                text: highlights[index]['highlight'].replaceAll(new RegExp(r' - '), ''),
 
-                                    popMenu: PopupMenuButton(
-                                        onSelected: (selectedDropDownItem) =>
-                                            manageHighlight.handlePopUpMenuAction(
-                                                selectedDropDownItem,
-                                                context,
-                                                index,
-                                                highlights,
-                                                widget.bookId,
-                                                'kindle'
-                                            ),
-                                        itemBuilder: (BuildContext context) => manageHighlight.popMenu
-                                    ),
-                                    )
-                                ],
-                              ),
-                            ),
-                        );
+                                popMenu: PopupMenuButton(
+                                    onSelected: (selectedDropDownItem) =>
+                                        manageHighlight.handlePopUpMenuAction(
+                                            selectedDropDownItem,
+                                            context,
+                                            index,
+                                            highlights,
+                                            widget.bookId,
+                                            'kindle'
+                                        ),
+                                    itemBuilder: (BuildContext context) => manageHighlight.popMenu
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                      );
 
                       widgetHighlights.add(highlightWidget);
                     }
-
                   }
+                  else {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+
                   return ListView.builder(
                       itemCount: snapshot.data['highlights'].length == null ? 0 : snapshot.data['highlights'].length,
                       itemBuilder: (context, index) {

@@ -8,6 +8,7 @@ import 'package:reading_retention_tool/module/app_data.dart';
 import 'package:reading_retention_tool/constants/constants.dart';
 
 
+
 class ManualHighlightBookShelfScreen extends StatefulWidget {
   @override
   _ManualHighlightBookShelfScreenState createState() => _ManualHighlightBookShelfScreenState();
@@ -17,6 +18,64 @@ class _ManualHighlightBookShelfScreenState extends State<ManualHighlightBookShel
 
   final _store = Firestore.instance;
   Map<String, dynamic> bookData;
+
+  showAlertDialog(BuildContext context, Map<String, dynamic> bookData) {
+
+    print(bookData);
+    // set up the buttons
+    Widget shelfButton = FlatButton(
+      child: Text("Open Book", style: TextStyle(color: kPrimaryColor),),
+      onPressed:  () {
+        Provider.of<AppData>(context, listen: false).setBookData(bookData);
+        Navigator.popAndPushNamed(context, SpecificManualBookRoute,
+            arguments: bookData);
+      },
+    );
+    Widget deleteButton = FlatButton(
+      child: Text("Delete", style: TextStyle(color: Colors.red)),
+      onPressed:  () {
+        Firestore.instance.collection("hmq")
+            .document(Provider.of<AppData>(context, listen: false).userData.id)
+            .collection("books")
+            .document(bookData['bookname'])
+            .delete();
+
+        Navigator.of(context).pop();
+      },
+    );
+    Widget cancelButton = FlatButton(
+      child: Text("Cancel", style: TextStyle(color: kPrimaryColor)),
+      onPressed:  () {
+        Navigator.of(context).pop();
+      },
+    );
+
+    // set up the AlertDialog
+    AlertDialog alert = AlertDialog(
+      title: Text("Actions"),
+      content: Text("Are you sure you would like to proceed with deleting this book"), //contains blah highlights
+      actions: [
+        Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: <Widget>[
+            shelfButton,
+            deleteButton,
+            cancelButton,
+          ],
+        )
+
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,6 +95,8 @@ class _ManualHighlightBookShelfScreenState extends State<ManualHighlightBookShel
                               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
                               itemCount: snapshot.data.documents.length,
                               itemBuilder: (context, index) {
+                                bookData = { 'bookname' : snapshot.data.documents[index]['bookname'],
+                                  'url' : snapshot.data.documents[index]['url'] };
                                 return Padding(
                                   padding: const EdgeInsets.all(10.0),
                                   child: Container(
@@ -50,12 +111,14 @@ class _ManualHighlightBookShelfScreenState extends State<ManualHighlightBookShel
                                             child: Image.network(snapshot.data.documents[index]['url'] ?? kBookPlaceHolder),
                                           ),
                                           onTap: (){
-                                            bookData = { 'bookname' : snapshot.data.documents[index]['bookname'],
-                                              'url' : snapshot.data.documents[index]['url'] };
+
 
                                             Provider.of<AppData>(context, listen: false).setBookData(bookData);
                                             Navigator.popAndPushNamed(context, SpecificManualBookRoute,
                                                 arguments: bookData);
+                                          },
+                                          onLongPress: (){
+                                            showAlertDialog(context, bookData);
                                           },
                                         ),
                                         Expanded(

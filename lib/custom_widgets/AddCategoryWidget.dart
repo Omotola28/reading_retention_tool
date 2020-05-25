@@ -18,6 +18,7 @@ class AddCategoryWidgetState extends State<AddCategoryWidget> {
 
   String colCat;
   String newCategory;
+  bool errorInCreation = false;
 
 
   Map<String, bool> checkVals = {
@@ -25,8 +26,7 @@ class AddCategoryWidgetState extends State<AddCategoryWidget> {
     '#ec8c9d' : false,
     '#ffdb00' : false,
     '#008000' : false,
-   // '#800080' : false,  //grey
-    '#808080' : false,
+    '#32BCA8' : false,
     '#00ffff' : false,
     '#ffa500' : false,
     '#e3c64e' : false,
@@ -95,7 +95,7 @@ class AddCategoryWidgetState extends State<AddCategoryWidget> {
                         return colorCircle(context, key, HexColor(key));
                      }).toList(),
                    ),
-
+                    errorInCreation == true ? Text('Must add a label and color', style: TextStyle(color: Colors.red)) : Text(''),
                     Padding(padding: EdgeInsets.all(10)),
                     Row(
                       //crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -110,13 +110,21 @@ class AddCategoryWidgetState extends State<AddCategoryWidget> {
                             ),
                           ),
                           onPressed: () {
-                              Firestore.instance.collection("category")
-                                  .document(Provider.of<AppData>(context, listen: false).userData.id)
-                                  .collection('userCategories')
-                                  .document(newCategory+colCat)
-                                  .setData({});
-
-                              Navigator.pop(context);
+                              if(newCategory == null || colCat == null){
+                                setState(() {
+                                  errorInCreation = true;
+                                });
+                              }else{
+                                Firestore.instance.collection("category")
+                                    .document(Provider.of<AppData>(context, listen: false).userData.id)
+                                    .collection('userCategories')
+                                    .document(newCategory+colCat)
+                                    .setData({});
+                                setState(() {
+                                  errorInCreation = false;
+                                });
+                                Navigator.pop(context);
+                              }
                           },
                         ),
                         FlatButton(
@@ -150,13 +158,13 @@ class AddCategoryWidgetState extends State<AddCategoryWidget> {
     var checked = [];
     var keyIndex;
 
-    //TODO: This moves forward but it does come back which is sad! Not sure how to do this now
     getItems(){
 
       checkVals.forEach((key, value) {
         if(value == true)
         {
 
+          print(checked);
           checked.add(key);
           if(checked.length > 1)
           {

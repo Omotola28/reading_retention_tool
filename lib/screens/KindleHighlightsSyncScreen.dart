@@ -5,11 +5,11 @@ import 'package:provider/provider.dart';
 import 'package:reading_retention_tool/constants/constants.dart';
 import 'package:flutter/services.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:reading_retention_tool/constants/route_constants.dart';
 import 'package:reading_retention_tool/custom_widgets/ActionUserButton.dart';
 import 'package:reading_retention_tool/custom_widgets/AppBar.dart';
 import 'package:reading_retention_tool/module/app_data.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:reading_retention_tool/screens/BookSpecificHighlightScreen.dart';
 import 'package:reading_retention_tool/screens/HomeScreen.dart';
 import 'dart:io';
 
@@ -45,6 +45,7 @@ class _KindleHighlightsSync extends State<KindleHighlightsSync> {
   @override
   void dispose() {
     super.dispose();
+    _controller.dispose();
     task = null;
     _path = null;
   }
@@ -151,6 +152,7 @@ class _KindleHighlightsSync extends State<KindleHighlightsSync> {
                         padding: const EdgeInsets.all(10.0),
                         child: CircularProgressIndicator(),
                       ) :
+                          _path != null ? // If no files have been selected yet dont show anything
                       ActionUserButton(color: Colors.white,
                           title: 'Upload File',
                           onPressed: () {
@@ -160,16 +162,21 @@ class _KindleHighlightsSync extends State<KindleHighlightsSync> {
                               print(onData.type);
                               if (onData.type == StorageTaskEventType.success) {
 
-                               Navigator.pushNamed(
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context)
+                                  => BookSpecificHighlightScreen(_fileName)),
+                                );
+                               /*Navigator.pushNamed(
                                   context,
                                   ShowRetrievedHightlightsRoute,
                                   arguments: {
                                     'bookName': _fileName
                                   },
-                                );
+                                );*/
                               }
                             });
-                          }),
+                          }) : SizedBox(),
 
                     ],
                   ),

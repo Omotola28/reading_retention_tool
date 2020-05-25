@@ -147,7 +147,7 @@ class ManageHighlightsController{
         {
 
           //Set identifier mostly for bookmarkID
-          Provider.of<AppData>(context, listen: false).setBookMarkIdentifier(identifier);
+          Provider.of<AppData>(context, listen: false).setHighlightIdentifier(identifier);
           //set the bookdata so we can navigate back to SpecificManualBook
 
 

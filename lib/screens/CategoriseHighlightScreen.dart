@@ -37,7 +37,8 @@ class _CategoriseHighlightScreenState extends State<CategoriseHighlightScreen> {
       backScreen = MediumHighlightsSyncScreen('success');
     }
     else if(widget.whichService == 'instapaper'){
-      backScreen = BookmarkHighlightScreen(Provider.of<AppData>(context, listen: false).bookmarkID);//Add bookmark id
+
+      backScreen = BookmarkHighlightScreen(Provider.of<AppData>(context, listen: false).bookmarkId);//Add bookmark id
     }
     else if(widget.whichService == 'hmq'){
       backScreen = SpecificManualBookScreen(Provider.of<AppData>(context, listen: false).bookData);

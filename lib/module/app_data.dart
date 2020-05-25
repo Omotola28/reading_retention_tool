@@ -1,7 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:reading_retention_tool/module/category.dart';
 import 'package:flutter/material.dart';
-import 'package:reading_retention_tool/module/formdata.dart';
 import 'package:reading_retention_tool/module/notification_data.dart';
 import 'package:reading_retention_tool/service/firestore_notification_service.dart';
 import 'package:reading_retention_tool/plugins/highlightNotificationPlugin.dart';
@@ -12,7 +10,8 @@ import 'package:rxdart/rxdart.dart';
 
 class AppData extends ChangeNotifier{
 
-  String bookmarkID;
+  String highlightId;
+  String bookmarkId;
   String savedString;
   String whatActionButton;
   String bookName;
@@ -24,6 +23,7 @@ class AppData extends ChangeNotifier{
   User userData;
   bool isCustomSignIn = false;
   Map<String, dynamic> bookData;
+
 
   List<NotificationData> _notifications = List();
   HighlightNotificationPlugin _notificationPlugin = HighlightNotificationPlugin();
@@ -39,8 +39,13 @@ class AppData extends ChangeNotifier{
   }
 
 
-  void setBookMarkIdentifier(String bookmarkIdentifier){
-    bookmarkID = bookmarkIdentifier;
+  void setBookmarkIdentifier(String bookmarkIdentifier){
+    bookmarkId = bookmarkIdentifier;
+    notifyListeners();
+  }
+
+  void setHighlightIdentifier(String highlightIdentifier){
+    highlightId = highlightIdentifier;
     notifyListeners();
   }
 

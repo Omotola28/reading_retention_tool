@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:reading_retention_tool/constants/route_constants.dart';
 import 'package:reading_retention_tool/custom_widgets/AppBar.dart';
 import 'package:reading_retention_tool/custom_widgets/UserTextInputField.dart';
@@ -26,6 +25,7 @@ class _ManualEditHighlightScreenState extends State<ManualEditHighlightScreen> {
 
   String extractedText, page, title, thoughts;
   List<dynamic> textList = [];
+  final onlyNumbers = RegExp(r'^[0-9]+$');
 
 
 
@@ -79,8 +79,9 @@ class _ManualEditHighlightScreenState extends State<ManualEditHighlightScreen> {
                   UserTextInputField(
                       labelText: 'Page',
                       initialVal: widget.formData.page == null ? '' : widget.formData.page,
-                      validate: null,
+                      validate: (value) => !onlyNumbers.hasMatch(value) ? 'Page number can only be digits' : null,
                       value: false,
+                      inputType: TextInputType.number,
                       savedValue:  (value) => page = value,
                       onchanged: (text){
                         widget.formData.page = text;

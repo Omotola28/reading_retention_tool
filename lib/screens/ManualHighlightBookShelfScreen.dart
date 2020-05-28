@@ -118,6 +118,8 @@ class _ManualHighlightBookShelfScreenState extends State<ManualHighlightBookShel
                                                 arguments: bookData);
                                           },
                                           onLongPress: (){
+                                            bookData = { 'bookname' : snapshot.data.documents[index]['bookname'],
+                                              'url' : snapshot.data.documents[index]['url'] };
                                             showAlertDialog(context, bookData);
                                           },
                                         ),

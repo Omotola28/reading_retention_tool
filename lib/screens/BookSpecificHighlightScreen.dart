@@ -54,7 +54,7 @@ class _BookSpecificHighlightScreenState extends State<BookSpecificHighlightScree
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: header(headerText: 'Manage Highlights', screen: UserBooksListScreen(), context: context),
+      appBar: header(headerText: 'Kindle Highlights', screen: UserBooksListScreen(), context: context),
       body: SafeArea(
           child: Column(
         children: <Widget>[
@@ -105,8 +105,13 @@ class _BookSpecificHighlightScreenState extends State<BookSpecificHighlightScree
                     }
                   }
                   else {
-                    return Center(
-                      child: CircularProgressIndicator(),
+                    return Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          CircularProgressIndicator(),
+                          Center(child: Text('Please wait while the highlights are loading'))
+                        ],
                     );
                   }
 

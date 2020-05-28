@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:reading_retention_tool/module/notification_data.dart';
 import 'package:reading_retention_tool/service/firestore_notification_service.dart';
 import 'package:reading_retention_tool/plugins/highlightNotificationPlugin.dart';
 import 'package:reading_retention_tool/module/user.dart';
+import 'package:reading_retention_tool/service/no_of_highlights_service.dart';
 import 'dart:async';
 import 'package:rxdart/rxdart.dart';
 
@@ -17,7 +19,7 @@ class AppData extends ChangeNotifier{
   String bookName;
   int categoryIndex;
   List bookSpecificHighlights = [];
-  int noOfHighlights = 0;
+  int noOfHlightsAdded = 0;
   List notificationHighlights = [];
   String payloadHighlight;
   User userData;
@@ -84,6 +86,13 @@ class AppData extends ChangeNotifier{
       startNotifications(_notifications);
       _inNotifications(_notifications);
     });
+
+    //No of highlights Added
+
+    final noOfHighlights = await NoOfHighlightService.getNoOfHiglights();
+    setNoOfHighlightsPerUser(noOfHighlights.data == null ? 0 : noOfHighlights.data ['number']);
+
+
   }
 
   Future<void> cancelNotifications() async {
@@ -106,12 +115,12 @@ class AppData extends ChangeNotifier{
 
 ///Number of highlights for each user
 void setNoOfHighlightsPerUser(int number){
-    noOfHighlights += number;
+    noOfHlightsAdded += number;
     notifyListeners();
 }
 
 void reduceNoOfHighlights(int number){
-    noOfHighlights -= number;
+    noOfHlightsAdded -= number;
     notifyListeners();
 }
 

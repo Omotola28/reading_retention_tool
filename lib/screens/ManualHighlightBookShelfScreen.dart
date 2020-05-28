@@ -95,8 +95,7 @@ class _ManualHighlightBookShelfScreenState extends State<ManualHighlightBookShel
                               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
                               itemCount: snapshot.data.documents.length,
                               itemBuilder: (context, index) {
-                                bookData = { 'bookname' : snapshot.data.documents[index]['bookname'],
-                                  'url' : snapshot.data.documents[index]['url'] };
+
                                 return Padding(
                                   padding: const EdgeInsets.all(10.0),
                                   child: Container(
@@ -111,7 +110,8 @@ class _ManualHighlightBookShelfScreenState extends State<ManualHighlightBookShel
                                             child: Image.network(snapshot.data.documents[index]['url'] ?? kBookPlaceHolder),
                                           ),
                                           onTap: (){
-
+                                            bookData = { 'bookname' : snapshot.data.documents[index]['bookname'],
+                                              'url' : snapshot.data.documents[index]['url'] };
 
                                             Provider.of<AppData>(context, listen: false).setBookData(bookData);
                                             Navigator.popAndPushNamed(context, SpecificManualBookRoute,

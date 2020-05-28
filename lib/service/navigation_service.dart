@@ -10,7 +10,7 @@ class NavigationService{
     return navigatorKey.currentState.pushNamed(routename, arguments: arguments );
   }
 
-  bool goBack(){
+  void goBack(){
     return navigatorKey.currentState.pop();
   }
 

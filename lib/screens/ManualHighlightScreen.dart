@@ -40,6 +40,7 @@ class _ManualHighlightScreenState extends State<ManualHighlightScreen> {
   }
 
   Future<void> _cropImage() async{
+
     File cropped = await ImageCropper.cropImage(
         sourcePath: _imageFile.path,
         aspectRatioPresets: Platform.isAndroid

@@ -55,7 +55,7 @@ class _KindleHighlightsSync extends State<KindleHighlightsSync> {
     setState(() => _loadingPath = true);
     try {
       _path = await FilePicker.getFilePath(
-          type: FileType.CUSTOM, fileExtension: 'pdf'
+          type: FileType.custom, allowedExtensions: ['pdf']
       );
     } on PlatformException catch (e) {
       print("Unsupported operation" + e.toString());

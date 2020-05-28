@@ -34,7 +34,7 @@ class _ServiceSyncListPageState extends State<ServiceSyncListPage> {
                           style: kHeadingTextStyleDecoration.copyWith(fontSize: 25.0),
                       ),
                       Text(
-                        Provider.of<AppData>(context).noOfHighlights.toString() + ' Highlights Added',
+                        Provider.of<AppData>(context).noOfHlightsAdded.toString() + ' Highlights Added',
                         style: kTrailingTextStyleDecoration,
                       ),
                     ],

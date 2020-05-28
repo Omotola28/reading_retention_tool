@@ -16,7 +16,7 @@ import 'package:reading_retention_tool/screens/UserBooksListScreen.dart';
 import 'package:reading_retention_tool/customIcons/my_flutter_app_icons.dart';
 import 'dart:async';
 import 'package:cloud_functions/cloud_functions.dart';
-import 'dart:io';
+//import 'dart:io';
 
 
 
@@ -34,10 +34,10 @@ class _HomeScreenState extends State<HomeScreen> {
   int categoryLength = 0;
   PageController pageController;
   int pageIndex = 0;
-  static const platform = const MethodChannel('app.channel.shared.data');
+  //static const platform = const MethodChannel('app.channel.shared.data');
   String dataShared = "No data";
-  final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
-  StreamSubscription<IosNotificationSettings> iosSubscription;
+  //final FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+  //StreamSubscription<IosNotificationSettings> iosSubscription;
 
 
   @override
@@ -53,7 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
     //Navigation page controller
     pageController = PageController(initialPage: 0);
 
-    if(Platform.isIOS){
+    /*if(Platform.isIOS){
        iosSubscription = _firebaseMessaging.onIosSettingsRegistered.listen((data){
            _saveDeviceToke();
       });
@@ -61,7 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
     }
     else{
       _saveDeviceToke();
-    }
+    }*/
 
 
 
@@ -85,7 +85,7 @@ class _HomeScreenState extends State<HomeScreen> {
   );
 
 
-  _saveDeviceToke() async{
+/*  _saveDeviceToke() async{
 
     FirebaseUser user = await FirebaseAuth.instance.currentUser();
     String uid = user.uid;
@@ -105,7 +105,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
     }
 
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {

@@ -121,7 +121,7 @@ class _ShowMediumDialogState extends State<ShowMediumDialog> {
                       children: <Widget>[
                         Stack(
                           children: <Widget>[
-                            Container(height: 150.0),
+                            Container(height: 140.0),
                             Container(
                               height: 100.0,
                               decoration: BoxDecoration(
@@ -205,7 +205,12 @@ class _ShowMediumDialogState extends State<ShowMediumDialog> {
                           ),
                         )
                             : Center(
-                          child: Container(child: circularProgressIndicator(),),)
+                          child: Column(
+                            children: <Widget>[
+                              Text('Might take a while please come back later'),
+                              Container(child: circularProgressIndicator(),),
+                            ],
+                          ),)
                       ],
                     ))),
           ),

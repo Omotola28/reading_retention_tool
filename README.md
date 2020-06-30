@@ -5,7 +5,7 @@
 ## Highlight My Quotes {: # }
 An application that allows you do more with your highlights
 
-* [Key Features ](#howtouse)
+* [Key Features ](#how-to-use-)
 * How to Use 
 * Download 
 * Credits 

@@ -2,16 +2,22 @@
 
 -----
 
-## Highlight My Quotes {: # }
+## Highlight My Quotes 
 An application that allows you do more with your highlights
 
-* [Key Features ](#how-to-use-)
-* How to Use 
-* Download 
-* Credits 
+![a3a8799e-3fd0-4c4b-8463-9df0e7857bda](https://user-images.githubusercontent.com/23417243/86133449-330aae00-bae0-11ea-8c34-aaef0986f71e.gif)
 
-### Key Features
-this is thksakathis is thksakathis is thksakathis is thksakathis is thksakathis is thksakathis is thksakathis is thksakathis is thksakathis is thksakathis is thksakathis is thksakathis is thksakathis is thksakathis is thksakathis is thksakathis is thksakathis is thksakathis is thksakathis is thksakathis is thksakathis is thksakathis is thksakathis is thksakathis is thksakathis is thksakathis is thksakathis is thksakathis is thksakathis is thksakathis is thksakathis is thksakathis is thksakathis is thksakathis is thksakathis is thksakathis is thksakathis is thksakathis is thksakathis is thksakathis is thksakathis is thksakathis is thksakathis is thksakathis is thksakathis is thksakathis is thksakathis is thksaka
+* [Key Features ](#keyfeatures)
+* [How to Use ](#howtouse)
+* [Download](#download) 
+* [Credits ](#credits)
+
+### [Key Features](https://github.com/Omotola28/reading_retention_tool/blob/master/README.md#key-features-)
+
 
 ### [How to use ](https://github.com/Omotola28/reading_retention_tool/blob/master/README.md#how-to-use-)
-This is a girl This is a girl This is a girl This is a girl This is a girl This is a girl This is a girl This is a girl This is a girl This is a girl This is a girl This is a girl This is a girl This is a girl This is a girl This is a girl This is a girl This is a girl This is a girl This is a girl This is a girl This is a girl This is a girl This is a girl This is a girl This is a girl This is a girl This is a girl This is a girl This is a girl This is a girl This is a girl This is a girl This is a girl This is a girl This is a girl This is a girl This is a girl This is a girl This is a girl This is a girl 
+ 
+### [Download](https://github.com/Omotola28/reading_retention_tool/blob/master/README.md#download)
+
+### [Credits](https://github.com/Omotola28/reading_retention_tool/blob/master/README.md#credits)
+

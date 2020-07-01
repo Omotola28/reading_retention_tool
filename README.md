@@ -7,7 +7,7 @@
 * [Key Features ](#keyfeatures) 
 * [How to Use ](#howtouse)
 * [Download](#download) 
-* [How to Contribute ](#howtocontribute)
+* [How to Contribute ](#how-to-contribute)
 
 ![a3a8799e-3fd0-4c4b-8463-9df0e7857bda](https://user-images.githubusercontent.com/23417243/86133449-330aae00-bae0-11ea-8c34-aaef0986f71e.gif)
 

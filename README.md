@@ -5,7 +5,7 @@
 ## Highlight My Quotes 
 **An application that allows you do more with your highlights**
 * [Key Features ](#key-features) 
-* [How to Use ](#howtouse)
+* [How to Use ](#how-to-use)
 * [Download](#download) 
 * [How to Contribute ](#how-to-contribute)
 
@@ -22,12 +22,12 @@
 ### [How to use ](https://github.com/Omotola28/reading_retention_tool/blob/master/README.md#how-to-use-)
 > **Important:** To extract text for kindle devices, your highlights need to be exported from the kindle application and then converted to pdf before using it on the application. 
 
-** A video explanation of how to use this application can be found below **
+**A video explanation of how to use this application can be found below**
 
 [**Click me**](https://youtu.be/OZBNmJ5tS0A)
  
 ### [Download](https://github.com/Omotola28/reading_retention_tool/blob/master/README.md#download)
-> Although the application can run on both android and ios this current version of the application is only available to be downloaded on ** android devices ** only
+> Although the application can run on both android and ios this current version of the application is only available to be downloaded on **android devices** only
 
 Download [**here**](https://play.google.com/store/apps/details?id=com.oshogunle.reading_retention_tool)
 
